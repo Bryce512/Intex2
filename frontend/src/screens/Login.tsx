@@ -65,17 +65,18 @@ function Login() {
     e.preventDefault();
     setErrorMessage("");
     setLoading(true);
+    console.log("Logging in with:", { username, password });
 
     try {
       // Send plain password to the server - it will handle hashing/verification
-      const response = await fetch("http://localhost:5000/User/login", {
+      const response = await fetch("https://localhost:5000/User/login", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          userName: username,
-          password: password,
+          Username: username,
+          Password: password,
         }),
       });
 

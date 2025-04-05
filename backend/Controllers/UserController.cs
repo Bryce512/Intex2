@@ -15,7 +15,7 @@ namespace intex2.Controllers
             _context = context;
         }
 
-        [HttpGet ("/GetAllUsers")]
+        [HttpGet ("GetAllUsers")]
         public IActionResult GetUsers()
         {
             var users = _context.Users.ToList();  // Assuming your table is named "Users"
@@ -23,7 +23,7 @@ namespace intex2.Controllers
         }
 
 
-        [HttpGet ("/GetUser/{Username}")]
+        [HttpGet ("GetUser{Username}")]
         public IActionResult GetUser(string Username)
         {
             var user = _context.Users.FirstOrDefault(u => u.Username == Username);  
@@ -34,30 +34,40 @@ namespace intex2.Controllers
             return Ok(user);
         }
 
-        [HttpPost("/AddUser")]
-        public IActionResult AddUser([FromBody] User newUser)
+    [HttpPost("AddUser")]
+public IActionResult AddUser([FromBody] User newUser)
+{
+    Console.WriteLine("AddUser method called");
+    try
+    {
+        // Log the input for debugging
+        Console.WriteLine($"Received user data: Username={newUser.Username}, Email={newUser.Email}");
+        
+        if (newUser == null)
         {
-            if (newUser == null)
-            {
-                return BadRequest();
-            }
+            return BadRequest(new { message = "Invalid user data" });
+        }
 
-            // Check if username already exists
-            if (_context.Users.Any(u => u.Username == newUser.Username))
-            {
-                return Conflict(new { message = "Username already exists" });
-            }
+        // Check if username already exists
+        if (_context.Users.Any(u => u.Username == newUser.Username))
+        {
+            return Conflict(new { message = "Username already exists" });
+        }
+        
+        
+        // Hash the password before storing
+        newUser.Password = CreatePasswordHash(newUser.Password);
 
-            // Hash the password before storing
-            newUser.Password = CreatePasswordHash(newUser.Password);
-
+        try
+        {
+            
+            // Add the user to the database
             _context.Users.Add(newUser);
             _context.SaveChanges();
             
             // Don't return the password in the response
             var userResponse = new
             {
-                newUser.UserId,
                 newUser.Username,
                 newUser.FirstName,
                 newUser.LastName,
@@ -66,9 +76,27 @@ namespace intex2.Controllers
             
             return CreatedAtAction(nameof(GetUser), new { Username = newUser.Username }, userResponse);
         }
-
+        catch (Exception dbEx)
+        {
+            // Get more details about the database exception
+            var innerMessage = dbEx.InnerException?.Message ?? dbEx.Message;
+            Console.WriteLine($"Database error: {innerMessage}");
+            return StatusCode(500, new { message = $"Database error: {innerMessage}" });
+        }
+    }
+    catch (Exception ex)
+    {
+        // Log the exception details
+        Console.WriteLine($"Error in AddUser: {ex.Message}");
+        Console.WriteLine($"Stack trace: {ex.StackTrace}");
+        
+        // Return a structured error response
+        return StatusCode(500, new { message = $"Server error: {ex.Message}" });
+    }
+}
+        
         // Update user details
-        [HttpPut("/updateUser/{Username}")]
+    [HttpPut("updateUser{Username}")]
         public IActionResult UpdateUser(string Username, [FromBody] User updatedUser)
         {
             if (Username != updatedUser.Username)
@@ -90,7 +118,7 @@ namespace intex2.Controllers
             return NoContent();
         }
 
-        [HttpDelete("/deleteUser/{Username}")]
+    [HttpDelete("deleteUser{Username}")]
         public IActionResult DeleteUser(string Username)
         {
             var user = _context.Users.FirstOrDefault(u => u.Username == Username);
@@ -104,8 +132,8 @@ namespace intex2.Controllers
             return NoContent();
         }
 
-      [HttpPost("login")]
-      public IActionResult Login([FromBody] LoginModel model)
+    [HttpPost("login")]
+      public IActionResult Login([FromBody] Login model)
       {
           // Find user by Username
           var user = _context.Users.FirstOrDefault(u => u.Username == model.Username);
@@ -116,7 +144,7 @@ namespace intex2.Controllers
           }
           
           // Verify the password
-          bool isPasswordValid = VerifyPassword(model.password, user.Password);
+          bool isPasswordValid = VerifyPassword(model.Password, user.Password);
           
           if (!isPasswordValid)
           {
@@ -186,12 +214,6 @@ namespace intex2.Controllers
           string salt = GenerateSalt();
           string hash = HashPassword(password, salt);
           return $"{salt}${hash}";
-      }
-
-      public class LoginModel
-      {
-          public string Username { get; set; }
-          public string password { get; set; }
       }
 
     }

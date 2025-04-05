@@ -48,11 +48,12 @@ function FormExample({
 
     // Create user object and call the registration function
     const userData = {
-      firstName,
-      lastName,
-      userName: username,
-      email,
-      password,
+      // Make sure these property names match EXACTLY what's in your C# User model
+      Username: username, // Verify if it's Username with capital 'U'
+      Password: password,
+      Email: email,
+      FirstName: firstName,
+      LastName: lastName,
     };
 
     onRegister(userData);
@@ -179,48 +180,65 @@ function RegisterModal({
   const [loading, setLoading] = useState(false);
   const [failedAttempts, setFailedAttempts] = useState(0);
 
-  const handleRegister = async (userData: any) => {
-    setLoading(true);
-    setErrorMessage("");
+const handleRegister = async (userData: JSON) => {
+  setLoading(true);
+  setErrorMessage("");
 
-    try {
-      const response = await fetch("http://localhost:5000/User/AddUser", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(userData),
-      });
+  console.log("Registering user:", userData);
 
-      if (!response.ok) {
-        const errorData = await response.json();
-        throw new Error(errorData.message || "Registration failed");
-      }
+  try {
+    const response = await fetch("https://localhost:5000/User/AddUser", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(userData),
+    });
 
-      // Registration successful
-      const data = await response.json();
 
-      // Reset validation state and close modal
-      setValidated(false);
-      onHide();
+    // Check if the response is JSON before trying to parse it
+    const contentType = response.headers.get("content-type");
+    let data;
 
-      // You might want to automatically log the user in here
-      // or show a success message
-      alert("Registration successful! Please log in.");
-    } catch (error: any) {
-      // Increment failed attempts counter
-      setFailedAttempts((prev) => prev + 1);
-
-      // Set error message
-      setErrorMessage(
-        error.message || "Registration failed. Please try again."
+    if (contentType && contentType.includes("application/json")) {
+      data = await response.json();
+      console.log("JSON Response:", data);
+    } else {
+      // Not JSON, get as text instead
+      const textResponse = await response.text();
+      console.log(
+        "Text Response (first 200 chars):",
+        textResponse.substring(0, 200)
       );
-
-      console.error("Registration error:", error);
-    } finally {
-      setLoading(false);
+      throw new Error("Server returned non-JSON response");
     }
-  };
+
+    if (!response.ok) {
+      throw new Error(data?.message || `Server error: ${response.status}`);
+    }
+
+    // Registration successful
+    console.log("Registration successful:", data);
+
+    // Reset validation state and close modal
+    setValidated(false);
+    onHide();
+
+    // You might want to automatically log the user in here
+    // or show a success message
+    alert("Registration successful! Please log in.");
+  } catch (error: any) {
+    // Increment failed attempts counter
+    setFailedAttempts((prev) => prev + 1);
+
+    // Set error message
+    setErrorMessage(error.message || "Registration failed. Please try again.");
+
+    console.error("Registration error:", error);
+  } finally {
+    setLoading(false);
+  }
+};
 
   // Reset error message and loading state when modal is closed
   const handleClose = () => {
