@@ -24,6 +24,7 @@ function booklist(
       try {
         setLoading(true);
         const data = await fetchBooks(page, resultsPerPage, selectedCategories);
+        console.log("Fetched books2:", data);
         setBooks(data.books);
         setTotalPages(Math.ceil(data.totalNumBooks / resultsPerPage));
       } catch (error) {
