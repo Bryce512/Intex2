@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import "../css/CategoryFilter.css";
+import "../css/categoryFilter.css";
 
 
 
