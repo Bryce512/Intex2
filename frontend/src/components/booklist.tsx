@@ -2,6 +2,8 @@ import { useEffect, useState } from "react";
 import { Book } from "../types/books";
 import { cartItem } from "../types/cartItem";
 import { useCart } from "../context/CartContext";
+import { fetchBooks } from "../api/BooklistAPI";
+import Pagination from "./pagination";
 
 function booklist(
   {selectedCategories} : {selectedCategories: string[] }
@@ -9,37 +11,32 @@ function booklist(
   const [books, setBooks] = useState<Book[]>([]);
   const [page, setPage] = useState(1);
   const [resultsPerPage, setResultsPerPage] = useState(5);
-  const [totalResults, setTotalResults] = useState(0);
   const [totalPages, setTotalPages] = useState(0);
   const [searchTerm, setSearchTerm] = useState("");
   const [showAlert, setShowAlert] = useState(false);
   const [alertMessage, setAlertMessage] = useState("");
-  const {addToCart} = useCart();
-
-
-  // Filter books based on the search term
-  const filteredBooks = books.filter((book) =>
-    book.title.toLowerCase().includes(searchTerm.toLowerCase())
-  );
-
+  const { addToCart } = useCart();
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-  const fetchBooks = async () => {
-      const catParams = selectedCategories.map((c) => 
-      `categories=${encodeURIComponent(c)}`)
-      .join("&")
-
-      const response = await fetch(
-        `https://localhost:5000/BookStore/AllBooks?pageNum=${page}&resultsPerPage=${resultsPerPage}${selectedCategories.length ? `&${catParams}`: ''}`
-      );
-      const data = await response.json();
-      setBooks(data.bookList);
-      setTotalResults(data.totalBooks);
-      setTotalPages(Math.ceil(totalResults / resultsPerPage));
+    const loadBooks = async () => {
+      try {
+        setLoading(true);
+        const data = await fetchBooks(page, resultsPerPage, selectedCategories);
+        setBooks(data.books);
+        setTotalPages(Math.ceil(data.totalNumBooks / resultsPerPage));
+      } catch (error) {
+        setError((error as Error).message);
+      } finally {
+        setLoading(false);
+      }
     };
+    loadBooks();
+  }, [page, resultsPerPage, selectedCategories]);
 
-    fetchBooks();
-  }, [resultsPerPage, page, selectedCategories, totalResults]);
+  if (loading) {return <p>Loading...</p>;}
+  if (error) {return <p className="text-red-500">Error: {error}</p>;}
 
   const handleAddToCart = (book: Book) => {
     const newItem: cartItem = {
@@ -60,8 +57,13 @@ function booklist(
 
     addToCart(newItem);
   };
-  
 
+  const booksArray = Array.isArray(books) ? books : [];
+
+  // Filter books based on the search term
+  const filteredBooks = booksArray.filter((book) =>
+    book.title.toLowerCase().includes(searchTerm.toLowerCase())
+  );
 
   return (
     <>
@@ -129,35 +131,15 @@ function booklist(
       ))}
       <br />
 
-      <div>
-        <button>Previous</button>
-
-        {[...Array(totalPages)].map((_, i) => (
-          <button key={i} onClick={() => setPage(i + 1)}>
-            {i + 1}
-          </button>
-        ))}
-
-        <button>Next</button>
-      </div>
-
+      <Pagination currentPage={page}
+         totalPages={totalPages}
+         itemsPerPage={resultsPerPage}
+         onPageChange={setPage}
+         onPageSizeChange={(newSize) => {
+          setResultsPerPage(newSize);
+          setPage(1)
+        }}/>
       <br />
-      <label>
-        Results per page:
-        <span> </span>
-        <select
-          value={resultsPerPage}
-          onChange={(p) => {
-            console.log("results per page: ", p.target.value);
-            setResultsPerPage(Number(p.target.value));
-          }}
-        >
-          <option value="5">5</option>
-          <option value="10">10</option>
-          <option value="15">15</option>
-          <option value="20">20</option>
-        </select>
-      </label>
     </>
   );
 }

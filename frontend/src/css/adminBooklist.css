@@ -1,0 +1,22 @@
+/* Add this to your CSS file */
+.btn-blue {
+  background-color: #007bff;
+  border-color: #007bff;
+  color: white;
+  transition: background-color 0.3s;
+}
+
+.btn-blue:hover {
+  background-color: #0056b3;
+}
+
+.btn-red {
+  background-color: #dc3545;
+  border-color: #dc3545;
+  color: white;
+  transition: background-color 0.3s;
+}
+
+.btn-red:hover {
+  background-color: #bd2130;
+}
