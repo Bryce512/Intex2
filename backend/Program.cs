@@ -1,5 +1,6 @@
 using Microsoft.EntityFrameworkCore;
-using intex2.Models;
+using Microsoft.Extensions.Options;
+using mission11.Models;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -14,6 +15,14 @@ builder.Services.AddDbContext<BookstoreContext>(options =>
     options.UseSqlite(builder.Configuration["ConnectionStrings:BowlingConnect"]);
 });
 
+builder.Services.AddCors(options =>
+    options.AddPolicy("AllowReactApp",
+    policy =>  {
+        policy.AllowAnyOrigin()
+        .AllowAnyMethod()
+        .AllowAnyHeader();
+    }));
+
 var app = builder.Build();
 
 builder.Services.AddCors();
@@ -25,9 +34,8 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
-app.UseCors(builder => builder
-    .WithOrigins("http://localhost:3000"));
-    
+app.UseCors("AllowReactApp");
+
 app.UseHttpsRedirection();
 
 app.UseAuthorization();
