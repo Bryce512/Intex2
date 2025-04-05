@@ -14,6 +14,10 @@ builder.Services.AddDbContext<BookstoreContext>(options =>
 {
     options.UseSqlite(builder.Configuration["ConnectionStrings:BowlingConnect"]);
 });
+builder.Services.AddDbContext<UserContext>(options =>
+{
+    options.UseSqlite(builder.Configuration.GetConnectionString("UserConnection"));
+});
 
 builder.Services.AddCors(options =>
     options.AddPolicy("AllowReactApp",

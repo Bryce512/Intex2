@@ -1,33 +1,112 @@
 import FloatingLabel from "react-bootstrap/FloatingLabel";
 import Form from "react-bootstrap/Form";
 import { useState } from "react";
-import RegisterModal from "../components/RegisterModal";
+import RegisterModal from "../components/registerModal";
+import Alert from "react-bootstrap/Alert";
+import { useNavigate } from "react-router-dom";
 
-function FormFloatingBasicExample() {
+function FormFloatingBasicExample({
+  username,
+  setUsername,
+  password,
+  setPassword,
+  handleSubmit,
+  loading,
+}: {
+  username: string;
+  setUsername: React.Dispatch<React.SetStateAction<string>>;
+  password: string;
+  setPassword: React.Dispatch<React.SetStateAction<string>>;
+  handleSubmit: (e: React.FormEvent) => void;
+  loading: boolean;
+}) {
   return (
-    <>
+    <Form onSubmit={handleSubmit}>
       <FloatingLabel
         controlId="floatingInput"
-        label="Email address"
+        label="Username"
         className="mb-3"
       >
-        <Form.Control type="email" placeholder="name@example.com" />
+        <Form.Control
+          type="text"
+          placeholder="username"
+          value={username}
+          onChange={(e) => setUsername(e.target.value)}
+          required
+        />
       </FloatingLabel>
       <FloatingLabel controlId="floatingPassword" label="Password">
-        <Form.Control type="password" placeholder="Password" />
+        <Form.Control
+          type="password"
+          placeholder="Password"
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
+          required
+        />
       </FloatingLabel>
       <br />
-      <button type="submit" className="btn btn-primary">
-        Submit
+      <button type="submit" className="btn btn-primary" disabled={loading}>
+        {loading ? "Logging in..." : "Login"}
       </button>
-    </>
+    </Form>
   );
 }
 
 function Login() {
+  const navigate = useNavigate();
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
+  const [errorMessage, setErrorMessage] = useState("");
+  const [loading, setLoading] = useState(false);
   const [modalShow, setModalShow] = useState(false);
   const [validated, setValidated] = useState(false);
 
+  const handleLogin = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setErrorMessage("");
+    setLoading(true);
+
+    try {
+      // Send plain password to the server - it will handle hashing/verification
+      const response = await fetch("http://localhost:5000/User/login", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          userName: username,
+          password: password,
+        }),
+      });
+
+      // Handle non-OK responses
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.message || "Login failed");
+      }
+
+      // Process successful login
+      const data = await response.json();
+
+      // Store user info (don't store the password!)
+      localStorage.setItem(
+        "user",
+        JSON.stringify({
+          id: data.user.id,
+          username: data.user.username,
+          firstName: data.user.firstName,
+          lastName: data.user.lastName,
+        })
+      );
+
+      // Redirect to dashboard/home
+      navigate("/dashboard");
+    } catch (error: any) {
+      setErrorMessage(error.message || "Failed to login. Please try again.");
+    } finally {
+      setLoading(false);
+    }
+  };
 
   return (
     <>
@@ -35,7 +114,26 @@ function Login() {
         <div className="row">
           <div className="col-md-12">
             <h2>Login</h2>
-            <FormFloatingBasicExample />
+
+            {errorMessage && (
+              <Alert
+                variant="danger"
+                onClose={() => setErrorMessage("")}
+                dismissible
+              >
+                {errorMessage}
+              </Alert>
+            )}
+
+            <FormFloatingBasicExample
+              username={username}
+              setUsername={setUsername}
+              password={password}
+              setPassword={setPassword}
+              handleSubmit={handleLogin}
+              loading={loading}
+            />
+
             <br />
             <p>
               Don't have an account?{" "}
@@ -43,6 +141,7 @@ function Login() {
                 Sign Up
               </a>
             </p>
+
             {modalShow && (
               <RegisterModal
                 show={modalShow}
@@ -58,4 +157,4 @@ function Login() {
   );
 }
 
-export default Login
+export default Login;
