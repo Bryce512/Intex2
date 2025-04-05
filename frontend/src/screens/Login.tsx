@@ -1,7 +1,7 @@
 import FloatingLabel from "react-bootstrap/FloatingLabel";
 import Form from "react-bootstrap/Form";
 import { useState } from "react";
-import RegisterModal from "../components/registerModal";
+import RegisterModal from "../components/RegisterModal";
 
 function FormFloatingBasicExample() {
   return (
