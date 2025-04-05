@@ -25,6 +25,7 @@ export const fetchBooks = async (
         throw new Error(`HTTP error! status: ${response.status}`);
       }
     const data = await response.json();
+    console.log("Fetched books:", data);
   
     return data;
     } catch (error) {
