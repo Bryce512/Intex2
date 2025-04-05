@@ -5,7 +5,7 @@ interface fetchBooksResponse {
   totalNumBooks: number;
 }
 const API_URL =
-  "https://bookstore-backend-hrceaafxeyd9akfy.westus3-01.azurewebsites.net/BookStore";
+  "https://intex2-backend-ezargqcgdwbgd4hq.westus3-01.azurewebsites.net/BookStore";
 
 export const fetchBooks = async (
   page: number,

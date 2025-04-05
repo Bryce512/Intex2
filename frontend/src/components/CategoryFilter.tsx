@@ -16,7 +16,7 @@ function CategoryFilter(
     const fetchCategories = async () => {
       try {
         fetch(
-          "https://bookstore-backend-hrceaafxeyd9akfy.westus3-01.azurewebsites.net/BookStore/getCategories"
+          "https://intex2-backend-ezargqcgdwbgd4hq.westus3-01.azurewebsites.net/BookStore/getCategories"
         )
           .then((response) => response.json())
           .then((data) => setCategories(data));
