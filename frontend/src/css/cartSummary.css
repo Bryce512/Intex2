@@ -1,0 +1,61 @@
+.cart-summary {
+  position: fixed;
+  top: 70px; /* Position it just below the header */
+  right: 20px;
+  background-color: #a0c7ef53;
+  color: black;
+  border-radius: 8px;
+  padding: 6px 10px;
+  display: flex;
+  align-items: center;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+  cursor: pointer;
+  transition: all 0.2s ease;
+  z-index: 999;
+  font-size: 16px;
+  max-width: 120px; /* Limit the maximum width */
+}
+
+.cart-summary:hover {
+  background-color: #0056b3;
+}
+
+.cart-summary .cart-icon {
+  font-size: 1rem;
+  margin-right: 4px;
+}
+
+/* Add a badge to show number of items */
+.cart-summary .items-count {
+  margin-left: 3px;
+  background-color: #dc3545;
+  color: white;
+  border-radius: 50%;
+  width: 18px;
+  height: 18px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 0.65rem;
+  font-weight: bold;
+}
+
+/* Make sure it's visible but compact on mobile */
+@media (max-width: 768px) {
+  .cart-summary {
+    padding: 4px 8px;
+    font-size: 0.7rem;
+    top: 60px; /* Slightly higher on mobile */
+    right: 10px;
+  }
+  
+  .cart-summary .cart-icon {
+    font-size: 0.9rem;
+  }
+  
+  .cart-summary .items-count {
+    width: 16px;
+    height: 16px;
+    font-size: 0.6rem;
+  }
+}
