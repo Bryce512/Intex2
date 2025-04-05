@@ -1,6 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
-using mission11.Models;
+using intex2.Models;
 
 var builder = WebApplication.CreateBuilder(args);
 
