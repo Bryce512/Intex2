@@ -8,7 +8,7 @@ export default defineConfig({
     port: 3000,
   },
   build: {
-    outDir: "build", // Output directory
+    outDir: "dist", // Output directory
     assetsDir: "assets", // Where to place assets
     rollupOptions: {
       output: {
