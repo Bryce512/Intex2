@@ -22,7 +22,11 @@ builder.Services.AddDbContext<UserContext>(options =>
 builder.Services.AddCors(options =>
     options.AddPolicy("AllowReactApp",
     policy =>  {
-        policy.AllowAnyOrigin()
+        policy.WithOrigins(
+            "https://icy-sky-018ec221e.6.azurestaticapps.net",
+            "http://localhost:3000",
+            "http://localhost:5173"
+        )
         .AllowAnyMethod()
         .AllowAnyHeader();
     }));
@@ -48,8 +52,6 @@ builder.Services.AddCors(options =>
 // }
 
 var app = builder.Build();
-
-builder.Services.AddCors();
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
