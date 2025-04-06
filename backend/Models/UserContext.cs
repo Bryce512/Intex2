@@ -17,9 +17,24 @@ public partial class UserContext : DbContext
 
     public virtual DbSet<User> Users { get; set; }
 
-    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-        => optionsBuilder.UseSqlite("Data Source=/Users/Bryce/Desktop/ISCore/Intex2/backend/intex2_users.sqlite");
+protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+{
+    if (!optionsBuilder.IsConfigured)
+    {
+        // For local development
+        string localPath = "/Users/Bryce/Desktop/ISCore/Intex2/backend/intex2_users.sqlite";
 
+        // For Azure deployment
+        string azurePath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "intex2_users.sqlite");
+        
+        // Determine which path to use based on environment
+        string dbPath = File.Exists(localPath) ? localPath : azurePath;
+        
+        Console.WriteLine($"Using SQLite database at: {dbPath}");
+        
+        optionsBuilder.UseSqlite($"Data Source={dbPath}");
+    }
+}
    protected override void OnModelCreating(ModelBuilder modelBuilder)
 {
     base.OnModelCreating(modelBuilder);

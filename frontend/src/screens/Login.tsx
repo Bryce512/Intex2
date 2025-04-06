@@ -5,6 +5,10 @@ import RegisterModal from "../components/RegisterModal";
 import Alert from "react-bootstrap/Alert";
 import { useNavigate } from "react-router-dom";
 
+const API_URL =
+  "https://intex2-backend-ezargqcgdwbgd4hq.westus3-01.azurewebsites.net/User";
+
+
 function FormFloatingBasicExample({
   username,
   setUsername,
@@ -70,7 +74,7 @@ function Login() {
     try {
       // Send plain password to the server - it will handle hashing/verification
       const response = await fetch(
-        "https://intex2-backend-ezargqcgdwbgd4hq.westus3-01.azurewebsites.net/User/login",
+        `${API_URL}/login`,
         {
           method: "POST",
           headers: {

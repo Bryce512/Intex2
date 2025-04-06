@@ -133,11 +133,11 @@ public IActionResult AddUser([FromBody] User newUser)
         }
 
     [HttpPost("login")]
-      public IActionResult Login([FromBody] Login model)
+      public IActionResult login([FromBody] Login model)
       {
           // Find user by Username
           var user = _context.Users.FirstOrDefault(u => u.Username == model.Username);
-          
+          Console.WriteLine($"User found: {user != null}");
           if (user == null)
           {
               return NotFound(new { message = "User not found" });
@@ -215,6 +215,10 @@ public IActionResult AddUser([FromBody] User newUser)
           string hash = HashPassword(password, salt);
           return $"{salt}${hash}";
       }
-
+      public class Login
+      {
+          public string Username { get; set; } = null!;
+          public string Password { get; set; } = null!;
+      }
     }
 }
