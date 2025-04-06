@@ -4,12 +4,11 @@ import { useState } from "react";
 import RegisterModal from "../components/RegisterModal";
 import Alert from "react-bootstrap/Alert";
 import { useNavigate } from "react-router-dom";
-
-const API_URL =
-  "https://intex2-backend-ezargqcgdwbgd4hq.westus3-01.azurewebsites.net/User";
+import { handleLogin } from "../api/UsersAPI";
 
 
-function FormFloatingBasicExample({
+
+function LoginForm({
   username,
   setUsername,
   password,
@@ -65,56 +64,6 @@ function Login() {
   const [modalShow, setModalShow] = useState(false);
   const [validated, setValidated] = useState(false);
 
-  const handleLogin = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setErrorMessage("");
-    setLoading(true);
-    console.log("Logging in with:", { username, password });
-
-    try {
-      // Send plain password to the server - it will handle hashing/verification
-      const response = await fetch(
-        `${API_URL}/login`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            Username: username,
-            Password: password,
-          }),
-        }
-      );
-
-      // Handle non-OK responses
-      if (!response.ok) {
-        const errorData = await response.json();
-        throw new Error(errorData.message || "Login failed");
-      }
-
-      // Process successful login
-      const data = await response.json();
-
-      // Store user info (don't store the password!)
-      localStorage.setItem(
-        "user",
-        JSON.stringify({
-          id: data.user.id,
-          username: data.user.username,
-          firstName: data.user.firstName,
-          lastName: data.user.lastName,
-        })
-      );
-
-      // Redirect to dashboard/home
-      navigate("/dashboard");
-    } catch (error: any) {
-      setErrorMessage(error.message || "Failed to login. Please try again.");
-    } finally {
-      setLoading(false);
-    }
-  };
 
   return (
     <>
@@ -133,15 +82,24 @@ function Login() {
               </Alert>
             )}
 
-            <FormFloatingBasicExample
+            <LoginForm
               username={username}
               setUsername={setUsername}
               password={password}
               setPassword={setPassword}
-              handleSubmit={handleLogin}
+              handleSubmit={(e) => {
+                e.preventDefault();
+                handleLogin(
+                  e,
+                  setErrorMessage,
+                  setLoading,
+                  username,
+                  password,
+                  navigate
+                );
+              }}
               loading={loading}
             />
-
             <br />
             <p>
               Don't have an account?{" "}
