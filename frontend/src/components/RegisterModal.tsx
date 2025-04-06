@@ -187,13 +187,16 @@ const handleRegister = async (userData: JSON) => {
   console.log("Registering user:", userData);
 
   try {
-    const response = await fetch("https://localhost:5000/User/AddUser", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(userData),
-    });
+    const response = await fetch(
+      "https://intex2-backend-ezargqcgdwbgd4hq.westus3-01.azurewebsites.net/User/AddUser",
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(userData),
+      }
+    );
 
 
     // Check if the response is JSON before trying to parse it

@@ -69,16 +69,19 @@ function Login() {
 
     try {
       // Send plain password to the server - it will handle hashing/verification
-      const response = await fetch("https://localhost:5000/User/login", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          Username: username,
-          Password: password,
-        }),
-      });
+      const response = await fetch(
+        "https://intex2-backend-ezargqcgdwbgd4hq.westus3-01.azurewebsites.net/User/login",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            Username: username,
+            Password: password,
+          }),
+        }
+      );
 
       // Handle non-OK responses
       if (!response.ok) {
