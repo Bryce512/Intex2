@@ -3,13 +3,14 @@ import Booklist from "../components/booklist";
 import Header from "../components/Header";
 import { useState } from "react";
 import CartSummary from "../components/CartSummary";
+import HeaderBuilder from "../components/HeaderBuilder";
 
 function Home() {
   const [selectedCategories, setSelectedCategories] = useState<string[]>([]); 
 
   return (
     <>
-      <Header />
+      <HeaderBuilder />
       <CartSummary />
       <div className="container">
         <div className="row">
