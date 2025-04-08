@@ -25,7 +25,7 @@ builder.Services.AddDbContext<MoviesDbContext>(options =>
     .LogTo(Console.WriteLine, LogLevel.Information));  // Log the SQL queries
 
 
-builder.Services.AddIdentity<MoviesUser, IdentityRole<int>>(options =>
+builder.Services.AddIdentityApiEndpoints<MoviesUser>(options =>
     {
         options.Password.RequireDigit = true;
         options.Password.RequiredLength = 6;
@@ -50,8 +50,6 @@ builder.Services.AddIdentity<MoviesUser, IdentityRole<int>>(options =>
 builder.Services.AddSingleton<IEmailSender<MoviesUser>, DummyEmailSender>();
 
 builder.Services.AddAuthorization();
-builder.Services.AddIdentityApiEndpoints<MoviesUser>()
-    .AddEntityFrameworkStores<MoviesDbContext>();
 
 builder.Services.AddCors(options =>
     options.AddPolicy("AllowReactApp", policy =>
@@ -69,6 +67,12 @@ builder.Services.ConfigureApplicationCookie(options =>
     options.LogoutPath = "/Logout"; // Path to the logout page
     options.AccessDeniedPath = "/AccessDenied";  // Optional: Path to handle access-denied scenarios
 });
+
+builder.Services.AddDbContext<ActionRecommendationsDbContext>(options =>
+    options.UseSqlite("Data Source=action_recommendations.db"));
+
+
+
 
 
 
