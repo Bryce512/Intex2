@@ -4,20 +4,20 @@ import { useState } from "react";
 import RegisterModal from "../components/RegisterModal";
 import Alert from "react-bootstrap/Alert";
 import { useNavigate } from "react-router-dom";
-import { handleLogin } from "../api/UsersAPI";
+import { handleLogin } from "../api/moviesAPI";
 
 
 
 function LoginForm({
-  username,
-  setUsername,
+  email,
+  setEmail,
   password,
   setPassword,
   handleSubmit,
   loading,
 }: {
-  username: string;
-  setUsername: React.Dispatch<React.SetStateAction<string>>;
+  email: string;
+  setEmail: React.Dispatch<React.SetStateAction<string>>;
   password: string;
   setPassword: React.Dispatch<React.SetStateAction<string>>;
   handleSubmit: (e: React.FormEvent) => void;
@@ -32,9 +32,9 @@ function LoginForm({
       >
         <Form.Control
           type="text"
-          placeholder="username"
-          value={username}
-          onChange={(e) => setUsername(e.target.value)}
+          placeholder="email"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
           required
         />
       </FloatingLabel>
@@ -57,7 +57,7 @@ function LoginForm({
 
 function Login() {
   const navigate = useNavigate();
-  const [username, setUsername] = useState("");
+  const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
   const [loading, setLoading] = useState(false);
@@ -83,8 +83,8 @@ function Login() {
             )}
 
             <LoginForm
-              username={username}
-              setUsername={setUsername}
+              email={email}
+              setEmail={setEmail}
               password={password}
               setPassword={setPassword}
               handleSubmit={(e) => {
@@ -93,7 +93,7 @@ function Login() {
                   e,
                   setErrorMessage,
                   setLoading,
-                  username,
+                  email,
                   password,
                   navigate
                 );
