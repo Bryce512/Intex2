@@ -4,6 +4,7 @@ import Cart from "./screens/Cart";
 import Home from "./screens/Home";
 import { BrowserRouter as Router, Routes, Route} from 'react-router-dom'
 import Login from "./screens/Login";
+import AllMovies from "./screens/AllMovies";
 
 function App() {
   return (
@@ -15,6 +16,7 @@ function App() {
           <Route path="/Login" element={<Login />}></Route>
           <Route path="/Cart" element={<Cart />}></Route>
           <Route path="/Admin" element={<AdminBooklist />}></Route>
+          <Route path="/All" element={<AllMovies />}></Route>
         </Routes>
       </Router>
 

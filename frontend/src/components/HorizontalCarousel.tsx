@@ -22,6 +22,14 @@ const HorizontalCarousel: React.FC<HorizontalCarouselProps> = ({
   const scrollRef = useRef<HTMLDivElement>(null);
   const navigate = useNavigate();
 
+  // Image error handler function
+  const handleImageError = (
+    event: React.SyntheticEvent<HTMLImageElement, Event>
+  ) => {
+    const target = event.target as HTMLImageElement;
+    target.src = 'images/Movie Posters/placeholder.jpg';
+  };
+
   const scroll = (direction: 'left' | 'right') => {
     if (scrollRef.current) {
       scrollRef.current.scrollBy({
@@ -36,9 +44,10 @@ const HorizontalCarousel: React.FC<HorizontalCarouselProps> = ({
       {title && <h2 className={styles.title}>{title}</h2>}
 
       <div className={styles.carouselContainer}>
-        <button className={styles.navButtonLeft} onClick={() => scroll('left')}>
-          &#8249;
-        </button>
+        <button
+          className={styles.navButtonLeft}
+          onClick={() => scroll('left')}
+        ></button>
 
         <div ref={scrollRef} className={styles.carousel}>
           {items.map((item) => (
@@ -52,6 +61,7 @@ const HorizontalCarousel: React.FC<HorizontalCarouselProps> = ({
                 alt="Show"
                 className={styles.image}
                 loading="lazy"
+                onError={handleImageError}
               />
             </div>
           ))}
@@ -60,9 +70,7 @@ const HorizontalCarousel: React.FC<HorizontalCarouselProps> = ({
         <button
           className={styles.navButtonRight}
           onClick={() => scroll('right')}
-        >
-          &#8250;
-        </button>
+        ></button>
       </div>
     </div>
   );

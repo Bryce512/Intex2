@@ -7,7 +7,6 @@ using Microsoft.CodeAnalysis.CodeActions;
 
 var builder = WebApplication.CreateBuilder(args);
 
-
 // Add services to the container.
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
@@ -79,8 +78,30 @@ builder.Services.ConfigureApplicationCookie(options =>
     options.LogoutPath = "/logout"; // Path to the logout page
     options.AccessDeniedPath = "/AccessDenied";  // Optional: Path to handle access-denied scenarios
     options.Cookie.SecurePolicy = CookieSecurePolicy.Always;
+
 });
 
+// Added DbContexts for each of the .db recommendation files to builder
+builder.Services.AddDbContext<ActionRecommendationsDbContext>(options =>
+    options.UseSqlite("Data Source=action_recommendations.db"));
+
+builder.Services.AddDbContext<TopRatedRecommendationsDbContext>(options =>
+    options.UseSqlite("Data Source=top_rated.db"));
+
+builder.Services.AddDbContext<ChildrenRecommendationsDbContext>(options =>
+    options.UseSqlite("Data Source=children_recommendations.db"));
+
+builder.Services.AddDbContext<FantasyRecommendationsDbContext>(options =>
+    options.UseSqlite("Data Source=fantasy_recommendations.db"));
+
+builder.Services.AddDbContext<ComedyRecommendationsDbContext>(options =>
+    options.UseSqlite("Data Source=comedy_recommendations.db"));
+
+builder.Services.AddDbContext<PopularRecommendationsDbContext>(options =>
+    options.UseSqlite("Data Source=popular.db"));
+
+builder.Services.AddDbContext<UserRecommendationsDbContext>(options =>
+    options.UseSqlite("Data Source=user_recommendations.db"));
 
 var app = builder.Build();
 

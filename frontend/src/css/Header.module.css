@@ -1,0 +1,190 @@
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: center; /* Center all elements inside the header */
+  background-color: #f5b400; /* Yellow */
+  height: 80px;
+  width: 100vw;
+  padding: 0 2rem;
+  box-sizing: border-box;
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 1000;
+}
+
+.headerContent {
+  display: flex;
+  justify-content: space-between; /* Pushes logo left, nav right */
+  align-items: center;
+  width: 100%;
+}
+
+.rightNav {
+  display: flex;
+  align-items: center;
+  gap: 1.25rem; /* spacing between Home, All Movies, Profile */
+}
+
+
+.img {
+  height: 70px;
+  width: auto;
+}
+
+/* Center search bar container */
+.searchbar {
+  display: flex;
+  justify-content: center;
+  flex-grow: 1;
+  margin-right: 1rem; /* Added: create space before All Movies */
+  max-width: 700px;
+}
+
+.stateLayer {
+  width: 100%;
+  max-width: 700px;
+  background-color: #011627;
+  border-radius: 9999px;
+  display: flex;
+  align-items: center;
+  padding: 0.6rem 1.5rem;
+}
+
+.searchInput {
+  width: 100%;
+  border: none;
+  background: transparent;
+  color: white;
+  font-size: 1rem;
+  outline: none;
+}
+
+/* Right side: All Movies button + user info */
+.rightSection {
+  display: flex;
+  align-items: center;
+  gap: 2rem;
+  margin-left: 1rem;
+}
+
+.moviesButton {
+  background-color: #011627;
+  color: white;
+  font-size: 1rem;
+  font-weight: 600;
+  padding: 0.6rem 1.5rem;
+  border: none;
+  border-radius: 999px;
+  cursor: pointer;
+  transition: background 0.3s ease;
+  gap: 1rem;
+}
+
+.moviesButton:hover {
+  background-color: #003366;
+}
+
+.welcomeWrapper {
+  display: flex;
+  align-items: center;
+  gap: 1.25rem; /* Was 0.75rem — gives better spacing */
+}
+
+.userInfo {
+  font-size: 23px;
+  font-weight: 700;
+  color: #011627;
+  line-height: 1; /* Ensures compact height */
+  display: flex;
+  align-items: right;
+}
+
+.img3 {
+  width: 55px;
+  height: 55px;
+  border-radius: 50%;
+  object-fit: cover;
+  background-color: white;
+}
+
+/* Dropdown container - ensure it is positioned properly and has space around items */
+.dropdownMenu {
+  position: absolute;
+  background-color: #fff;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  border-radius: 8px;
+  z-index: 999;
+  min-width: 150px;
+  display: flex; /* Flexbox to stack items vertically */
+  flex-direction: column; /* Stack items vertically */
+  padding: 0.5rem 0; /* Optional: Add some padding for space around the items */
+}
+
+/* Each dropdown item should look like a button */
+.dropdownItem {
+  background-color: #C4cbca;
+  border: none;
+  padding: 0.8rem 1rem;
+  width: 100%;
+  text-align: left;
+  color: #011627;
+  font-size: 1rem;
+  font-weight: bold;
+  font-family:system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  border-radius: 4px; /* Optional: Rounded corners on each item */
+}
+
+/* Hover effect for dropdown items */
+.dropdownItem:hover {
+  background-color: #636b61;
+  color: #C4cbca
+}
+
+.buttonHeader {
+  background-color: #f5b700;
+  color: #011627;
+  align-items: right;
+  font-size: 21px;
+  font-weight:900;
+  font-family:system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+  letter-spacing: 2px;
+  border-radius: 999px;
+}
+
+.buttonHeader:hover {
+  background-color: #011627;
+  color: #C4cbca;
+  border-radius: 999px;
+  border-color: #011627;
+}
+
+.userInfoWrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+
+.dropdownMenuUser {
+  position: absolute;
+  top: 100%; /* Places dropdown directly below the avatar */
+  right: 0; /* Aligns it to the right side of the avatar */
+  background-color: #C4cbca;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  border-radius: 8px;
+  z-index: 999;
+  min-width: 150px;
+  display: flex;
+  flex-direction: column;
+  padding: 0.5rem 0;
+}
+
+.dropdownMenuUser:hover {
+  background-color: #636b61;
+  color: #C4cbca
+}
+
