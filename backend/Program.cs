@@ -23,7 +23,6 @@ builder.Services.AddDbContext<MoviesDbContext>(options =>
     options.UseSqlite(builder.Configuration.GetConnectionString("MovieConnection"))
     .LogTo(Console.WriteLine, LogLevel.Information));  // Log the SQL queries
 
-
 builder.Services.AddIdentityApiEndpoints<MoviesUser>(options =>
     {
         options.Password.RequireDigit = true;
