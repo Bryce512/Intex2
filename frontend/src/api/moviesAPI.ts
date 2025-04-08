@@ -7,7 +7,6 @@ interface fetchMoviesResponse {
 
 // const API_URL = "https://intex2-backend-ezargqcgdwbgd4hq.westus3-01.azurewebsites.net/User";
 const API_URL = 'https://localhost:5000'; // For local development
-const API_URL = 'https://localhost:5000'; // For local development
 
 // Handle login using plain username/password
 export const handleLogin = async (
@@ -28,7 +27,6 @@ export const handleLogin = async (
     const response = await fetch(`${API_URL}/login`, {
       method: 'POST',
       headers: {
-        'Content-Type': 'application/json', // Send JSON data
         'Content-Type': 'application/json', // Send JSON data
       },
       body: JSON.stringify({
@@ -131,7 +129,6 @@ export const handleRegister = async (
 >>>>>>>>> Temporary merge branch 2
       headers: {
         'Content-Type': 'application/json',
-        'Content-Type': 'application/json',
       },
       body: JSON.stringify({
         password: userData.Password,
@@ -141,10 +138,8 @@ export const handleRegister = async (
 
     // Check if the response is JSON before trying to parse it
     const contentType = response.headers.get('content-type');
-    const contentType = response.headers.get('content-type');
     let data;
 
-    if (contentType && contentType.includes('application/json')) {
     if (contentType && contentType.includes('application/json')) {
       data = await response.json();
       console.log('JSON Response:', data);

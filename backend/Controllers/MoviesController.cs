@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Identity;
 using intex2.Models;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
 namespace intex2.Controllers
@@ -63,7 +64,7 @@ namespace intex2.Controllers
             }
 
             // Step 2: Look up this user's recommendations
-            var recs = _actionRecommendationsContext.Recommendations.FirstOrDefault(r => r.UserId == user.Id);
+            var recs = _actionRecommendationsContext.Recommendations.FirstOrDefault(r => r.UserId == user.UserId);
 
             if (recs == null)
             {
@@ -112,7 +113,7 @@ namespace intex2.Controllers
             }
 
             // Step 2: Look up this user's recommendations
-            var recs = _comedyRecommendationsContext.Recommendations.FirstOrDefault(r => r.UserId == user.Id);
+            var recs = _comedyRecommendationsContext.Recommendations.FirstOrDefault(r => r.UserId == user.UserId);
 
             if (recs == null)
             {
@@ -161,7 +162,7 @@ namespace intex2.Controllers
             }
 
             // Step 2: Look up this user's recommendations
-            var recs = _childrenRecommendationsContext.Recommendations.FirstOrDefault(r => r.UserId == user.Id);
+            var recs = _childrenRecommendationsContext.Recommendations.FirstOrDefault(r => r.UserId == user.UserId);
 
             if (recs == null)
             {
@@ -210,7 +211,7 @@ namespace intex2.Controllers
             }
 
             // Step 2: Look up this user's recommendations
-            var recs = _fantasyRecommendationsContext.Recommendations.FirstOrDefault(r => r.UserId == user.Id);
+            var recs = _fantasyRecommendationsContext.Recommendations.FirstOrDefault(r => r.UserId == user.UserId);
 
             if (recs == null)
             {
@@ -259,7 +260,7 @@ namespace intex2.Controllers
             }
 
             // Step 2: Look up this user's recommendations
-            var recs = _userRecommendationsContext.Recommendations.FirstOrDefault(r => r.UserId == user.Id);
+            var recs = _userRecommendationsContext.Recommendations.FirstOrDefault(r => r.UserId == user.UserId);
 
             if (recs == null)
             {
