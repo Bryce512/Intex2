@@ -43,6 +43,9 @@ export default function UserInfo() {
       {isDropdownOpen && (
         <div className={styles.dropdownMenuUser}>
           <button className={styles.dropdownItem} onClick={handleLogout}>
+            Privacy Policy
+          </button>
+          <button className={styles.dropdownItem} onClick={handleLogout}>
             Logout
           </button>
         </div>

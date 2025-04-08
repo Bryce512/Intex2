@@ -1,6 +1,5 @@
 import { useEffect, useState } from 'react';
 import { deleteMovie, fetchMovies } from '../api/moviesAPI';
-// import { Book } from "../types/books";
 import '../css/adminBooklist.css';
 import Pagination from '../components/pagination';
 import NewBookForm from '../components/newBookForm';

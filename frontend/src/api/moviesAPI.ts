@@ -5,7 +5,6 @@ interface fetchMoviesResponse {
   totalNumMovies: number;
 }
 
-// const API_URL = "https://intex2-backend-ezargqcgdwbgd4hq.westus3-01.azurewebsites.net/User";
 const API_URL = 'https://localhost:5000'; // For local development
 
 // Handle login using plain username/password
@@ -19,11 +18,9 @@ export const handleLogin = async (
 ): Promise<void> => {
   e.preventDefault();
   setErrorMessage('');
-  setErrorMessage('');
   setLoading(true);
 
   try {
-
     const response = await fetch(`${API_URL}/login`, {
       method: 'POST',
       headers: {
@@ -38,19 +35,15 @@ export const handleLogin = async (
     });
 
     console.log('Login response:', response);
-    console.log('Login response:', response);
 
     if (!response.ok) {
       const errorData = await response.json();
-      throw new Error(errorData.message || 'Login failed');
       throw new Error(errorData.message || 'Login failed');
     }
 
     // If the login is successful, redirect the user
     navigate('/');
-    navigate('/');
   } catch (error: any) {
-    setErrorMessage(error.message || 'Failed to login. Please try again.');
     setErrorMessage(error.message || 'Failed to login. Please try again.');
   } finally {
     setLoading(false);
@@ -69,7 +62,7 @@ export const handleSubmit = (
   setErrorMessage: React.Dispatch<React.SetStateAction<string>>,
   setLoading: React.Dispatch<React.SetStateAction<boolean>>,
   setFailedAttempts: React.Dispatch<React.SetStateAction<number>>,
-  handleClose: void
+  handleClose: Function
 ) => {
   event.preventDefault();
   event.stopPropagation();
@@ -87,7 +80,6 @@ export const handleSubmit = (
 
   // Create user object and call the registration function
   const userData = {
-    // Make sure these property names match EXACTLY what's in your C# User model
     Username: username, // Verify if it's Username with capital 'U'
     Password: password,
     Name: name,
@@ -110,29 +102,23 @@ export const handleRegister = async (
   setLoading: Function,
   setErrorMessage: Function,
   setValidated: Function,
-  handleClose: void,
+  handleClose: Function,
   setFailedAttempts: Function
 ) => {
   setLoading(true);
   setErrorMessage('');
-  setErrorMessage('');
 
-  console.log('Registering user:', userData);
   console.log('Registering user:', userData);
 
   try {
     const response = await fetch(`${API_URL}/register`, {
-      method: "POST",
-=========
-    const response = await fetch(`${API_URL}/movies/register`, {
       method: 'POST',
->>>>>>>>> Temporary merge branch 2
       headers: {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
         password: userData.Password,
-        email: userData.Email
+        email: userData.Email,
       }),
     });
 
@@ -144,7 +130,6 @@ export const handleRegister = async (
       data = await response.json();
       console.log('JSON Response:', data);
     } else {
-      // Not JSON, get as text instead
       const textResponse = await response.text();
       console.log(
         'Text Response (first 200 chars):',
@@ -162,10 +147,8 @@ export const handleRegister = async (
 
     // Reset validation state and close modal
     setValidated(false);
-    handleClose;
+    handleClose();
 
-    // You might want to automatically log the user in here
-    // or show a success message
     alert('Registration successful! Please log in.');
   } catch (error: any) {
     // Increment failed attempts counter
@@ -178,8 +161,7 @@ export const handleRegister = async (
   } finally {
     setLoading(false);
   }
-  };
-
+};
 
 export const fetchMovies = async (
   page: number,
@@ -197,7 +179,6 @@ export const fetchMovies = async (
 
   return data;
 };
-
 
 export const addMovie = async (newMovie: Movie): Promise<Movie> => {
   try {
