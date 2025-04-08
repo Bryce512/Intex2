@@ -7,7 +7,6 @@ import { useNavigate } from "react-router-dom";
 import { handleLogin } from "../api/moviesAPI";
 
 
-
 function LoginForm({
   email,
   setEmail,
