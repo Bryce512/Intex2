@@ -132,36 +132,36 @@ public IActionResult AddUser([FromBody] User newUser)
             return NoContent();
         }
 
-    [HttpPost("login")]
-      public IActionResult login([FromBody] Login model)
-      {
-          // Find user by Username
-          var user = _context.Users.FirstOrDefault(u => u.Username == model.Username);
-          Console.WriteLine($"User found: {user != null}");
-          if (user == null)
-          {
-              return NotFound(new { message = "User not found" });
-          }
-          
-          // Verify the password
-          bool isPasswordValid = VerifyPassword(model.Password, user.Password);
-          
-          if (!isPasswordValid)
-          {
-              return Unauthorized(new { message = "Invalid password" });
-          }
-          
-          // User authenticated successfully
-          return Ok(new { 
-              message = "Login successful", 
-              user = new {
-                  id = user.UserId,
-                  Username = user.Username,
-                  firstName = user.FirstName,
-                  lastName = user.LastName
-              }
-          });
-      }
+    // [HttpPost("login")]
+    //   public IActionResult login([FromBody] Login model)
+    //   {
+    //       // Find user by Username
+    //       var user = _context.Users.FirstOrDefault(u => u.Username == model.Username);
+    //       Console.WriteLine($"User found: {user != null}");
+    //       if (user == null)
+    //       {
+    //           return NotFound(new { message = "User not found" });
+    //       }
+    //       
+    //       // Verify the password
+    //       bool isPasswordValid = VerifyPassword(model.Password, user.Password);
+    //       
+    //       if (!isPasswordValid)
+    //       {
+    //           return Unauthorized(new { message = "Invalid password" });
+    //       }
+    //       
+    //       // User authenticated successfully
+    //       return Ok(new { 
+    //           message = "Login successful", 
+    //           user = new {
+    //               id = user.UserId,
+    //               Username = user.Username,
+    //               firstName = user.FirstName,
+    //               lastName = user.LastName
+    //           }
+    //       });
+    //   }
       // Helper method to verify password
       private bool VerifyPassword(string inputPassword, string storedPassword)
       {
@@ -214,11 +214,6 @@ public IActionResult AddUser([FromBody] User newUser)
           string salt = GenerateSalt();
           string hash = HashPassword(password, salt);
           return $"{salt}${hash}";
-      }
-      public class Login
-      {
-          public string Username { get; set; } = null!;
-          public string Password { get; set; } = null!;
       }
     }
 }

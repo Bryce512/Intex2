@@ -23,9 +23,4 @@ namespace intex2.Models
         public string? LastName { get; set; }
     }
 
-     public class Login
-      {
-          public required string Username { get; set; }
-          public required string Password { get; set; }
-      }
 }
