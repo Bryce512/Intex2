@@ -1,5 +1,5 @@
 // const API_URL = "https://intex2-backend-ezargqcgdwbgd4hq.westus3-01.azurewebsites.net/User";
-const API_URL = "https://localhost:5000"; // For local development
+const API_URL = 'https://localhost:5000'; // For local development
 
 // Handle login using plain username/password
 export const handleLogin = async (
@@ -11,10 +11,11 @@ export const handleLogin = async (
   navigate: Function
 ): Promise<void> => {
   e.preventDefault();
-  setErrorMessage("");
+  setErrorMessage('');
   setLoading(true);
 
   try {
+
     const response = await fetch(`${API_URL}/login`, {
       method: 'POST',
       headers: {
@@ -28,22 +29,21 @@ export const handleLogin = async (
       }),
     });
 
-    console.log("Login response:", response);
+    console.log('Login response:', response);
 
     if (!response.ok) {
       const errorData = await response.json();
-      throw new Error(errorData.message || "Login failed");
+      throw new Error(errorData.message || 'Login failed');
     }
 
     // If the login is successful, redirect the user
-    navigate("/");
+    navigate('/');
   } catch (error: any) {
-    setErrorMessage(error.message || "Failed to login. Please try again.");
+    setErrorMessage(error.message || 'Failed to login. Please try again.');
   } finally {
     setLoading(false);
   }
 };
-
 
 // Register new user
 export const handleSubmit = (
@@ -102,15 +102,15 @@ export const handleRegister = async (
   setFailedAttempts: Function
 ) => {
   setLoading(true);
-  setErrorMessage("");
+  setErrorMessage('');
 
-  console.log("Registering user:", userData);
+  console.log('Registering user:', userData);
 
   try {
     const response = await fetch(`${API_URL}/register`, {
       method: "POST",
       headers: {
-        "Content-Type": "application/json",
+        'Content-Type': 'application/json',
       },
       body: JSON.stringify({
         password: userData.Password,
@@ -118,22 +118,21 @@ export const handleRegister = async (
       }),
     });
 
-
     // Check if the response is JSON before trying to parse it
-    const contentType = response.headers.get("content-type");
+    const contentType = response.headers.get('content-type');
     let data;
 
-    if (contentType && contentType.includes("application/json")) {
+    if (contentType && contentType.includes('application/json')) {
       data = await response.json();
-      console.log("JSON Response:", data);
+      console.log('JSON Response:', data);
     } else {
       // Not JSON, get as text instead
       const textResponse = await response.text();
       console.log(
-        "Text Response (first 200 chars):",
+        'Text Response (first 200 chars):',
         textResponse.substring(0, 200)
       );
-      throw new Error("Server returned non-JSON response");
+      throw new Error('Server returned non-JSON response');
     }
 
     if (!response.ok) {
@@ -141,7 +140,7 @@ export const handleRegister = async (
     }
 
     // Registration successful
-    console.log("Registration successful:", data);
+    console.log('Registration successful:', data);
 
     // Reset validation state and close modal
     setValidated(false);
@@ -149,15 +148,15 @@ export const handleRegister = async (
 
     // You might want to automatically log the user in here
     // or show a success message
-    alert("Registration successful! Please log in.");
+    alert('Registration successful! Please log in.');
   } catch (error: any) {
     // Increment failed attempts counter
     setFailedAttempts((prev: any) => prev + 1);
 
     // Set error message
-    setErrorMessage(error.message || "Registration failed. Please try again.");
+    setErrorMessage(error.message || 'Registration failed. Please try again.');
 
-    console.error("Registration error:", error);
+    console.error('Registration error:', error);
   } finally {
     setLoading(false);
   }
