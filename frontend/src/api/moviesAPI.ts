@@ -15,14 +15,16 @@ export const handleLogin = async (
   setLoading(true);
 
   try {
-    const response = await fetch(`${API_URL}/movies/login`, {
-      method: "POST",
+    const response = await fetch(`${API_URL}/login`, {
+      method: 'POST',
       headers: {
-        "Content-Type": "application/json", // Send JSON data
+        'Content-Type': 'application/json', // Send JSON data
       },
       body: JSON.stringify({
-        username: username,
+        email: username,
         password: password,
+        twoFactorCode: 'string',
+        twoFactorRecoveryCode: 'string',
       }),
     });
 
@@ -92,7 +94,7 @@ export const handleSubmit = (
 
 // Register the user
 export const handleRegister = async (
-  userData: object,
+  userData: any,
   setLoading: Function,
   setErrorMessage: Function,
   setValidated: Function,
@@ -105,17 +107,15 @@ export const handleRegister = async (
   console.log("Registering user:", userData);
 
   try {
-    const response = await fetch(`${API_URL}/movies/register`, {
+    const response = await fetch(`${API_URL}/register`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify(
-        {Username: userData.Username,
-        Password: userData.Password,
-        Email: userData.email,
-        Name: userData.name,}
-      ),
+      body: JSON.stringify({
+        password: userData.Password,
+        email: userData.Email
+      }),
     });
 
 
