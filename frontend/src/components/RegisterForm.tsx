@@ -5,7 +5,7 @@ import Row from "react-bootstrap/Row";
 import Alert from "react-bootstrap/Alert";
 import Button from "react-bootstrap/Button";
 import { useState } from "react";
-import { handleSubmit } from "../api/UsersAPI";
+import { handleSubmit } from "../api/moviesAPI";
 
 function RegisterForm({
   validated,
@@ -28,8 +28,7 @@ function RegisterForm({
   setFailedAttempts: React.Dispatch<React.SetStateAction<number>>;
   handleClose: () => void;
 }) {
-  const [firstName, setFirstName] = useState("");
-  const [lastName, setLastName] = useState("");
+  const [name, setName] = useState("");
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [email, setEmail] = useState("");
@@ -49,8 +48,7 @@ function RegisterForm({
           username,
           password,
           email,
-          firstName,
-          lastName,
+          name,
           setErrorMessage,
           setLoading,
           setFailedAttempts,
@@ -66,33 +64,33 @@ function RegisterForm({
         </Alert>
       )}
 
-      <Row className="mb-3">
+      <Row classname="mb-3">
         <Form.Group as={Col} md="6" controlId="validationCustom01">
-          <Form.Label>First name</Form.Label>
+          <Form.Label>Name</Form.Label>
           <Form.Control
             required
             type="text"
-            placeholder="First name"
-            value={firstName}
-            onChange={(e) => setFirstName(e.target.value)}
+            placeholder="Name"
+            value={name}
+            onChange={(e) => setName(e.target.value)}
             disabled={isRateLimited || loading}
           />
           <Form.Control.Feedback>Looks good!</Form.Control.Feedback>
         </Form.Group>
         <Form.Group as={Col} md="6" controlId="validationCustom02">
-          <Form.Label>Last name</Form.Label>
+          <Form.Label>Email</Form.Label>
           <Form.Control
             required
             type="text"
-            placeholder="Last name"
-            value={lastName}
-            onChange={(e) => setLastName(e.target.value)}
+            placeholder="Email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
             disabled={isRateLimited || loading}
           />
           <Form.Control.Feedback>Looks good!</Form.Control.Feedback>
         </Form.Group>
       </Row>
-      <Row className="mb-3">
+      <Row classname="mb-3">
         <Form.Group as={Col} md="6" controlId="validationCustomUsername">
           <Form.Label>Username</Form.Label>
           <InputGroup hasValidation>
@@ -126,7 +124,7 @@ function RegisterForm({
           </Form.Control.Feedback>
         </Form.Group>
       </Row>
-      <Row className="mb-3">
+      <Row classname="mb-3">
         <Form.Group as={Col} md="6" controlId="validationCustom04">
           <Form.Label>Email</Form.Label>
           <Form.Control

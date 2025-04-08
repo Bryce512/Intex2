@@ -1,7 +1,7 @@
 import CategoryFilter from "../components/CategoryFilter";
 import Booklist from "../components/booklist";
 import Header from "../components/Header";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import CartSummary from "../components/CartSummary";
 import HeaderHome from "../components/HeaderHome";
 
