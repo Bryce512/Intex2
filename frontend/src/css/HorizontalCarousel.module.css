@@ -5,9 +5,10 @@
 .title {
   text-align: left;
   padding-left: 10px;
-  font-size: 1.4rem;
-  margin: 0 0 0.5rem 1rem;
+  font-size: 2rem;
+  margin: 0 0 0rem 1rem;
   font-weight: bold;
+  color: #c4cbca;
 }
 
 .carouselContainer {
@@ -97,11 +98,11 @@
 }
 
 .navButtonLeft:hover::before {
-  border-color: transparent #aeb5b5 transparent transparent;
+  border-color: transparent #c4cbca transparent transparent;
 }
 
 .navButtonRight:hover::before {
-  border-color: transparent transparent transparent #aeb5b5;
+  border-color: transparent transparent transparent #c4cbca;
 }
 
 .navButtonLeft {
