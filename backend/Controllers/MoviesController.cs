@@ -1,4 +1,3 @@
-using intex2.Models;
 using Microsoft.AspNetCore.Identity;
 using intex2.Models;
 using System.Linq;
@@ -23,7 +22,14 @@ namespace intex2.Controllers
         private readonly UserManager<AppIdentityUser> _userManager;
         private readonly SignInManager<AppIdentityUser> _signInManager;
 
-        public MoviesController(TopRatedRecommendationsDbContext topRatedRecommendationsContext, UserRecommendationsDbContext userRecommendationsContext, PopularRecommendationsDbContext popularRecommendationsContext, FantasyRecommendationsDbContext fantasyRecommendationsContext, ChildrenRecommendationsDbContext childrenRecommendationsContext, ComedyRecommendationsDbContext comedyRecommendationsContext, ActionRecommendationsDbContext actionRecommendationsContext, MoviesDbContext moviesContext, UserManager<MoviesUser> userManager, SignInManager<MoviesUser> signInManager)
+        public MoviesController(
+            TopRatedRecommendationsDbContext topRatedRecommendationsContext,
+            UserRecommendationsDbContext userRecommendationsContext,
+            PopularRecommendationsDbContext popularRecommendationsContext,
+            FantasyRecommendationsDbContext fantasyRecommendationsContext,
+            ChildrenRecommendationsDbContext childrenRecommendationsContext,
+            ComedyRecommendationsDbContext comedyRecommendationsContext,
+            ActionRecommendationsDbContext actionRecommendationsContext, MoviesDbContext moviesContext, UserManager<AppIdentityUser> userManager, SignInManager<AppIdentityUser> signInManager)
         {
             _topRatedRecommendationsContext = topRatedRecommendationsContext;
             _userRecommendationsContext = userRecommendationsContext;
@@ -33,6 +39,8 @@ namespace intex2.Controllers
             _comedyRecommendationsContext = comedyRecommendationsContext;
             _actionRecommendationsContext = actionRecommendationsContext;
             _moviesContext = moviesContext;
+            _userManager = userManager;
+            _signInManager = signInManager;
         }
 
 
