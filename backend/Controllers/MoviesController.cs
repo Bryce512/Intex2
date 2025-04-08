@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Authorization;
 
 namespace intex2.Controllers
 {
@@ -46,7 +47,7 @@ namespace intex2.Controllers
             _signInManager = signInManager;
         }
 
-
+        [Authorize]
         [HttpGet("UserActionMovies")]
         public async Task<IActionResult> GetUserActionMovies()
         {
@@ -96,6 +97,7 @@ namespace intex2.Controllers
             return Ok(movies);
         }
 
+        [Authorize]
         [HttpGet("UserComedyMovies")]
         public async Task<IActionResult> GetUserComedyMovies()
         {
@@ -145,6 +147,7 @@ namespace intex2.Controllers
             return Ok(movies);
         }
 
+        [Authorize]
         [HttpGet("UserChildrenMovies")]
         public async Task<IActionResult> GetUserChildrenMovies()
         {
@@ -194,6 +197,7 @@ namespace intex2.Controllers
             return Ok(movies);
         }
 
+        [Authorize]
         [HttpGet("UserFantasyMovies")]
         public async Task<IActionResult> GetUserFantasyMovies()
         {
@@ -243,11 +247,13 @@ namespace intex2.Controllers
             return Ok(movies);
         }
 
+        [Authorize]
         [HttpGet("UserMovies")]
         public async Task<IActionResult> GetUserMovies()
         {
             // Step 1: Get the currently logged-in user
             var user = await _userManager.GetUserAsync(User);
+
             if (user == null)
             {
                 // return Unauthorized(new { message = "User not logged in." });

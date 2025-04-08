@@ -80,24 +80,24 @@ function Home() {
 
   return (
     <>
-      {/* <AuthorizeView> */}
-      <span>
-        <Logout>
-          Logout <AuthorizedUser value="email" />
-        </Logout>{' '}
-      </span>
-      <HeaderHome />
-      <TopMovieRecommendation />
-      <br />
-      {Object.entries(carouselMovies).map(([category, movies]) => (
-        <HorizontalCarousel
-          key={category}
-          title={category}
-          items={getMovieItems(movies)}
-        />
-      ))}
-      <Footer />
-      {/* </AuthorizeView> */}
+      <AuthorizeView>
+        <span>
+          <Logout>
+            Logout <AuthorizedUser value="email" />
+          </Logout>{' '}
+        </span>
+        <HeaderHome />
+        <TopMovieRecommendation />
+        <br />
+        {Object.entries(carouselMovies).map(([category, movies]) => (
+          <HorizontalCarousel
+            key={category}
+            title={category}
+            items={getMovieItems(movies)}
+          />
+        ))}
+        <Footer />
+      </AuthorizeView>
     </>
   );
 }
