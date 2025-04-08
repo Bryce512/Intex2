@@ -384,20 +384,16 @@ namespace intex2.Controllers
         }
         
         [HttpGet("AllMovies")]
-        public IActionResult GetBooks(int pageNum , int resultsPerPage, [FromQuery] List<string>? categories = null)
+        public IActionResult GetMovies(int pageNum, int resultsPerPage)
         {
             var query = _moviesContext.MoviesTitles.AsQueryable();
 
-            if (categories != null && categories.Any()) {
-            }
-
             var totalMovies = query.Count();
 
-            var movies =  query
-                .Skip((pageNum-1) * resultsPerPage)
+            var movies = query
+                .Skip((pageNum - 1) * resultsPerPage)
                 .Take(resultsPerPage)
                 .ToList();
-            
 
             return Ok(new
             {
@@ -405,6 +401,8 @@ namespace intex2.Controllers
                 totalNumMovies = totalMovies
             });
         }
+
+
 
         // [HttpGet ("getCategories")]
         // public List<string> GetCategories()

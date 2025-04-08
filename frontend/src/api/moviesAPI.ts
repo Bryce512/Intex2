@@ -170,32 +170,21 @@ export const handleRegister = async (
 
 export const fetchMovies = async (
   page: number,
-  resultsPerPage: number,
-  selectedCategories: string[]
+  resultsPerPage: number
 ): Promise<fetchMoviesResponse> => {
-  try {
-    const catParams = selectedCategories
-      .map((c) => `categories=${encodeURIComponent(c)}`)
-      .join('&');
+  const response = await fetch(
+    `${API_URL}/Movies/AllMovies?pageNum=${page}&resultsPerPage=${resultsPerPage}`
+  );
 
-    const response = await fetch(
-      `${API_URL}/Movies/AllMovies?pageNum=${page}&resultsPerPage=${resultsPerPage}${
-        selectedCategories.length ? `&${catParams}` : ''
-      }`
-    );
-
-    if (!response.ok) {
-      throw new Error(`HTTP error! status: ${response.status}`);
-    }
-    const data = await response.json();
-    console.log('Fetched movies:', data);
-
-    return data;
-  } catch (error) {
-    console.error('Error fetching movies:', error);
-    throw error;
+  if (!response.ok) {
+    throw new Error(`HTTP error! status: ${response.status}`);
   }
+  const data = await response.json();
+  console.log('Fetched movies:', data);
+
+  return data;
 };
+
 
 export const addMovie = async (newMovie: Movie): Promise<Movie> => {
   try {

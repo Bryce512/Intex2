@@ -21,7 +21,7 @@ function AdminMovielist() {
   useEffect(() => {
     const loadMovies = async () => {
       try {
-        const data = await fetchMovies(page, resultsPerPage, []);
+        const data = await fetchMovies(page, resultsPerPage);
         setMovies(data.movies);
         setTotalPages(Math.ceil(data.totalNumMovies / resultsPerPage));
       } catch (error) {
@@ -72,7 +72,7 @@ function AdminMovielist() {
         <NewBookForm
           onSuccess={() => {
             setShowForm(false);
-            fetchMovies(page, resultsPerPage, []).then((data) =>
+            fetchMovies(page, resultsPerPage).then((data) =>
               setMovies(data.movies)
             );
           }}
@@ -85,7 +85,7 @@ function AdminMovielist() {
           movie={editingMovie}
           onSuccess={() => {
             setEditingMovie(null);
-            fetchMovies(page, resultsPerPage, []).then((data) =>
+            fetchMovies(page, resultsPerPage).then((data) =>
               setMovies(data.movies)
             );
           }}
