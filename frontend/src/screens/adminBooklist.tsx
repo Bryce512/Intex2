@@ -6,6 +6,8 @@ import Pagination from "../components/pagination";
 import NewBookForm from "../components/newBookForm";
 import EditBookForm from "../components/editBookForm";
 import HeaderHome from "../components/HeaderHome";
+import AuthorizeView, { AuthorizedUser } from "../components/AuthorizeView";
+import Logout from "../components/Logout";
 
 
 
@@ -54,29 +56,48 @@ function AdminBooklist() {
 
   return (
     <>
+      <AuthorizeView>
+      <span>
+        <Logout>
+          Logout <AuthorizedUser value="email" />
+        </Logout>
+      </span>
     <HeaderHome />
       <h1>Admin Library</h1>
 
-      {!showForm && (
-        <button className="btn btn-success mb-3" onClick={() => setShowForm(true)}>Add Book</button>
-      )}
+        {!showForm && (
+          <button
+            className="btn btn-success mb-3"
+            onClick={() => setShowForm(true)}
+          >
+            Add Book
+          </button>
+        )}
 
-      {showForm && (
-        <NewBookForm onSuccess={() => {setShowForm(false); fetchBooks(page, resultsPerPage,[])
-          .then((data) =>
-            setBooks(data.books));
-          }} onCancel={() => setShowForm(false)} />
-      )}  
+        {showForm && (
+          <NewBookForm
+            onSuccess={() => {
+              setShowForm(false);
+              fetchBooks(page, resultsPerPage, []).then((data) =>
+                setBooks(data.books)
+              );
+            }}
+            onCancel={() => setShowForm(false)}
+          />
+        )}
 
-      {editingBook && (
-        <EditBookForm  book={editingBook} onSuccess={() => {
-          setEditingBook(null);
-          fetchBooks(page, resultsPerPage,[])
-          .then((data) =>
-            setBooks(data.books));
-          }} onCancel={() => setEditingBook(null)} />
-      )}
-
+        {editingBook && (
+          <EditBookForm
+            book={editingBook}
+            onSuccess={() => {
+              setEditingBook(null);
+              fetchBooks(page, resultsPerPage, []).then((data) =>
+                setBooks(data.books)
+              );
+            }}
+            onCancel={() => setEditingBook(null)}
+          />
+        )}
 
       <table className="table-auto table table-striped table-bordered">
         <thead className="table-dark">
@@ -128,6 +149,7 @@ function AdminBooklist() {
           setPage(1);
         }}
       />
+    </AuthorizeView>
     </>
   );
  

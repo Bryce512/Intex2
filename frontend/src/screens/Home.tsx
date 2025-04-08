@@ -2,6 +2,8 @@ import { useEffect, useState } from 'react';
 import HeaderHome from '../components/HeaderHome';
 import TopMovieRecommendation from '../components/TopMovie';
 import HorizontalCarousel from '../components/HorizontalCarousel';
+import AuthorizeView, { AuthorizedUser } from "../components/AuthorizeView";
+import Logout from "../components/Logout";
 
 function Home() {
   // State to hold multiple categories of movies
@@ -78,7 +80,13 @@ function Home() {
 
   return (
     <>
-      <HeaderHome />
+        <AuthorizeView>
+        <span>
+          <Logout>
+            Logout <AuthorizedUser value="email" />
+          </Logout>{' '}
+        </span>
+           <HeaderHome />
       <TopMovieRecommendation />
       <br />
       {Object.entries(carouselMovies).map(([category, movies]) => (
@@ -88,6 +96,7 @@ function Home() {
           items={getMovieItems(movies)}
         />
       ))}
+    </AuthorizeView>
     </>
   );
 }
