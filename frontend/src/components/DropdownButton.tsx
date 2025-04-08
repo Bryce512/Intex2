@@ -30,7 +30,7 @@ const AllMoviesDropdown = forwardRef<HTMLButtonElement, Props>(
           ref={buttonRef}
           onClick={onToggle}
         >
-          All Movies
+          Filter
         </button>
         {isOpen && <GenreFilterDropdown dropdownPosition={calculatedPosition} />}
       </>
