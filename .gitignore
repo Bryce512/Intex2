@@ -27,3 +27,4 @@ obj*
 *.sw?
 
 /frontend/public/images/Movie\ Posters
+frontend/public/images/Movie\ Posters/

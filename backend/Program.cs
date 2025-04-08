@@ -25,7 +25,7 @@ builder.Services.AddDbContext<MoviesDbContext>(options =>
     .LogTo(Console.WriteLine, LogLevel.Information));  // Log the SQL queries
 
 
-builder.Services.AddIdentityApiEndpoints<MoviesUser>(options =>
+builder.Services.AddIdentity<MoviesUser, IdentityRole<int>>(options =>
     {
         options.Password.RequireDigit = true;
         options.Password.RequiredLength = 6;
@@ -50,6 +50,8 @@ builder.Services.AddIdentityApiEndpoints<MoviesUser>(options =>
 builder.Services.AddSingleton<IEmailSender<MoviesUser>, DummyEmailSender>();
 
 builder.Services.AddAuthorization();
+builder.Services.AddIdentityApiEndpoints<MoviesUser>()
+    .AddEntityFrameworkStores<MoviesDbContext>();
 
 builder.Services.AddCors(options =>
     options.AddPolicy("AllowReactApp", policy =>

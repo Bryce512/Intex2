@@ -5,7 +5,7 @@ import '../css/adminBooklist.css';
 import Pagination from "../components/pagination";
 import NewBookForm from "../components/newBookForm";
 import EditBookForm from "../components/editBookForm";
-import Header from "../components/Header";
+import HeaderHome from "../components/HeaderHome";
 
 
 
@@ -54,7 +54,7 @@ function AdminBooklist() {
 
   return (
     <>
-    <Header />
+    <HeaderHome />
       <h1>Admin Library</h1>
 
       {!showForm && (
@@ -81,14 +81,15 @@ function AdminBooklist() {
       <table className="table-auto table table-striped table-bordered">
         <thead className="table-dark">
           <tr>
-            <th className="px-4 py-2">Book ID</th>
-            <th className="px-4 py-2">ISBN</th>
+            <th className="px-4 py-2">ID</th>
             <th className="px-4 py-2">Title</th>
-            <th className="px-4 py-2">Author</th>
-            <th className="px-4 py-2">Category</th>
-            <th className="px-4 py-2">Price</th>
-            <th className="px-4 py-2">Publisher</th>
-            <th></th>
+            <th className="px-4 py-2">Type</th>
+            <th className="px-4 py-2">Director</th>
+            <th className="px-4 py-2">Year</th>
+            <th className="px-4 py-2">Rating</th>
+            <th className="px-4 py-2">Duration</th>
+            <th className="px-4 py-2">Genre Tags</th>
+            <th className="px-4 py-2">Actions</th>
           </tr>
         </thead>
         <tbody>

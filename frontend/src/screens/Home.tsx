@@ -1,4 +1,5 @@
-import { useState, useEffect } from 'react';
+import { useEffect, useState } from 'react';
+import HeaderHome from '../components/HeaderHome';
 import TopMovieRecommendation from '../components/TopMovie';
 import HorizontalCarousel from '../components/HorizontalCarousel';
 
@@ -77,6 +78,7 @@ function Home() {
 
   return (
     <>
+      <HeaderHome />
       <TopMovieRecommendation />
       <br />
       {Object.entries(carouselMovies).map(([category, movies]) => (
