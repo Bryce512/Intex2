@@ -1,8 +1,4 @@
 import { useState, useEffect } from 'react';
-import CategoryFilter from '../components/CategoryFilter';
-import Booklist from '../components/booklist';
-import Header from '../components/Header';
-import CartSummary from '../components/CartSummary';
 import TopMovieRecommendation from '../components/TopMovie';
 import HorizontalCarousel from '../components/HorizontalCarousel';
 
@@ -11,8 +7,6 @@ function Home() {
   const [carouselMovies, setCarouselMovies] = useState<{
     [category: string]: { title: string; showId: string }[];
   }>({});
-
-  const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
 
   // Fetch different movie categories
   useEffect(() => {
