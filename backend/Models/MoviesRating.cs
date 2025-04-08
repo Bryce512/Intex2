@@ -6,11 +6,8 @@ namespace intex2.Models;
 
 public partial class MoviesRating
 {
-    [Key]
-
+    
     public int? UserId { get; set; }
-
-    [Key]
 
     public string? ShowId { get; set; }
 

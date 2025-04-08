@@ -1,11 +1,11 @@
-import { Book } from "../types/books";
+import { Book } from '../types/books';
 
 interface fetchBooksResponse {
   books: Book[];
   totalNumBooks: number;
 }
 const API_URL =
-  "https://intex2-backend-ezargqcgdwbgd4hq.westus3-01.azurewebsites.net/BookStore";
+  'https://intex2-backend-ezargqcgdwbgd4hq.westus3-01.azurewebsites.net/BookStore';
 
 export const fetchBooks = async (
   page: number,
@@ -13,33 +13,35 @@ export const fetchBooks = async (
   selectedCategories: string[]
 ): Promise<fetchBooksResponse> => {
   try {
-        const catParams = selectedCategories.map((c) => 
-        `categories=${encodeURIComponent(c)}`)
-        .join("&");
-  
-      const response = await fetch(
-        `${API_URL}/AllBooks?pageNum=${page}&resultsPerPage=${resultsPerPage}${selectedCategories.length ? `&${catParams}` : ""}`
-      );
-    
-      if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
-      }
+    const catParams = selectedCategories
+      .map((c) => `categories=${encodeURIComponent(c)}`)
+      .join('&');
+
+    const response = await fetch(
+      `${API_URL}/AllBooks?pageNum=${page}&resultsPerPage=${resultsPerPage}${
+        selectedCategories.length ? `&${catParams}` : ''
+      }`
+    );
+
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
     const data = await response.json();
-    console.log("Fetched books:", data);
-  
+    console.log('Fetched books:', data);
+
     return data;
-    } catch (error) {
-      console.error("Error fetching books:", error);
-      throw error;
+  } catch (error) {
+    console.error('Error fetching books:', error);
+    throw error;
   }
-}
+};
 
 export const addBook = async (newBook: Book): Promise<Book> => {
   try {
     const response = await fetch(`${API_URL}/AddBook`, {
-      method: "POST",
+      method: 'POST',
       headers: {
-        "Content-Type": "application/json",
+        'Content-Type': 'application/json',
       },
       body: JSON.stringify(newBook),
     });
@@ -49,7 +51,7 @@ export const addBook = async (newBook: Book): Promise<Book> => {
 
     return await response.json();
   } catch (error) {
-    console.error("Error adding book:", error);
+    console.error('Error adding book:', error);
     throw error;
   }
 };
@@ -60,9 +62,9 @@ export const updateBook = async (
 ): Promise<Book> => {
   try {
     const response = await fetch(`${API_URL}/UpdateBook/${bookId}`, {
-      method: "PUT",
+      method: 'PUT',
       headers: {
-        "Content-Type": "application/json",
+        'Content-Type': 'application/json',
       },
       body: JSON.stringify(updatedBook),
     });
@@ -72,22 +74,21 @@ export const updateBook = async (
 
     return await response.json();
   } catch (error) {
-    console.error("Error updating book:", error);
+    console.error('Error updating book:', error);
     throw error;
   }
-
-}
+};
 
 export const deleteBook = async (bookId: number): Promise<void> => {
   try {
     const response = await fetch(`${API_URL}/DeleteBook/${bookId}`, {
-      method: "DELETE",
+      method: 'DELETE',
     });
     if (!response.ok) {
       throw new Error(`HTTP error! status: ${response.status}`);
     }
   } catch (error) {
-    console.error("Error deleting book:", error);
+    console.error('Error deleting book:', error);
     throw error;
   }
-}
+};

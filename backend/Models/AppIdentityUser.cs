@@ -1,19 +1,12 @@
-﻿using Microsoft.AspNetCore.Identity;
-using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
+using Microsoft.AspNetCore.Identity;
 
-namespace intex2.Models
+namespace intex2.Models;
+
+public class AppIdentityUser : IdentityUser<int>
 {
-    public class MoviesUser
-    {
-        // Remove duplicate Id property - already defined in IdentityUser<int>
-        // [Key] attribute isn't needed as it's defined in the base class
-        
-        // Custom properties
-        [Key]
-        [Required]
-        [ForeignKey(nameof(AppIdentityUser))] 
-        public int UserId { get; set; }
+
+
+    // No need to add properties here unless you want to extend IdentityUser
         public string Name { get; set; } = string.Empty;
         public string Gender { get; set; } = string.Empty;
         public string City { get; set; } = string.Empty;
@@ -32,6 +25,5 @@ namespace intex2.Models
         public bool Hulu { get; set; }
         public bool AppleTv { get; set; }
         public bool Peacock { get; set; }
-        
-    }
 }
+
