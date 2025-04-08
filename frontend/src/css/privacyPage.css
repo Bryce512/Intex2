@@ -1,0 +1,40 @@
+.privacy-page {
+  background-color: #011627;
+  color: #f0f4f8;
+  min-height: 100vh;
+  padding: 40px 20px;
+  font-family: sans-serif;
+}
+
+.privacy-container {
+  max-width: 800px;
+  margin: 0 auto;
+  background-color: transparent; /* no box background */
+  text-align: left;
+}
+
+.privacy-container h1,
+.privacy-container h2,
+.privacy-container h3 {
+  color: #ffffff;
+  margin-top: 1.5em;
+}
+
+.privacy-container p,
+.privacy-container li {
+  line-height: 1.7;
+  font-size: 1rem;
+}
+
+.privacy-container ul {
+  padding-left: 1.5em;
+  margin-bottom: 1.5em;
+}
+
+.privacy-container li {
+  margin-bottom: 0.5em;
+}
+
+.privacy-container strong {
+  color: #ffffff;
+}
