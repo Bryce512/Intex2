@@ -36,9 +36,10 @@ const HorizontalCarousel: React.FC<HorizontalCarouselProps> = ({
       {title && <h2 className={styles.title}>{title}</h2>}
 
       <div className={styles.carouselContainer}>
-        <button className={styles.navButtonLeft} onClick={() => scroll('left')}>
-          &#8249;
-        </button>
+        <button
+          className={styles.navButtonLeft}
+          onClick={() => scroll('left')}
+        ></button>
 
         <div ref={scrollRef} className={styles.carousel}>
           {items.map((item) => (
@@ -60,9 +61,7 @@ const HorizontalCarousel: React.FC<HorizontalCarouselProps> = ({
         <button
           className={styles.navButtonRight}
           onClick={() => scroll('right')}
-        >
-          &#8250;
-        </button>
+        ></button>
       </div>
     </div>
   );
