@@ -25,3 +25,5 @@ obj*
 *.njsproj
 *.sln
 *.sw?
+
+frontend/public/images/Movie\ Posters/
