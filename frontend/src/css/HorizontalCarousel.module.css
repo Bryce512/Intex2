@@ -66,6 +66,8 @@
   height: 4rem;
   background: transparent;
   border: none;
+  cursor: pointer;
+  transition: transform 0.2s ease;
 }
 
 .navButtonLeft::before,
@@ -76,6 +78,7 @@
   height: 0;
   margin: auto;
   border-style: solid;
+  transition: border-color 0.2s ease;
 }
 
 .navButtonLeft::before {
@@ -86,6 +89,19 @@
 .navButtonRight::before {
   border-width: 20px 0 20px 28px;
   border-color: transparent transparent transparent #c4cbca;
+}
+
+.navButtonLeft:hover,
+.navButtonRight:hover {
+  transform: translateY(-50%) scale(1.3);
+}
+
+.navButtonLeft:hover::before {
+  border-color: transparent #aeb5b5 transparent transparent;
+}
+
+.navButtonRight:hover::before {
+  border-color: transparent transparent transparent #aeb5b5;
 }
 
 .navButtonLeft {
