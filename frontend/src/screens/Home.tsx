@@ -2,8 +2,8 @@ import { useEffect, useState } from 'react';
 import HeaderHome from '../components/HeaderHome';
 import TopMovieRecommendation from '../components/TopMovie';
 import HorizontalCarousel from '../components/HorizontalCarousel';
-import AuthorizeView, { AuthorizedUser } from "../components/AuthorizeView";
-import Logout from "../components/Logout";
+import AuthorizeView, { AuthorizedUser } from '../components/AuthorizeView';
+import Logout from '../components/Logout';
 import Footer from '../components/Footer';
 
 function Home() {
@@ -63,7 +63,6 @@ function Home() {
           console.error(`Error fetching ${key}:`, error);
         }
       }
-
       setCarouselMovies(results);
     };
 
@@ -81,24 +80,24 @@ function Home() {
 
   return (
     <>
-      <AuthorizeView>
-        <span>
-          <Logout>
-            Logout <AuthorizedUser value="email" />
-          </Logout>{' '}
-        </span>
-        <HeaderHome />
-        <TopMovieRecommendation />
-        <br />
-        {Object.entries(carouselMovies).map(([category, movies]) => (
-          <HorizontalCarousel
-            key={category}
-            title={category}
-            items={getMovieItems(movies)}
-          />
-        ))}
-        <Footer />
-      </AuthorizeView>
+      {/* <AuthorizeView> */}
+      <span>
+        <Logout>
+          Logout <AuthorizedUser value="email" />
+        </Logout>{' '}
+      </span>
+      <HeaderHome />
+      <TopMovieRecommendation />
+      <br />
+      {Object.entries(carouselMovies).map(([category, movies]) => (
+        <HorizontalCarousel
+          key={category}
+          title={category}
+          items={getMovieItems(movies)}
+        />
+      ))}
+      <Footer />
+      {/* </AuthorizeView> */}
     </>
   );
 }

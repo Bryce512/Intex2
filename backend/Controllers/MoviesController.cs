@@ -55,16 +55,16 @@ namespace intex2.Controllers
                 // Mock data for testing
                 var mockMovies = new List<object>
                 {
-                    new { ShowId = "1", Title = "3022" },
-                    new { ShowId = "2", Title = "A Mission in an Old Movie" },
-                    new { ShowId = "3", Title = "Dogs of Berlin" },
-                    new { ShowId = "4", Title = "Afflicted" },
-                    new { ShowId = "5", Title = "Feel Rich" },
-                    new { ShowId = "6", Title = "100 Hotter" },
-                    new { ShowId = "7", Title = "Follow This" },
-                    new { ShowId = "8", Title = "1 Chance 2 Dance" },
-                    new { ShowId = "9", Title = "Slow Country" },
-                    new { ShowId = "10", Title = "Small Town Crime" }
+                    new { ShowId = "s1", Title = "3022" },
+                    new { ShowId = "s2", Title = "A Mission in an Old Movie" },
+                    new { ShowId = "s3", Title = "Dogs of Berlin" },
+                    new { ShowId = "s4", Title = "Afflicted" },
+                    new { ShowId = "s5", Title = "Feel Rich" },
+                    new { ShowId = "s6", Title = "100 Hotter" },
+                    new { ShowId = "s7", Title = "Follow This" },
+                    new { ShowId = "s8", Title = "1 Chance 2 Dance" },
+                    new { ShowId = "s9", Title = "Slow Country" },
+                    new { ShowId = "s10", Title = "Small Town Crime" }
                 };
                 return Ok(mockMovies);
             }
@@ -104,16 +104,16 @@ namespace intex2.Controllers
                 // Mock data for testing
                 var mockMovies = new List<object>
                 {
-                    new { ShowId = "1", Title = "Small Chops" },
-                    new { ShowId = "2", Title = "A Mission in an Old Movie" },
-                    new { ShowId = "3", Title = "Dogs of Berlin" },
-                    new { ShowId = "4", Title = "Afflicted" },
-                    new { ShowId = "5", Title = "Feel Rich" },
-                    new { ShowId = "6", Title = "100 Hotter" },
-                    new { ShowId = "7", Title = "Follow This" },
-                    new { ShowId = "8", Title = "1 Chance 2 Dance" },
-                    new { ShowId = "9", Title = "Slow Country" },
-                    new { ShowId = "10", Title = "Small Town Crime" }
+                    new { ShowId = "s1", Title = "Small Chops" },
+                    new { ShowId = "s2", Title = "A Mission in an Old Movie" },
+                    new { ShowId = "s3", Title = "Dogs of Berlin" },
+                    new { ShowId = "s4", Title = "Afflicted" },
+                    new { ShowId = "s5", Title = "Feel Rich" },
+                    new { ShowId = "s6", Title = "100 Hotter" },
+                    new { ShowId = "s7", Title = "Follow This" },
+                    new { ShowId = "s8", Title = "1 Chance 2 Dance" },
+                    new { ShowId = "s9", Title = "Slow Country" },
+                    new { ShowId = "s10", Title = "Small Town Crime" }
                 };
                 return Ok(mockMovies);
             }
@@ -153,16 +153,16 @@ namespace intex2.Controllers
                 // Mock data for testing
                 var mockMovies = new List<object>
                 {
-                    new { ShowId = "1", Title = "Shooter" },
-                    new { ShowId = "2", Title = "A Mission in an Old Movie" },
-                    new { ShowId = "3", Title = "Dogs of Berlin" },
-                    new { ShowId = "4", Title = "Afflicted" },
-                    new { ShowId = "5", Title = "Feel Rich" },
-                    new { ShowId = "6", Title = "100 Hotter" },
-                    new { ShowId = "7", Title = "Follow This" },
-                    new { ShowId = "8", Title = "1 Chance 2 Dance" },
-                    new { ShowId = "9", Title = "Slow Country" },
-                    new { ShowId = "10", Title = "Small Town Crime" }
+                    new { ShowId = "s1", Title = "Shooter" },
+                    new { ShowId = "s2", Title = "A Mission in an Old Movie" },
+                    new { ShowId = "s3", Title = "Dogs of Berlin" },
+                    new { ShowId = "s4", Title = "Afflicted" },
+                    new { ShowId = "s5", Title = "Feel Rich" },
+                    new { ShowId = "s6", Title = "100 Hotter" },
+                    new { ShowId = "s7", Title = "Follow This" },
+                    new { ShowId = "s8", Title = "1 Chance 2 Dance" },
+                    new { ShowId = "s9", Title = "Slow Country" },
+                    new { ShowId = "s10", Title = "Small Town Crime" }
                 };
                 return Ok(mockMovies);
             }
@@ -202,16 +202,16 @@ namespace intex2.Controllers
                 // Mock data for testing
                 var mockMovies = new List<object>
                 {
-                    new { ShowId = "1", Title = "Scissor Seven" },
-                    new { ShowId = "2", Title = "A Mission in an Old Movie" },
-                    new { ShowId = "3", Title = "Dogs of Berlin" },
-                    new { ShowId = "4", Title = "Afflicted" },
-                    new { ShowId = "5", Title = "Feel Rich" },
-                    new { ShowId = "6", Title = "100 Hotter" },
-                    new { ShowId = "7", Title = "Follow This" },
-                    new { ShowId = "8", Title = "1 Chance 2 Dance" },
-                    new { ShowId = "9", Title = "Slow Country" },
-                    new { ShowId = "10", Title = "Small Town Crime" }
+                    new { ShowId = "s1", Title = "Scissor Seven" },
+                    new { ShowId = "s2", Title = "A Mission in an Old Movie" },
+                    new { ShowId = "s3", Title = "Dogs of Berlin" },
+                    new { ShowId = "s4", Title = "Afflicted" },
+                    new { ShowId = "s5", Title = "Feel Rich" },
+                    new { ShowId = "s6", Title = "100 Hotter" },
+                    new { ShowId = "s7", Title = "Follow This" },
+                    new { ShowId = "s8", Title = "1 Chance 2 Dance" },
+                    new { ShowId = "s9", Title = "Slow Country" },
+                    new { ShowId = "s10", Title = "Small Town Crime" }
                 };
                 return Ok(mockMovies);
             }
@@ -251,16 +251,16 @@ namespace intex2.Controllers
                 // Mock data for testing
                 var mockMovies = new List<object>
                 {
-                    new { ShowId = "1", Title = "Sweet Girl" },
-                    new { ShowId = "2", Title = "A Mission in an Old Movie" },
-                    new { ShowId = "3", Title = "Dogs of Berlin" },
-                    new { ShowId = "4", Title = "Afflicted" },
-                    new { ShowId = "5", Title = "Feel Rich" },
-                    new { ShowId = "6", Title = "100 Hotter" },
-                    new { ShowId = "7", Title = "Follow This" },
-                    new { ShowId = "8", Title = "1 Chance 2 Dance" },
-                    new { ShowId = "9", Title = "Slow Country" },
-                    new { ShowId = "10", Title = "Small Town Crime" }
+                    new { ShowId = "s1", Title = "Sweet Girl" },
+                    new { ShowId = "s2", Title = "A Mission in an Old Movie" },
+                    new { ShowId = "s3", Title = "Dogs of Berlin" },
+                    new { ShowId = "s4", Title = "Afflicted" },
+                    new { ShowId = "s5", Title = "Feel Rich" },
+                    new { ShowId = "s6", Title = "100 Hotter" },
+                    new { ShowId = "s7", Title = "Follow This" },
+                    new { ShowId = "s8", Title = "1 Chance 2 Dance" },
+                    new { ShowId = "s9", Title = "Slow Country" },
+                    new { ShowId = "s10", Title = "Small Town Crime" }
                 };
                 return Ok(mockMovies);
             }
