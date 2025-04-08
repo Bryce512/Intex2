@@ -31,10 +31,10 @@ builder.Services.AddDbContext<AuthDbContext>(options =>
 builder.Services.AddCors(options =>
     options.AddPolicy("AllowReactApp", policy =>
     {
-        policy.AllowAnyOrigin()
+        policy.WithOrigins("http://localhost:3000")
             .AllowAnyMethod()
-            .AllowAnyHeader();
-        // .AllowCredentials(); // Add this if you're using credentials
+            .AllowAnyHeader()
+            .AllowCredentials(); // Add this if you're using credentials
     }));
 
 builder.Services.AddAuthorization();
@@ -78,7 +78,6 @@ builder.Services.ConfigureApplicationCookie(options =>
     options.LogoutPath = "/logout"; // Path to the logout page
     options.AccessDeniedPath = "/AccessDenied";  // Optional: Path to handle access-denied scenarios
     options.Cookie.SecurePolicy = CookieSecurePolicy.Always;
-
 });
 
 // Added DbContexts for each of the .db recommendation files to builder
@@ -162,9 +161,6 @@ app.MapGet("/pingauth", (ClaimsPrincipal user) =>
     var email = user.FindFirstValue(ClaimTypes.Email) ?? "unknown@example.com"; // Ensure it's never null
     return Results.Json(new { email = email }); // Return as JSON
 }).RequireAuthorization();
-
-
-
 
 
 app.Run();
