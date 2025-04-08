@@ -19,7 +19,6 @@ export const handleLogin = async (
 ): Promise<void> => {
   e.preventDefault();
   setErrorMessage('');
-  setErrorMessage('');
   setLoading(true);
 
   try {
@@ -37,23 +36,21 @@ export const handleLogin = async (
           twoFactorCode: 'string',
           twoFactorRecoveryCode: 'string',
         }),
+        credentials: 'include', // ✅ This must be outside the body!
       }
     );
 
-    console.log('Login response:', response);
+
     console.log('Login response:', response);
 
     if (!response.ok) {
       const errorData = await response.json();
       throw new Error(errorData.message || 'Login failed');
-      throw new Error(errorData.message || 'Login failed');
     }
 
     // If the login is successful, redirect the user
     navigate('/');
-    navigate('/');
   } catch (error: any) {
-    setErrorMessage(error.message || 'Failed to login. Please try again.');
     setErrorMessage(error.message || 'Failed to login. Please try again.');
   } finally {
     setLoading(false);
