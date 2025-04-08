@@ -1,4 +1,12 @@
+import { Movie } from '../types/movies';
+
+interface fetchMoviesResponse {
+  movies: Movie[];
+  totalNumMovies: number;
+}
+
 // const API_URL = "https://intex2-backend-ezargqcgdwbgd4hq.westus3-01.azurewebsites.net/User";
+const API_URL = 'https://localhost:5000'; // For local development
 const API_URL = 'https://localhost:5000'; // For local development
 
 // Handle login using plain username/password
@@ -12,6 +20,7 @@ export const handleLogin = async (
 ): Promise<void> => {
   e.preventDefault();
   setErrorMessage('');
+  setErrorMessage('');
   setLoading(true);
 
   try {
@@ -19,6 +28,7 @@ export const handleLogin = async (
     const response = await fetch(`${API_URL}/login`, {
       method: 'POST',
       headers: {
+        'Content-Type': 'application/json', // Send JSON data
         'Content-Type': 'application/json', // Send JSON data
       },
       body: JSON.stringify({
@@ -30,15 +40,19 @@ export const handleLogin = async (
     });
 
     console.log('Login response:', response);
+    console.log('Login response:', response);
 
     if (!response.ok) {
       const errorData = await response.json();
+      throw new Error(errorData.message || 'Login failed');
       throw new Error(errorData.message || 'Login failed');
     }
 
     // If the login is successful, redirect the user
     navigate('/');
+    navigate('/');
   } catch (error: any) {
+    setErrorMessage(error.message || 'Failed to login. Please try again.');
     setErrorMessage(error.message || 'Failed to login. Please try again.');
   } finally {
     setLoading(false);
@@ -103,13 +117,16 @@ export const handleRegister = async (
 ) => {
   setLoading(true);
   setErrorMessage('');
+  setErrorMessage('');
 
+  console.log('Registering user:', userData);
   console.log('Registering user:', userData);
 
   try {
     const response = await fetch(`${API_URL}/register`, {
       method: "POST",
       headers: {
+        'Content-Type': 'application/json',
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
@@ -120,8 +137,10 @@ export const handleRegister = async (
 
     // Check if the response is JSON before trying to parse it
     const contentType = response.headers.get('content-type');
+    const contentType = response.headers.get('content-type');
     let data;
 
+    if (contentType && contentType.includes('application/json')) {
     if (contentType && contentType.includes('application/json')) {
       data = await response.json();
       console.log('JSON Response:', data);
@@ -159,5 +178,80 @@ export const handleRegister = async (
     console.error('Registration error:', error);
   } finally {
     setLoading(false);
+  }
+};
+
+export const fetchMovies = async (
+  page: number,
+  resultsPerPage: number
+): Promise<fetchMoviesResponse> => {
+  const response = await fetch(
+    `${API_URL}/Movies/AllMovies?pageNum=${page}&resultsPerPage=${resultsPerPage}`
+  );
+
+  if (!response.ok) {
+    throw new Error(`HTTP error! status: ${response.status}`);
+  }
+  const data = await response.json();
+  console.log('Fetched movies:', data);
+
+  return data;
+};
+
+
+export const addMovie = async (newMovie: Movie): Promise<Movie> => {
+  try {
+    const response = await fetch(`${API_URL}/Movies/AddMovie`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(newMovie),
+    });
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+
+    return await response.json();
+  } catch (error) {
+    console.error('Error adding movie:', error);
+    throw error;
+  }
+};
+
+export const updateMovie = async (
+  showId: string,
+  updatedMovie: Movie
+): Promise<Movie> => {
+  try {
+    const response = await fetch(`${API_URL}/Movies/UpdateMovie/${showId}`, {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(updatedMovie),
+    });
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+
+    return await response.json();
+  } catch (error) {
+    console.error('Error updating movie:', error);
+    throw error;
+  }
+};
+
+export const deleteMovie = async (showId: string): Promise<void> => {
+  try {
+    const response = await fetch(`${API_URL}/Movies/DeleteMovie/${showId}`, {
+      method: 'DELETE',
+    });
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+  } catch (error) {
+    console.error('Error deleting movie:', error);
+    throw error;
   }
 };

@@ -7,7 +7,7 @@ namespace intex2.Models;
 public partial class MoviesTitle
 {
 
-    public string? ShowId { get; set; }
+    public string ShowId { get; set; }
 
     public string? Type { get; set; }
 
