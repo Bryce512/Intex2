@@ -29,7 +29,10 @@ namespace intex2.Controllers
             FantasyRecommendationsDbContext fantasyRecommendationsContext,
             ChildrenRecommendationsDbContext childrenRecommendationsContext,
             ComedyRecommendationsDbContext comedyRecommendationsContext,
-            ActionRecommendationsDbContext actionRecommendationsContext, MoviesDbContext moviesContext, UserManager<AppIdentityUser> userManager, SignInManager<AppIdentityUser> signInManager)
+            ActionRecommendationsDbContext actionRecommendationsContext,
+            MoviesDbContext moviesContext,
+            UserManager<AppIdentityUser> userManager,
+            SignInManager<AppIdentityUser> signInManager)
         {
             _topRatedRecommendationsContext = topRatedRecommendationsContext;
             _userRecommendationsContext = userRecommendationsContext;
