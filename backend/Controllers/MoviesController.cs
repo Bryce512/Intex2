@@ -20,8 +20,8 @@ namespace intex2.Controllers
         private readonly ComedyRecommendationsDbContext _comedyRecommendationsContext;
         private readonly ActionRecommendationsDbContext _actionRecommendationsContext;
         private readonly MoviesDbContext _moviesContext;
-        private readonly UserManager<MoviesUser> _userManager;
-        private readonly SignInManager<MoviesUser> _signInManager;
+        private readonly UserManager<AppIdentityUser> _userManager;
+        private readonly SignInManager<AppIdentityUser> _signInManager;
 
         public MoviesController(TopRatedRecommendationsDbContext topRatedRecommendationsContext, UserRecommendationsDbContext userRecommendationsContext, PopularRecommendationsDbContext popularRecommendationsContext, FantasyRecommendationsDbContext fantasyRecommendationsContext, ChildrenRecommendationsDbContext childrenRecommendationsContext, ComedyRecommendationsDbContext comedyRecommendationsContext, ActionRecommendationsDbContext actionRecommendationsContext, MoviesDbContext moviesContext, UserManager<MoviesUser> userManager, SignInManager<MoviesUser> signInManager)
         {
@@ -33,8 +33,6 @@ namespace intex2.Controllers
             _comedyRecommendationsContext = comedyRecommendationsContext;
             _actionRecommendationsContext = actionRecommendationsContext;
             _moviesContext = moviesContext;
-            _userManager = userManager;
-            _signInManager = signInManager;
         }
 
 
@@ -64,7 +62,7 @@ namespace intex2.Controllers
             }
 
             // Step 2: Look up this user's recommendations
-            var recs = _actionRecommendationsContext.Recommendations.FirstOrDefault(r => r.UserId == user.UserId);
+            var recs = _actionRecommendationsContext.Recommendations.FirstOrDefault(r => r.UserId == user.Id);
 
             if (recs == null)
             {
@@ -113,7 +111,7 @@ namespace intex2.Controllers
             }
 
             // Step 2: Look up this user's recommendations
-            var recs = _comedyRecommendationsContext.Recommendations.FirstOrDefault(r => r.UserId == user.UserId);
+            var recs = _comedyRecommendationsContext.Recommendations.FirstOrDefault(r => r.UserId == user.Id);
 
             if (recs == null)
             {
@@ -162,7 +160,7 @@ namespace intex2.Controllers
             }
 
             // Step 2: Look up this user's recommendations
-            var recs = _childrenRecommendationsContext.Recommendations.FirstOrDefault(r => r.UserId == user.UserId);
+            var recs = _childrenRecommendationsContext.Recommendations.FirstOrDefault(r => r.UserId == user.Id);
 
             if (recs == null)
             {
@@ -211,7 +209,7 @@ namespace intex2.Controllers
             }
 
             // Step 2: Look up this user's recommendations
-            var recs = _fantasyRecommendationsContext.Recommendations.FirstOrDefault(r => r.UserId == user.UserId);
+            var recs = _fantasyRecommendationsContext.Recommendations.FirstOrDefault(r => r.UserId == user.Id);
 
             if (recs == null)
             {
@@ -260,7 +258,7 @@ namespace intex2.Controllers
             }
 
             // Step 2: Look up this user's recommendations
-            var recs = _userRecommendationsContext.Recommendations.FirstOrDefault(r => r.UserId == user.UserId);
+            var recs = _userRecommendationsContext.Recommendations.FirstOrDefault(r => r.UserId == user.Id);
 
             if (recs == null)
             {
