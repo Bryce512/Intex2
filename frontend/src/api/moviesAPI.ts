@@ -21,18 +21,22 @@ export const handleLogin = async (
   setLoading(true);
 
   try {
-    const response = await fetch(`${API_URL}/login`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json', // Send JSON data
-      },
-      body: JSON.stringify({
-        email: username,
-        password: password,
-        twoFactorCode: 'string',
-        twoFactorRecoveryCode: 'string',
-      }),
-    });
+
+    const response = await fetch(
+      `${API_URL}/login?useCookies=true&useSessionCookies=false`,
+      {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json', // Send JSON data
+        },
+        body: JSON.stringify({
+          email: username,
+          password: password,
+          twoFactorCode: 'string',
+          twoFactorRecoveryCode: 'string',
+        }),
+      }
+    );
 
     console.log('Login response:', response);
 
