@@ -7,6 +7,7 @@ interface fetchMoviesResponse {
 
 // const API_URL = "https://intex2-backend-ezargqcgdwbgd4hq.westus3-01.azurewebsites.net/User";
 const API_URL = 'https://localhost:5000'; // For local development
+const API_URL = 'https://localhost:5000'; // For local development
 
 // Handle login using plain username/password
 export const handleLogin = async (
@@ -19,6 +20,7 @@ export const handleLogin = async (
 ): Promise<void> => {
   e.preventDefault();
   setErrorMessage('');
+  setErrorMessage('');
   setLoading(true);
 
   try {
@@ -26,6 +28,7 @@ export const handleLogin = async (
     const response = await fetch(`${API_URL}/login`, {
       method: 'POST',
       headers: {
+        'Content-Type': 'application/json', // Send JSON data
         'Content-Type': 'application/json', // Send JSON data
       },
       body: JSON.stringify({
@@ -37,15 +40,19 @@ export const handleLogin = async (
     });
 
     console.log('Login response:', response);
+    console.log('Login response:', response);
 
     if (!response.ok) {
       const errorData = await response.json();
+      throw new Error(errorData.message || 'Login failed');
       throw new Error(errorData.message || 'Login failed');
     }
 
     // If the login is successful, redirect the user
     navigate('/');
+    navigate('/');
   } catch (error: any) {
+    setErrorMessage(error.message || 'Failed to login. Please try again.');
     setErrorMessage(error.message || 'Failed to login. Please try again.');
   } finally {
     setLoading(false);
@@ -110,15 +117,20 @@ export const handleRegister = async (
 ) => {
   setLoading(true);
   setErrorMessage('');
+  setErrorMessage('');
 
+  console.log('Registering user:', userData);
   console.log('Registering user:', userData);
 
   try {
     const response = await fetch(`${API_URL}/register`, {
       method: "POST",
-    const response = await fetch(`${API_URL}/Movies/register`, {
+=========
+    const response = await fetch(`${API_URL}/movies/register`, {
       method: 'POST',
+>>>>>>>>> Temporary merge branch 2
       headers: {
+        'Content-Type': 'application/json',
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
@@ -129,8 +141,10 @@ export const handleRegister = async (
 
     // Check if the response is JSON before trying to parse it
     const contentType = response.headers.get('content-type');
+    const contentType = response.headers.get('content-type');
     let data;
 
+    if (contentType && contentType.includes('application/json')) {
     if (contentType && contentType.includes('application/json')) {
       data = await response.json();
       console.log('JSON Response:', data);

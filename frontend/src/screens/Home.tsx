@@ -4,6 +4,7 @@ import TopMovieRecommendation from '../components/TopMovie';
 import HorizontalCarousel from '../components/HorizontalCarousel';
 import AuthorizeView, { AuthorizedUser } from "../components/AuthorizeView";
 import Logout from "../components/Logout";
+import Footer from '../components/Footer';
 
 function Home() {
   // State to hold multiple categories of movies
@@ -80,23 +81,24 @@ function Home() {
 
   return (
     <>
-        <AuthorizeView>
+      <AuthorizeView>
         <span>
           <Logout>
             Logout <AuthorizedUser value="email" />
           </Logout>{' '}
         </span>
-           <HeaderHome />
-      <TopMovieRecommendation />
-      <br />
-      {Object.entries(carouselMovies).map(([category, movies]) => (
-        <HorizontalCarousel
-          key={category}
-          title={category}
-          items={getMovieItems(movies)}
-        />
-      ))}
-    </AuthorizeView>
+        <HeaderHome />
+        <TopMovieRecommendation />
+        <br />
+        {Object.entries(carouselMovies).map(([category, movies]) => (
+          <HorizontalCarousel
+            key={category}
+            title={category}
+            items={getMovieItems(movies)}
+          />
+        ))}
+        <Footer />
+      </AuthorizeView>
     </>
   );
 }
