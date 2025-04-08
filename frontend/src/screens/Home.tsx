@@ -97,6 +97,7 @@ function Home() {
         />
       ))}
     </AuthorizeView>
+      <Footer />
     </>
   );
 }
