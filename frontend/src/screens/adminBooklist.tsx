@@ -55,16 +55,13 @@ function AdminBooklist() {
     }
 
   return (
-    <AuthorizeView>
+    <>
+      <AuthorizeView>
       <span>
         <Logout>
           Logout <AuthorizedUser value="email" />
         </Logout>
       </span>
-      <>
-        <Header />
-        <h1>Admin Library</h1>
-    <>
     <HeaderHome />
       <h1>Admin Library</h1>
 
@@ -152,7 +149,7 @@ function AdminBooklist() {
           setPage(1);
         }}
       />
-    </AuthorizeView></>
+    </AuthorizeView>
     </>
   );
  
