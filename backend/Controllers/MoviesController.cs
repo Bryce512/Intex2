@@ -139,6 +139,118 @@ namespace intex2.Controllers
 
             return Ok(movies);
         }
+        
+        [HttpGet("AllMovies")]
+        public IActionResult GetBooks(int pageNum , int resultsPerPage, [FromQuery] List<string>? categories = null)
+        {
+            var query = _moviesContext.MoviesTitles.AsQueryable();
+
+            if (categories != null && categories.Any()) {
+            }
+
+            var totalMovies = query.Count();
+
+            var movies =  query
+                .Skip((pageNum-1) * resultsPerPage)
+                .Take(resultsPerPage)
+                .ToList();
+            
+
+            return Ok(new
+            {
+                movies = movies,
+                totalNumMovies = totalMovies
+            });
+        }
+
+        // [HttpGet ("getCategories")]
+        // public List<string> GetCategories()
+        // {
+        //     var categories = _context.Books
+        //         .Select(x => x.Category)
+        //         .Distinct()
+        //         .ToList();
+        //
+        //     return categories;
+        // }
+
+        [HttpPost("AddMovie")]
+        public IActionResult AddMovie([FromBody] MoviesTitle newMovie)
+        {
+            _moviesContext.MoviesTitles.Add(newMovie);
+            _moviesContext.SaveChanges();
+            return Ok(newMovie);
+        }
+
+        [HttpDelete("DeleteMovie/{id}")]
+        public IActionResult DeleteMovie(string id)
+        {
+            var movie = _moviesContext.MoviesTitles.Find(id);
+            if (movie == null)
+            {
+                return NotFound();
+            }
+
+            _moviesContext.MoviesTitles.Remove(movie);
+            _moviesContext.SaveChanges();
+            return Ok(movie);
+        }
+
+        [HttpPut("UpdateMovie/{id}")]
+        public IActionResult UpdateMovie(string id,[FromBody] MoviesTitle updatedMovie)
+        {
+            var movie = _moviesContext.MoviesTitles.Find(id);
+            if (movie == null)
+            {
+                return NotFound();
+            }
+            movie.Title = updatedMovie.Title;
+            movie.Director = updatedMovie.Director;
+            movie.Cast = updatedMovie.Cast;
+            movie.Country = updatedMovie.Country;
+            movie.ReleaseYear = updatedMovie.ReleaseYear;
+            movie.Type = updatedMovie.Type;
+            movie.Rating = updatedMovie.Rating;
+            movie.Duration = updatedMovie.Duration;
+            movie.Description = updatedMovie.Description;
+            movie.Action = updatedMovie.Action;
+            movie.Adventure = updatedMovie.Adventure;
+            movie.AnimeSeriesInternationalTvShows = updatedMovie.AnimeSeriesInternationalTvShows;
+            movie.BritishTvShowsDocuseriesInternationalTvShows = updatedMovie.BritishTvShowsDocuseriesInternationalTvShows;
+            movie.Children = updatedMovie.Children;
+            movie.Comedies = updatedMovie.Comedies;
+            movie.ComediesDramasInternationalMovies = updatedMovie.ComediesDramasInternationalMovies;
+            movie.ComediesInternationalMovies = updatedMovie.ComediesInternationalMovies;
+            movie.ComediesRomanticMovies = updatedMovie.ComediesRomanticMovies;
+            movie.CrimeTvShowsDocuseries = updatedMovie.CrimeTvShowsDocuseries;
+            movie.Documentaries = updatedMovie.Documentaries;
+            movie.DocumentariesInternationalMovies = updatedMovie.DocumentariesInternationalMovies;
+            movie.Docuseries = updatedMovie.Docuseries;
+            movie.Dramas = updatedMovie.Dramas;
+            movie.DramasInternationalMovies = updatedMovie.DramasInternationalMovies;
+            movie.DramasRomanticMovies = updatedMovie.DramasRomanticMovies;
+            movie.FamilyMovies = updatedMovie.FamilyMovies;
+            movie.Fantasy = updatedMovie.Fantasy;
+            movie.HorrorMovies = updatedMovie.HorrorMovies;
+            movie.InternationalMoviesThrillers = updatedMovie.InternationalMoviesThrillers;
+            movie.InternationalTvShowsRomanticTvShowsTvDramas = updatedMovie.InternationalTvShowsRomanticTvShowsTvDramas;
+            movie.KidsTv = updatedMovie.KidsTv;
+            movie.LanguageTvShows = updatedMovie.LanguageTvShows;
+            movie.Musicals = updatedMovie.Musicals;
+            movie.NatureTv = updatedMovie.NatureTv;
+            movie.RealityTv = updatedMovie.RealityTv;
+            movie.Spirituality = updatedMovie.Spirituality;
+            movie.TvAction = updatedMovie.TvAction;
+            movie.TvComedies = updatedMovie.TvComedies;
+            movie.TvDramas = updatedMovie.TvDramas;
+            movie.TalkShowsTvComedies = updatedMovie.TalkShowsTvComedies;
+            movie.Thrillers = updatedMovie.Thrillers;
+
+            _moviesContext.MoviesTitles.Update(movie);
+            _moviesContext.SaveChanges();
+            return Ok(movie);
+        }
+        
     }
 }
 

@@ -50,8 +50,7 @@ builder.Services.AddIdentity<MoviesUser, IdentityRole<int>>(options =>
 builder.Services.AddSingleton<IEmailSender<MoviesUser>, DummyEmailSender>();
 
 builder.Services.AddAuthorization();
-builder.Services.AddIdentityApiEndpoints<MoviesUser>()
-    .AddEntityFrameworkStores<MoviesDbContext>();
+
 
 builder.Services.AddCors(options =>
     options.AddPolicy("AllowReactApp", policy =>

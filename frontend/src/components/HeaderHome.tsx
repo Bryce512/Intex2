@@ -1,15 +1,15 @@
-import { useNavigate } from "react-router-dom";
-import { useState } from "react";
-import AllMoviesDropdown from "./DropdownButton";
-import SearchBar from "./SearchBar";
-import UserInfo from "./UserInfo";
-import styles from "../css/Header.module.css";
+import { useNavigate } from 'react-router-dom';
+import { useState } from 'react';
+import AllMoviesDropdown from './DropdownButton';
+import SearchBar from './SearchBar';
+import UserInfo from './UserInfo';
+import styles from '../css/Header.module.css';
 
 export default function Header() {
   const navigate = useNavigate();
 
   // You can later pull this from props, context, or auth state
-  const isAdmin = false; // Set to true to see the "Manage Movies" button
+  const isAdmin = true; // Set to true to see the "Manage Movies" button
 
   return (
     <header className={styles.header}>
@@ -23,14 +23,14 @@ export default function Header() {
         <div className={styles.rightNav}>
           <button
             className={styles.buttonHeader}
-            onClick={() => navigate("/Home")}
+            onClick={() => navigate('/Home')}
           >
             Home
           </button>
 
           <button
             className={styles.buttonHeader}
-            onClick={() => navigate("/All")}
+            onClick={() => navigate('/All')}
           >
             All Movies/TV
           </button>
@@ -38,7 +38,7 @@ export default function Header() {
           {isAdmin && (
             <button
               className={styles.buttonHeader}
-              onClick={() => navigate("/Admin")}
+              onClick={() => navigate('/Admin')}
             >
               Manage
             </button>

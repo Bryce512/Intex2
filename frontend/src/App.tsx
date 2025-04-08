@@ -1,5 +1,5 @@
 import "./App.css";
-import AdminBooklist from "./screens/adminBooklist";
+import AdminBooklist from "./screens/adminMovielist";
 import Cart from "./screens/Cart";
 import Home from "./screens/Home";
 import { BrowserRouter as Router, Routes, Route} from 'react-router-dom'
