@@ -86,7 +86,9 @@ function Login() {
 
       for (const { key, url } of endpoints) {
         try {
-          const response = await fetch(url);
+          const response = await fetch(url, {
+            credentials: 'include',
+          });
           if (response.ok) {
             const data = await response.json();
             results[key] = data;
@@ -108,7 +110,7 @@ function Login() {
     return movies.map((movie) => ({
       id: movie.showId,
       imageUrl: `images/Movie Posters/${movie.title}.jpg`,
-      linkUrl: `/show/${movie.showId}`,
+      linkUrl: `/MovieDetailsPage/${movie.showId}`,
     }));
   };
 

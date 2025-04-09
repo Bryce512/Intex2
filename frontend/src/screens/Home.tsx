@@ -76,7 +76,7 @@ function Home() {
     return movies.map((movie) => ({
       id: movie.showId,
       imageUrl: `images/Movie Posters/${movie.title}.jpg`,
-      linkUrl: `/show/${movie.showId}`,
+      linkUrl: `/MovieDetailsPage/${movie.showId}`,
     }));
   };
 
@@ -99,7 +99,7 @@ function Home() {
           />
         ))}
         <Footer />
-      </AuthorizeView> 
+      </AuthorizeView>
     </>
   );
 }
