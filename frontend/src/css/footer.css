@@ -105,6 +105,7 @@ body.no-scroll {
   margin-top: 10px;
   padding-right: 8px;
   text-align: left;
+  color: #111 !important;
 }
 
 /* Typography cleanup */
@@ -120,6 +121,7 @@ body.no-scroll {
 .modal-body p {
   margin-bottom: 1em;
   line-height: 1.6;
+  color: #111;
 }
 
 .modal-body ul {

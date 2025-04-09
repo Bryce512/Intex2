@@ -29,6 +29,7 @@ export function Footer() {
             </button>
             <div className="modal-body">
               <h2>Privacy Policy</h2>
+              <br></br>
               <p>
                 <strong>Effective Date:</strong> 4/8/2025
               </p>

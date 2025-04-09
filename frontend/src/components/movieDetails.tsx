@@ -5,11 +5,16 @@ import '../css/movieDetails.css';
 
 type MovieDetailsProps = {
   id: string;
+  rating: number;
+  onRatingChange: (newRating: number) => void;
 };
 
-export default function MovieDetails({ id }: MovieDetailsProps) {
+export default function MovieDetails({
+  id,
+  rating,
+  onRatingChange,
+}: MovieDetailsProps) {
   const [movie, setMovie] = useState<Movie | null>(null);
-  const [rating, setRating] = useState<number>(0);
 
   useEffect(() => {
     const fetchMovie = async () => {
@@ -31,14 +36,11 @@ export default function MovieDetails({ id }: MovieDetailsProps) {
   const displayCommaList = (value?: string) => {
     if (!value || value.trim() === '') return 'Not available';
 
-    // If it already has commas, return it as-is
     if (value.includes(',')) {
       return value.trim();
     }
 
-    // Otherwise, try to group every 2 words into names
     const words = value.trim().split(/\s+/).filter(Boolean);
-
     const pairs: string[] = [];
     for (let i = 0; i < words.length; i += 2) {
       const name = words[i] + (words[i + 1] ? ' ' + words[i + 1] : '');
@@ -56,13 +58,13 @@ export default function MovieDetails({ id }: MovieDetailsProps) {
         <div className="movie-poster">
           <img
             src={`https://movieposters123.blob.core.windows.net/movieposters/${movie.title.replace(
-              /[^a-zA-Z0-9 ]/g,
+              /[^a-zA-Z0-9À-ÿ ]/g,
               ''
             )}.jpg`}
             alt={`${movie.title} poster`}
             onError={(e) => {
               e.currentTarget.onerror = null;
-              e.currentTarget.src = '/images/placeholder.jpg'; // fallback image
+              e.currentTarget.src = '/images/placeholder.jpg';
             }}
           />
         </div>
@@ -75,11 +77,10 @@ export default function MovieDetails({ id }: MovieDetailsProps) {
 
           <ul className="movie-meta">
             <li>{displayValue(movie.description)}</li>
-            <br></br>
+            <br />
             <li>
               <strong>Rating:</strong> {displayValue(movie.rating)}
             </li>
-
             <li>
               <strong>Duration:</strong> {displayValue(movie.duration)}
             </li>
@@ -113,7 +114,7 @@ export default function MovieDetails({ id }: MovieDetailsProps) {
               <span
                 key={star}
                 className={`star ${star <= rating ? 'filled' : ''}`}
-                onClick={() => setRating(star === rating ? 0 : star)}
+                onClick={() => onRatingChange(star === rating ? 0 : star)}
               >
                 ★
               </span>

@@ -2,7 +2,7 @@ import { useNavigate, useParams } from 'react-router-dom';
 import HeaderHome from '../components/HeaderHome';
 import MovieDetails from '../components/movieDetails';
 import Footer from '../components/Footer';
-import '../css/movieDetailsPage.css'; // 👈 we'll define CSS here
+import '../css/movieDetailsPage.css';
 import { useEffect, useState } from 'react';
 import HorizontalCarousel from '../components/HorizontalCarousel';
 
@@ -13,6 +13,38 @@ function MovieDetailsPage() {
   const [publicCarousels, setPublicCarousels] = useState<{
     [category: string]: { title: string; showId: string }[];
   }>({});
+
+  const [movieRatings, setMovieRatings] = useState<{ [id: string]: number }>(
+    {}
+  );
+
+  // 🔁 Load ratings from localStorage when the component mounts
+  useEffect(() => {
+    const savedRatings = localStorage.getItem('movieRatings');
+    if (savedRatings) {
+      try {
+        setMovieRatings(JSON.parse(savedRatings));
+      } catch (e) {
+        console.error('Failed to parse movie ratings from localStorage:', e);
+      }
+    }
+  }, []);
+
+  // 💾 Save ratings to localStorage whenever they change
+  useEffect(() => {
+    localStorage.setItem('movieRatings', JSON.stringify(movieRatings));
+  }, [movieRatings]);
+
+  const handleRatingChange = (movieId: string, newRating: number) => {
+    setMovieRatings((prev) => ({
+      ...prev,
+      [movieId]: newRating,
+    }));
+  };
+
+  const getRatingForMovie = (movieId: string) => {
+    return movieRatings[movieId] || 0;
+  };
 
   useEffect(() => {
     const fetchPublicCarousels = async () => {
@@ -53,7 +85,7 @@ function MovieDetailsPage() {
     return movies.map((movie) => ({
       id: movie.showId,
       imageUrl: `https://movieposters123.blob.core.windows.net/movieposters/${movie.title.replace(
-        /[^a-zA-Z0-9 ]/g,
+        /[^a-zA-Z0-9À-ÿ ]/g,
         ''
       )}.jpg`,
       linkUrl: `/MovieDetailsPage/${movie.showId}`,
@@ -74,11 +106,14 @@ function MovieDetailsPage() {
             ← Back
           </button>
 
-          <MovieDetails id={id} />
+          <MovieDetails
+            id={id}
+            rating={getRatingForMovie(id)}
+            onRatingChange={(newRating) => handleRatingChange(id, newRating)}
+          />
         </>
       )}
 
-      {/* Carousels */}
       <div className="mt-5">
         {Object.entries(publicCarousels).map(([category, movies]) => (
           <HorizontalCarousel

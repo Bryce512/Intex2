@@ -1,11 +1,12 @@
 import FloatingLabel from 'react-bootstrap/FloatingLabel';
 import Form from 'react-bootstrap/Form';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import RegisterModal from '../components/RegisterModal';
 import Alert from 'react-bootstrap/Alert';
 import { useNavigate } from 'react-router-dom';
 import { handleLogin } from '../api/moviesAPI';
-import HorizontalCarousel from '../components/HorizontalCarousel';
+import '../css/login.css'; // add this stylesheet for the style upgrade
+import Footer from '../components/Footer';
 
 function LoginForm({
   email,
@@ -23,20 +24,21 @@ function LoginForm({
   loading: boolean;
 }) {
   return (
-    <Form onSubmit={handleSubmit}>
+    <Form onSubmit={handleSubmit} className="login-form">
       <FloatingLabel
-        controlId="floatingInput"
+        controlId="floatingUsername"
         label="Username"
         className="mb-3"
       >
         <Form.Control
           type="text"
-          placeholder="email"
+          placeholder="Username"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
           required
         />
       </FloatingLabel>
+
       <FloatingLabel controlId="floatingPassword" label="Password">
         <Form.Control
           type="password"
@@ -46,8 +48,12 @@ function LoginForm({
           required
         />
       </FloatingLabel>
-      <br />
-      <button type="submit" className="btn btn-primary" disabled={loading}>
+
+      <button
+        type="submit"
+        className="btn btn-dark w-100 mt-4"
+        disabled={loading}
+      >
         {loading ? 'Logging in...' : 'Login'}
       </button>
     </Form>
@@ -63,125 +69,69 @@ function Login() {
   const [modalShow, setModalShow] = useState(false);
   const [validated, setValidated] = useState(false);
 
-  const [publicCarousels, setPublicCarousels] = useState<{
-    [category: string]: { title: string; showId: string }[];
-  }>({});
-
-  useEffect(() => {
-    const fetchPublicCarousels = async () => {
-      const endpoints = [
-        {
-          key: 'Top Rated',
-          url: 'https://localhost:5000/Movies/TopRatedMovies',
-        },
-        {
-          key: 'Trending Now',
-          url: 'https://localhost:5000/Movies/PopularMovies',
-        },
-      ];
-
-      const results: {
-        [category: string]: { title: string; showId: string }[];
-      } = {};
-
-      for (const { key, url } of endpoints) {
-        try {
-          const response = await fetch(url, {
-            credentials: 'include',
-          });
-          if (response.ok) {
-            const data = await response.json();
-            results[key] = data;
-          } else {
-            console.error(`Failed to fetch movies for ${key}`);
-          }
-        } catch (error) {
-          console.error(`Error fetching ${key}:`, error);
-        }
-      }
-
-      setPublicCarousels(results);
-    };
-
-    fetchPublicCarousels();
-  }, []);
-
-  const getMovieItems = (movies: { title: string; showId: string }[]) => {
-    return movies.map((movie) => ({
-      id: movie.showId,
-      imageUrl: `https://movieposters123.blob.core.windows.net/movieposters/${movie.title}.jpg`,
-      linkUrl: `/MovieDetailsPage/${movie.showId}`,
-    }));
-  };
-
   return (
     <>
-      <div className="container mt-4">
-        <div className="row">
-          <div className="col-md-12">
-            <h2>Login</h2>
+      <div className="login-wrapper">
+        <div className="login-card">
+          <img
+            src="/images/logo.jpeg"
+            style={{
+              maxWidth: '100%',
+              height: 'auto',
+              maxHeight: '150px', // Adjust this value as needed
+              display: 'block',
+              margin: '0 auto',
+            }}
+            alt="Logo"
+          />
 
-            {errorMessage && (
-              <Alert
-                variant="danger"
-                onClose={() => setErrorMessage('')}
-                dismissible
-              >
-                {errorMessage}
-              </Alert>
-            )}
+          {errorMessage && (
+            <Alert
+              variant="danger"
+              onClose={() => setErrorMessage('')}
+              dismissible
+            >
+              {errorMessage}
+            </Alert>
+          )}
 
-            <LoginForm
-              email={email}
-              setEmail={setEmail}
-              password={password}
-              setPassword={setPassword}
-              handleSubmit={(e) => {
-                e.preventDefault();
-                handleLogin(
-                  e,
-                  setErrorMessage,
-                  setLoading,
-                  email,
-                  password,
-                  navigate
-                );
-              }}
-              loading={loading}
-            />
-            <br />
-            <p>
-              Don't have an account?{' '}
-              <a className="btn btn-link" onClick={() => setModalShow(true)}>
-                Sign Up
-              </a>
-            </p>
+          <LoginForm
+            email={email}
+            setEmail={setEmail}
+            password={password}
+            setPassword={setPassword}
+            handleSubmit={(e) => {
+              e.preventDefault();
+              handleLogin(
+                e,
+                setErrorMessage,
+                setLoading,
+                email,
+                password,
+                navigate
+              );
+            }}
+            loading={loading}
+          />
 
-            {modalShow && (
-              <RegisterModal
-                show={modalShow}
-                onHide={() => setModalShow(false)}
-                validated={validated}
-                setValidated={setValidated}
-              />
-            )}
+          <div className="text-center mt-3">
+            <span>Don't have an account? </span>
+            <a className="btn btn-link p-0" onClick={() => setModalShow(true)}>
+              Sign Up
+            </a>
           </div>
-        </div>
 
-        {/* Public Carousels */}
-        <div className="mt-5">
-          <h2 className="mb-3 text-center">
-            You could be watching all these--Right now
-          </h2>
-          {Object.entries(publicCarousels).map(([category, movies]) => (
-            <HorizontalCarousel
-              key={category}
-              title={category}
-              items={getMovieItems(movies)}
+          {modalShow && (
+            <RegisterModal
+              show={modalShow}
+              onHide={() => setModalShow(false)}
+              validated={validated}
+              setValidated={setValidated}
             />
-          ))}
+          )}
         </div>
       </div>
+      <Footer />
     </>
   );
 }
