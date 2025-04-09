@@ -2,10 +2,11 @@ import { useEffect, useState } from 'react';
 import { deleteMovie, fetchMovies } from '../api/moviesAPI';
 import '../css/adminBooklist.css';
 import Pagination from '../components/pagination';
-import NewBookForm from '../components/newBookForm';
+import NewMovieForm from '../components/NewMovieForm';
 import EditMovieForm from '../components/EditMovieForm';
 import HeaderHome from '../components/HeaderHome';
 import { Movie } from '../types/movies';
+import { useNavigate } from 'react-router-dom';
 
 function AdminMovielist() {
   const [movies, setMovies] = useState<Movie[]>([]);
@@ -16,6 +17,7 @@ function AdminMovielist() {
   const [totalPages, setTotalPages] = useState(0);
   const [showForm, setShowForm] = useState(false);
   const [editingMovie, setEditingMovie] = useState<Movie | null>(null);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const loadMovies = async () => {
@@ -61,14 +63,14 @@ function AdminMovielist() {
       {!showForm && (
         <button
           className="btn btn-success mb-3"
-          onClick={() => setShowForm(true)}
+          onClick={() => navigate('/NewMovie')}
         >
           Add Movie/TV Show
         </button>
       )}
 
       {showForm && (
-        <NewBookForm
+        <NewMovieForm
           onSuccess={() => {
             setShowForm(false);
             fetchMovies(page, resultsPerPage).then((data) =>
