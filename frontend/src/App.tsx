@@ -19,8 +19,7 @@ function App() {
           <Route path="/Cart" element={<Cart />}></Route>
           <Route path="/Admin" element={<AdminBooklist />}></Route>
           <Route path="/All" element={<AllMovies />}></Route>
-          <Route path="Privacy" element={<Privacy />}></Route>
-          <Route path="/NewMovie" element={<NewMovieForm />}></Route>
+          <Route path="/Privacy" element={<Privacy />}></Route>
         </Routes>
       </Router>
     </>

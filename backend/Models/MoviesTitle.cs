@@ -12,7 +12,7 @@ public partial class MoviesTitle
 
     public string? Type { get; set; }
 
-    public string? Title { get; set; }
+    public string Title { get; set; }
 
     public string? Director { get; set; }
 

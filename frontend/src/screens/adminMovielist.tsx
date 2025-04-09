@@ -18,6 +18,7 @@ function AdminMovielist() {
   const [totalPages, setTotalPages] = useState(0);
   const [showForm, setShowForm] = useState(false);
   const [editingMovie, setEditingMovie] = useState<Movie | null>(null);
+  const [searchTerm, setSearchTerm] = useState('');
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -49,6 +50,12 @@ function AdminMovielist() {
     }
   };
 
+  const moviesArray = Array.isArray(movies) ? movies : [];
+
+  const filteredMovies = moviesArray.filter((movie) =>
+    movie.tit.toLowerCase().includes(searchTerm.toLowerCase())
+  );
+
   if (loading) {
     return <p>Loading...</p>;
   }
@@ -60,6 +67,13 @@ function AdminMovielist() {
     <>
       <HeaderHome />
       <h1>Manage Movies</h1>
+
+      <input
+        type="text"
+        placeholder="Search by title..."
+        value={searchTerm}
+        onChange={(e) => setSearchTerm(e.target.value)}
+      />
 
       {!showForm && (
         <button
@@ -85,16 +99,18 @@ function AdminMovielist() {
       )}
 
       {editingMovie && (
-        <EditMovieForm
-          movie={editingMovie}
-          onSuccess={() => {
-            setEditingMovie(null);
-            fetchMovies(page, resultsPerPage).then((data) =>
-              setMovies(data.movies)
-            );
-          }}
-          onCancel={() => setEditingMovie(null)}
-        />
+        <NewMovieModal onClose={() => setShowForm(false)}>
+          <EditMovieForm
+            movie={editingMovie}
+            onSuccess={() => {
+              setEditingMovie(null);
+              fetchMovies(page, resultsPerPage).then((data) =>
+                setMovies(data.movies)
+              );
+            }}
+            onCancel={() => setEditingMovie(null)}
+          />
+        </NewMovieModal>
       )}
 
       <table className="table-auto table table-striped table-bordered">

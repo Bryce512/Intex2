@@ -356,12 +356,14 @@ namespace intex2.Controllers
         // }
 
         [HttpPost("AddMovie")]
-        public IActionResult AddMovie([FromBody] MoviesTitle newMovie)
+        public async Task<IActionResult> AddMovie([FromBody] MoviesTitle newMovie)
         {
+            newMovie.ShowId = await GenerateNextShowIdAsync(); // Assign new ID here
             _moviesContext.MoviesTitles.Add(newMovie);
-            _moviesContext.SaveChanges();
+            await _moviesContext.SaveChangesAsync();
             return Ok(newMovie);
         }
+
 
         [HttpDelete("DeleteMovie/{id}")]
         public IActionResult DeleteMovie(string id)
@@ -431,6 +433,23 @@ namespace intex2.Controllers
             _moviesContext.SaveChanges();
             return Ok(movie);
         }
+        
+        private async Task<string> GenerateNextShowIdAsync()
+        {
+            var allIds = await _moviesContext.MoviesTitles
+                .Where(m => m.ShowId.StartsWith("s"))
+                .Select(m => m.ShowId.Substring(1)) // get numeric part as string
+                .ToListAsync(); // still just strings here
+
+            var maxNumber = allIds
+                .AsEnumerable() // switch to LINQ-to-Objects so we can use TryParse
+                .Select(id => int.TryParse(id, out int number) ? number : 0)
+                .Max();
+
+            return $"s{maxNumber + 1}";
+        }
+
+        
 
         
     }
