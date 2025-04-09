@@ -56,7 +56,9 @@ function AdminMovielist() {
         setMovies(data.movies);
         setTotalPages(Math.ceil(data.totalNumMovies / resultsPerPage));
       } catch (error) {
-        setError("You are not authorized to access this page. You will be redirected to the home page.");
+        setError(
+          'You are not authorized to access this page. You will be redirected to the home page.'
+        );
         setTimeout(() => {
           navigate('/');
         }, 2000);
@@ -98,7 +100,7 @@ function AdminMovielist() {
     <>
       <HeaderHome />
       <h1>Manage Movies</h1>
-
+      <br />
       <input
         ref={searchInputRef}
         type="text"

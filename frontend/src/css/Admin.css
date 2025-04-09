@@ -25,14 +25,19 @@
 
 .btn-success {
   width: 200px;
-  background-color: #f5b700;
-  border-color: #011627;
-  color: #011627;
-  font-weight: bold;
+  background-color: #f5b700 !important;
+  border-color: #011627 !important;
+  color: #011627 !important;
+  font-weight: bold !important;
+}
+
+.btn-success:hover {
+  background-color: #3b7a3c !important;
+  color: #fff !important;
 }
 
 input {
-  width: 50%;
+  width: 60% !important;
   background-color: #c4cbca;
   color: #011627;
 }
@@ -42,7 +47,7 @@ input::placeholder {
 }
 
 /* Change the background color of the table header */
-.table th {
+table.table th {
   background-color: #636b61; /* Choose your desired color */
   color: white; /* Text color */
   font-weight: bold;
@@ -56,4 +61,3 @@ input::placeholder {
 .table tbody tr:nth-child(odd) {
   background-color: #c4cbca; /* White for odd rows */
 }
-

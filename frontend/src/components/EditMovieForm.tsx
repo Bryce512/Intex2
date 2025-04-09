@@ -13,7 +13,9 @@ function EditMovieForm({ movie, onSuccess, onCancel }: editMovieFormProps) {
   const [formData, setFormData] = useState<Movie>({ ...movie });
 
   const handleChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
+    e: React.ChangeEvent<
+      HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement
+    >
   ) => {
     const { name, value } = e.target;
 
@@ -50,7 +52,7 @@ function EditMovieForm({ movie, onSuccess, onCancel }: editMovieFormProps) {
     <>
       <HeaderHome />
       <form onSubmit={handleSubmit}>
-        <h2>Add New Movie/Show</h2>
+        <h2>Edit Movie/Show</h2>
 
         <label>
           Title:
@@ -149,34 +151,33 @@ function EditMovieForm({ movie, onSuccess, onCancel }: editMovieFormProps) {
 
         <label>
           Description:
-          <input
-            type="text"
+          <textarea
             name="description"
             value={formData.description}
             onChange={handleChange}
+            className="description-input"
           />
         </label>
 
+        <br />
         <h3>Genres</h3>
-        {genreKeys.map((key) => (
-          <label key={key}>
-            {formatGenreLabel(key)}:
-            <input
-              type="checkbox"
-              name={key}
-              checked={formData[key as keyof Movie] === 1}
-              onChange={handleCheckboxChange}
-            />
-          </label>
-        ))}
+        <div className="checkbox-list">
+          {genreKeys.map((key) => (
+            <div className="checkbox-item" key={key}>
+              <input
+                type="checkbox"
+                name={key}
+                checked={formData[key as keyof Movie] === 1}
+                onChange={handleCheckboxChange}
+              />
+              <label htmlFor={key}>{formatGenreLabel(key)}</label>
+            </div>
+          ))}
+        </div>
 
-        <div style={{ marginTop: '1rem' }}>
-          <button type="submit">Add Movie</button>
-          <button
-            type="button"
-            onClick={onCancel}
-            style={{ marginLeft: '1rem' }}
-          >
+        <div className='button-container' style={{ marginTop: '1rem' }}>
+          <button type="submit">Update Movie</button>
+          <button type="button" onClick={onCancel}>
             Cancel
           </button>
         </div>
