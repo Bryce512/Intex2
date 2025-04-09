@@ -3,7 +3,6 @@ import HeaderHome from '../components/HeaderHome';
 import TopMovieRecommendation from '../components/TopMovie';
 import HorizontalCarousel from '../components/HorizontalCarousel';
 import AuthorizeView, { AuthorizedUser } from '../components/AuthorizeView';
-import Logout from '../components/Logout';
 import Footer from '../components/Footer';
 
 function Home() {
@@ -75,7 +74,10 @@ function Home() {
   const getMovieItems = (movies: { title: string; showId: string }[]) => {
     return movies.map((movie) => ({
       id: movie.showId,
-      imageUrl: `https://movieposters123.blob.core.windows.net/movieposters/${movie.title}.jpg`,
+      imageUrl: `https://movieposters123.blob.core.windows.net/movieposters/${movie.title.replace(
+        /[^a-zA-Z0-9 ]/g,
+        ''
+      )}.jpg`,
       linkUrl: `/MovieDetailsPage/${movie.showId}`,
     }));
   };

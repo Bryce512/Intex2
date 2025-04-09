@@ -55,7 +55,10 @@ export default function MovieDetails({ id }: MovieDetailsProps) {
       <div className="movie-details-content">
         <div className="movie-poster">
           <img
-            src={movie.posterUrl}
+            src={`https://movieposters123.blob.core.windows.net/movieposters/${movie.title.replace(
+              /[^a-zA-Z0-9 ]/g,
+              ''
+            )}.jpg`}
             alt={`${movie.title} poster`}
             onError={(e) => {
               e.currentTarget.onerror = null;
@@ -76,13 +79,14 @@ export default function MovieDetails({ id }: MovieDetailsProps) {
             <li>
               <strong>Rating:</strong> {displayValue(movie.rating)}
             </li>
+
             <li>
-              <li>
-                <strong>Duration:</strong> {displayValue(movie.duration)}
-              </li>
-              <li>
-                <strong>Country:</strong> {displayCommaList(movie.country)}
-              </li>
+              <strong>Duration:</strong> {displayValue(movie.duration)}
+            </li>
+            <li>
+              <strong>Country:</strong> {displayCommaList(movie.country)}
+            </li>
+            <li>
               <strong>Director:</strong> {displayValue(movie.director)}
             </li>
             <li>
