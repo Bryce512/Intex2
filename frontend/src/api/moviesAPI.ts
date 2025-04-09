@@ -22,7 +22,6 @@ export const handleLogin = async (
   setLoading(true);
 
   try {
-
     const response = await fetch(
       `${API_URL}/login?useCookies=true&useSessionCookies=false`,
       {
@@ -243,3 +242,16 @@ export const deleteMovie = async (showId: string): Promise<void> => {
   }
 };
 
+export const fetchMovieById = async (showId: string): Promise<Movie> => {
+  const response = await fetch(`${API_URL}/Movies/GetMovieDetails/${showId}`, {
+    method: 'GET',
+  });
+
+  if (!response.ok) {
+    throw new Error(`HTTP error! status: ${response.status}`);
+  }
+  const data = await response.json();
+  console.log('Fetched movie by ID:', data);
+
+  return data;
+};
