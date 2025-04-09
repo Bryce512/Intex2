@@ -53,6 +53,9 @@ namespace intex2.Controllers
         {
             // Step 1: Get the currently logged-in user
             var user = await _userManager.GetUserAsync(User);
+
+            Console.WriteLine($"CURRENT USER: {user}");
+
             if (user == null)
             {
                 // return Unauthorized(new { message = "User not logged in." });
@@ -73,8 +76,13 @@ namespace intex2.Controllers
                 return Ok(mockMovies);
             }
 
+
+            Console.WriteLine($"CURRENT USER ID: {user.Id}");
+
             // Step 2: Look up this user's recommendations
             var recs = _actionRecommendationsContext.Recommendations.FirstOrDefault(r => r.UserId == user.Id);
+
+            Console.WriteLine($"CURRENT RECS: {System.Text.Json.JsonSerializer.Serialize(recs)}");
 
             if (recs == null)
             {
@@ -88,11 +96,15 @@ namespace intex2.Controllers
                 recs.Rec6, recs.Rec7, recs.Rec8, recs.Rec9, recs.Rec10
             }.Where(id => !string.IsNullOrEmpty(id)).ToList();
 
+            Console.WriteLine($"CURRENT SHOWIDS: {string.Join(", ", showIds)}");
+
             // Step 4: Match those show IDs with movies from Movies.db
             var movies = _moviesContext.MoviesTitles
                 .Where(m => showIds.Contains(m.ShowId))
                 .Select(m => new { m.ShowId, m.Title })
                 .ToList();
+
+            Console.WriteLine($"CURRENT MOVIES: {movies}");
 
             return Ok(movies);
         }

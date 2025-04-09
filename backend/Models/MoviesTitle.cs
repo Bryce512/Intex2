@@ -1,12 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace intex2.Models;
 
 public partial class MoviesTitle
 {
 
+    [Column("show_id")]
     public string ShowId { get; set; }
 
     public string? Type { get; set; }

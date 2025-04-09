@@ -52,7 +52,9 @@ function Home() {
 
       for (const { key, url } of endpoints) {
         try {
-          const response = await fetch(url);
+          const response = await fetch(url, {
+            credentials: 'include',
+          });
           if (response.ok) {
             const data = await response.json();
             results[key] = data;
