@@ -172,11 +172,13 @@ export const handleRegister = async (
 export const fetchMovies = async (
   page: number,
   resultsPerPage: number,
-  searchTerm: string = ""
+  searchTerm: string = ''
 ): Promise<fetchMoviesResponse> => {
   const response = await fetch(
-    `${API_URL}/Movies/AllMovies?pageNum=${page}&resultsPerPage=${resultsPerPage}`,{
-        credentials: 'include'}
+    `${API_URL}/Movies/AllMovies?pageNum=${page}&resultsPerPage=${resultsPerPage}`,
+    {
+      credentials: 'include',
+    }
   );
 
   if (!response.ok) {
@@ -187,7 +189,6 @@ export const fetchMovies = async (
 
   return data;
 };
-
 
 export const addMovie = async (newMovie: Movie): Promise<Movie> => {
   try {
@@ -259,6 +260,20 @@ export const fetchMovieById = async (showId: string): Promise<Movie> => {
   }
   const data = await response.json();
   console.log('Fetched movie by ID:', data);
+
+  return data;
+};
+
+export const fetchAllMoviesMax = async (): Promise<Array<Movie>> => {
+  const response = await fetch(`${API_URL}/Movies/AllMoviesMax`, {
+    method: 'GET',
+  });
+
+  if (!response.ok) {
+    throw new Error(`HTTP error! status: ${response.status}`);
+  }
+  const data = await response.json();
+  console.log('Fetched all moives:', data);
 
   return data;
 };
