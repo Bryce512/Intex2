@@ -12,6 +12,7 @@ namespace intex2.Controllers
     [Route("[controller]")]
     public class MoviesController : ControllerBase
     {
+        private readonly MovieToMovieRecommendationsDbContext _movieToMovieRecommendationsContext;
         private readonly TopRatedRecommendationsDbContext _topRatedRecommendationsContext;
         private readonly UserRecommendationsDbContext _userRecommendationsContext;
         private readonly PopularRecommendationsDbContext _popularRecommendationsContext;
@@ -24,6 +25,7 @@ namespace intex2.Controllers
         private readonly SignInManager<AppIdentityUser> _signInManager;
 
         public MoviesController(
+            MovieToMovieRecommendationsDbContext movieToMovieRecommendationsContext,
             TopRatedRecommendationsDbContext topRatedRecommendationsContext,
             UserRecommendationsDbContext userRecommendationsContext,
             PopularRecommendationsDbContext popularRecommendationsContext,
@@ -35,6 +37,7 @@ namespace intex2.Controllers
             UserManager<AppIdentityUser> userManager,
             SignInManager<AppIdentityUser> signInManager)
         {
+            _movieToMovieRecommendationsContext = movieToMovieRecommendationsContext;
             _topRatedRecommendationsContext = topRatedRecommendationsContext;
             _userRecommendationsContext = userRecommendationsContext;
             _popularRecommendationsContext = popularRecommendationsContext;
@@ -48,13 +51,47 @@ namespace intex2.Controllers
         }
 
         [Authorize]
+        [HttpGet("MovieToMovieRecommendations/{showId}")]
+        public async Task<IActionResult> GetMovieRecommendations(string showId)
+        {
+            // Step 1: Validate the input `showId`
+            if (string.IsNullOrEmpty(showId))
+            {
+                return BadRequest(new { message = "Movie showId is null or empty." });
+            }
+
+            // Step 2: Look up movie-to-movie recommendations for the given showId
+            var recs = _movieToMovieRecommendationsContext.MovieRecommendations
+                .FirstOrDefault(r => r.ShowId == showId);
+
+            if (recs == null)
+            {
+                return NotFound(new { message = "No movie recommendations found for this movie." });
+            }
+
+            // Step 3: Collect all the recommended movie show IDs (rec_1 to rec_10)
+            var showIds = new List<string?>
+            {
+                recs.Rec1, recs.Rec2, recs.Rec3, recs.Rec4, recs.Rec5,
+                recs.Rec6, recs.Rec7, recs.Rec8, recs.Rec9, recs.Rec10
+            }.Where(id => !string.IsNullOrEmpty(id)).ToList();
+
+            // Step 4: Match those show IDs with movies from Movies.db
+            var movies = _moviesContext.MoviesTitles
+                .Where(m => showIds.Contains(m.ShowId))
+                .Select(m => new { m.ShowId, m.Title })
+                .ToList();
+
+            // Return the recommended movies
+            return Ok(movies);
+        }
+
+        [Authorize]
         [HttpGet("UserActionMovies")]
         public async Task<IActionResult> GetUserActionMovies()
         {
             // Step 1: Get the currently logged-in user
             var user = await _userManager.GetUserAsync(User);
-
-            Console.WriteLine($"CURRENT USER: {user}");
 
             if (user == null)
             {
@@ -76,13 +113,8 @@ namespace intex2.Controllers
                 return Ok(mockMovies);
             }
 
-
-            Console.WriteLine($"CURRENT USER ID: {user.Id}");
-
             // Step 2: Look up this user's recommendations
             var recs = _actionRecommendationsContext.Recommendations.FirstOrDefault(r => r.UserId == user.Id);
-
-            Console.WriteLine($"CURRENT RECS: {System.Text.Json.JsonSerializer.Serialize(recs)}");
 
             if (recs == null)
             {
@@ -96,15 +128,11 @@ namespace intex2.Controllers
                 recs.Rec6, recs.Rec7, recs.Rec8, recs.Rec9, recs.Rec10
             }.Where(id => !string.IsNullOrEmpty(id)).ToList();
 
-            Console.WriteLine($"CURRENT SHOWIDS: {string.Join(", ", showIds)}");
-
             // Step 4: Match those show IDs with movies from Movies.db
             var movies = _moviesContext.MoviesTitles
                 .Where(m => showIds.Contains(m.ShowId))
                 .Select(m => new { m.ShowId, m.Title })
                 .ToList();
-
-            Console.WriteLine($"CURRENT MOVIES: {movies}");
 
             return Ok(movies);
         }
