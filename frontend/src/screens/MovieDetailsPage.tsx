@@ -19,7 +19,7 @@ function MovieDetailsPage() {
       const endpoints = [
         {
           key: 'Similar Titles',
-          url: `https://localhost:5000/Movies/MovieToMovieRecommendations/${id}`,
+          url: `https://intex2-backend-ezargqcgdwbgd4hq.westus3-01.azurewebsites.net/Movies/MovieToMovieRecommendations/${id}`,
         },
       ];
 

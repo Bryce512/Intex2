@@ -6,7 +6,9 @@ interface fetchMoviesResponse {
   totalNumMovies: number;
 }
 
-const API_URL = 'https://localhost:5000'; // For local development
+// const API_URL = 'https://localhost:5000'; // For local development
+const API_URL =
+  'https://intex2-backend-ezargqcgdwbgd4hq.westus3-01.azurewebsites.net';
 
 // Handle login using plain username/password
 export const handleLogin = async (
