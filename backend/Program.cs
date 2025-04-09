@@ -24,7 +24,7 @@ builder.Services.AddDbContext<AuthDbContext>(options =>
 builder.Services.AddCors(options =>
     options.AddPolicy("AllowReactApp", policy =>
     {
-        policy.WithOrigins("http://localhost:3000")
+        policy.WithOrigins("http://localhost:3000", "https://icy-sky-018ec221e.6.azurestaticapps.net")
             .AllowAnyMethod()
             .AllowAnyHeader()
             .AllowCredentials(); // Add this if you're using credentials
