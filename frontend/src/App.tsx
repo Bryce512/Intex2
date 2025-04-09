@@ -7,6 +7,7 @@ import Login from './screens/Login';
 import Privacy from './screens/Privacy';
 import AllMovies from './screens/AllMovies';
 import MovieDetailsPage from './screens/MovieDetailsPage';
+import NewMovieForm from './components/NewMovieForm';
 
 function App() {
   return (
@@ -20,6 +21,7 @@ function App() {
           <Route path="/Admin" element={<AdminBooklist />}></Route>
           <Route path="/All" element={<AllMovies />}></Route>
           <Route path="/Privacy" element={<Privacy />}></Route>
+          <Route path="/NewMovie" element={<NewMovieForm />}></Route>
           <Route
             path="/MovieDetailsPage/:id"
             element={<MovieDetailsPage />}

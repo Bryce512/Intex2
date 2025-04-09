@@ -5,7 +5,6 @@ interface fetchMoviesResponse {
   totalNumMovies: number;
 }
 
-// const API_URL = "https://intex2-backend-ezargqcgdwbgd4hq.westus3-01.azurewebsites.net/User";
 const API_URL = 'https://localhost:5000'; // For local development
 
 // Handle login using plain username/password
@@ -67,7 +66,7 @@ export const handleSubmit = (
   setErrorMessage: React.Dispatch<React.SetStateAction<string>>,
   setLoading: React.Dispatch<React.SetStateAction<boolean>>,
   setFailedAttempts: React.Dispatch<React.SetStateAction<number>>,
-  handleClose: void
+  handleClose: Function
 ) => {
   event.preventDefault();
   event.stopPropagation();
@@ -85,7 +84,6 @@ export const handleSubmit = (
 
   // Create user object and call the registration function
   const userData = {
-    // Make sure these property names match EXACTLY what's in your C# User model
     Username: username, // Verify if it's Username with capital 'U'
     Password: password,
     Name: name,
@@ -108,14 +106,12 @@ export const handleRegister = async (
   setLoading: Function,
   setErrorMessage: Function,
   setValidated: Function,
-  handleClose: void,
+  handleClose: Function,
   setFailedAttempts: Function
 ) => {
   setLoading(true);
   setErrorMessage('');
-  setErrorMessage('');
 
-  console.log('Registering user:', userData);
   console.log('Registering user:', userData);
 
   try {
@@ -138,7 +134,6 @@ export const handleRegister = async (
       data = await response.json();
       console.log('JSON Response:', data);
     } else {
-      // Not JSON, get as text instead
       const textResponse = await response.text();
       console.log(
         'Text Response (first 200 chars):',
@@ -156,10 +151,8 @@ export const handleRegister = async (
 
     // Reset validation state and close modal
     setValidated(false);
-    handleClose;
+    handleClose();
 
-    // You might want to automatically log the user in here
-    // or show a success message
     alert('Registration successful! Please log in.');
   } catch (error: any) {
     // Increment failed attempts counter

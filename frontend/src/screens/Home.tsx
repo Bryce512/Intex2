@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import HeaderHome from '../components/HeaderHome';
 import TopMovieRecommendation from '../components/TopMovie';
 import HorizontalCarousel from '../components/HorizontalCarousel';
-import AuthorizeView, { AuthorizedUser } from "../components/AuthorizeView";
+//import AuthorizeView, { AuthorizedUser } from "../components/AuthorizeView";
 import Logout from "../components/Logout";
 import Footer from '../components/Footer';
 
@@ -81,12 +81,12 @@ function Home() {
 
   return (
     <>
-      <AuthorizeView>
+      {/* <AuthorizeView>
         <span>
           <Logout>
             Logout <AuthorizedUser value="email" />
           </Logout>{' '}
-        </span>
+        </span> */}
         <HeaderHome />
         <TopMovieRecommendation />
         <br />
@@ -98,7 +98,7 @@ function Home() {
           />
         ))}
         <Footer />
-      </AuthorizeView>
+      {/* </AuthorizeView> */}
     </>
   );
 }
