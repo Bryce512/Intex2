@@ -513,10 +513,54 @@ private async Task<string> GenerateNextShowIdAsync()
                 return NotFound();
             }
 
+            // Step 1: Generate Poster URL
             var baseUrl = _config["BlobStorage:BaseImageUrl"];
             var encodedTitle = Uri.EscapeDataString(movie.Title ?? "placeholder");
             var posterUrl = $"{baseUrl}/{encodedTitle}.jpg";
 
+            // Step 2: Extract genres (place this here)
+            var genreMap = new Dictionary<string, int?>
+    {
+        { "Action", movie.Action },
+        { "Adventure", movie.Adventure },
+        { "Anime Series International TV Shows", movie.AnimeSeriesInternationalTvShows },
+        { "British TV Shows Docuseries International TV Shows", movie.BritishTvShowsDocuseriesInternationalTvShows },
+        { "Children", movie.Children },
+        { "Comedies", movie.Comedies },
+        { "Comedies Dramas International Movies", movie.ComediesDramasInternationalMovies },
+        { "Comedies International Movies", movie.ComediesInternationalMovies },
+        { "Comedies Romantic Movies", movie.ComediesRomanticMovies },
+        { "Crime TV Shows Docuseries", movie.CrimeTvShowsDocuseries },
+        { "Documentaries", movie.Documentaries },
+        { "Documentaries International Movies", movie.DocumentariesInternationalMovies },
+        { "Docuseries", movie.Docuseries },
+        { "Dramas", movie.Dramas },
+        { "Dramas International Movies", movie.DramasInternationalMovies },
+        { "Dramas Romantic Movies", movie.DramasRomanticMovies },
+        { "Family Movies", movie.FamilyMovies },
+        { "Fantasy", movie.Fantasy },
+        { "Horror Movies", movie.HorrorMovies },
+        { "International Movies Thrillers", movie.InternationalMoviesThrillers },
+        { "International TV Shows Romantic TV Shows TV Dramas", movie.InternationalTvShowsRomanticTvShowsTvDramas },
+        { "Kids' TV", movie.KidsTv },
+        { "Language TV Shows", movie.LanguageTvShows },
+        { "Musicals", movie.Musicals },
+        { "Nature TV", movie.NatureTv },
+        { "Reality TV", movie.RealityTv },
+        { "Spirituality", movie.Spirituality },
+        { "TV Action", movie.TvAction },
+        { "TV Comedies", movie.TvComedies },
+        { "TV Dramas", movie.TvDramas },
+        { "Talk Shows TV Comedies", movie.TalkShowsTvComedies },
+        { "Thrillers", movie.Thrillers }
+    };
+
+            var genres = genreMap
+                .Where(kvp => kvp.Value == 1)
+                .Select(kvp => kvp.Key)
+                .ToList();
+
+            // Step 3: Return Movie DTO
             var dto = new MovieDto
             {
                 ShowId = movie.ShowId,
@@ -529,7 +573,8 @@ private async Task<string> GenerateNextShowIdAsync()
                 Rating = movie.Rating,
                 Duration = movie.Duration,
                 Description = movie.Description,
-                PosterUrl = posterUrl
+                PosterUrl = posterUrl,
+                Genres = genres
             };
 
             return Ok(dto);

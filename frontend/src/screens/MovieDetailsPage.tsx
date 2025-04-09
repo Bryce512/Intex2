@@ -61,18 +61,19 @@ function MovieDetailsPage() {
     <>
       <HeaderHome />
 
-      <div className="page-wrapper">
-        {!id ? (
-          <div className="invalid-id-message">Invalid movie ID</div>
-        ) : (
-          <>
-            <div className="back-button" onClick={() => navigate(-1)}>
-              ← Back
-            </div>
-            <MovieDetails id={id} />
-          </>
-        )}
-      </div>
+      {!id ? (
+        <div className="invalid-id-wrapper">
+          <p className="invalid-id-message">Invalid movie ID</p>
+        </div>
+      ) : (
+        <>
+          <button className="back-button" onClick={() => navigate(-1)}>
+            ← Back
+          </button>
+
+          <MovieDetails id={id} />
+        </>
+      )}
 
       {/* Carousels */}
       <div className="mt-5">
