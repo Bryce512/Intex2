@@ -99,6 +99,9 @@ builder.Services.AddDbContext<PopularRecommendationsDbContext>(options =>
 builder.Services.AddDbContext<UserRecommendationsDbContext>(options =>
     options.UseSqlite("Data Source=user_recommendations.db"));
 
+builder.Services.AddDbContext<MovieToMovieRecommendationsDbContext>(options =>
+    options.UseSqlite("Data Source=movie_to_movie_hybrid_recommendations.db"));
+
 builder.Services.AddSingleton<IEmailSender<AppIdentityUser>, NoOpEmailSender<AppIdentityUser>>();
 
 var app = builder.Build();
