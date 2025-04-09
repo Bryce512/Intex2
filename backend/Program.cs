@@ -14,14 +14,6 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 // Register DbContexts
-builder.Services.AddDbContext<BookstoreContext>(options =>
-{
-    options.UseSqlite(builder.Configuration["ConnectionStrings:BowlingConnect"]);
-});
-builder.Services.AddDbContext<UserContext>(options =>
-{
-    options.UseSqlite(builder.Configuration.GetConnectionString("UserConnection"));
-});
 builder.Services.AddDbContext<MoviesDbContext>(options =>
 {
     options.UseSqlite(builder.Configuration.GetConnectionString("MovieConnection"));
@@ -38,7 +30,11 @@ builder.Services.AddCors(options =>
             .AllowCredentials(); // Add this if you're using credentials
     }));
 
-builder.Services.AddAuthorization();
+    builder.Services.AddAuthorization(options =>
+    {
+        options.AddPolicy("AdminOnly", policy => policy.RequireRole("admin"));
+        options.AddPolicy("UserOrAdmin", policy => policy.RequireRole("admin", "user"));
+    });
 builder.Services.AddIdentity<AppIdentityUser, IdentityRole<int>>(options =>
     {
          options.Password.RequireDigit = false;
@@ -77,7 +73,7 @@ builder.Services.ConfigureApplicationCookie(options =>
     options.Cookie.Name = ".AspNetCore.Identity.Application";
     options.LoginPath = "/login";  // Path to the login page
     options.LogoutPath = "/logout"; // Path to the logout page
-    options.AccessDeniedPath = "/AccessDenied";  // Optional: Path to handle access-denied scenarios
+    options.AccessDeniedPath = "/login";  // Optional: Path to handle access-denied scenarios
     options.Cookie.SecurePolicy = CookieSecurePolicy.Always;
 });
 
@@ -176,8 +172,11 @@ app.MapGet("/pingauth", (ClaimsPrincipal user) =>
     }
 
     var email = user.FindFirstValue(ClaimTypes.Email) ?? "unknown@example.com"; // Ensure it's never null
-    return Results.Json(new { email = email }); // Return as JSON
+    var roles = user.FindAll(ClaimTypes.Role).Select(c => c.Value).ToList();
+
+    return Results.Json(new { email = email, roles = roles }); // Check if roles are attached
 }).RequireAuthorization();
+
 
 
 app.Run();

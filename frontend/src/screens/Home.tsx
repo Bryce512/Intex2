@@ -83,11 +83,6 @@ function Home() {
   return (
     <>
       <AuthorizeView>
-        <span>
-          <Logout>
-            Logout <AuthorizedUser value="email" />
-          </Logout>{' '}
-        </span>
         <HeaderHome />
         <TopMovieRecommendation />
         <br />

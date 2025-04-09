@@ -47,7 +47,7 @@ namespace intex2.Controllers
             _signInManager = signInManager;
         }
 
-        [Authorize]
+        [Authorize(Roles = "admin,user")]
         [HttpGet("UserActionMovies")]
         public async Task<IActionResult> GetUserActionMovies()
         {
@@ -109,7 +109,7 @@ namespace intex2.Controllers
             return Ok(movies);
         }
 
-        [Authorize]
+        [Authorize(Roles = "admin,user")]
         [HttpGet("UserComedyMovies")]
         public async Task<IActionResult> GetUserComedyMovies()
         {
@@ -160,7 +160,7 @@ namespace intex2.Controllers
             return Ok(movies);
         }
 
-        [Authorize]
+        [Authorize(Roles = "admin,user")]
         [HttpGet("UserChildrenMovies")]
         public async Task<IActionResult> GetUserChildrenMovies()
         {
@@ -210,7 +210,7 @@ namespace intex2.Controllers
             return Ok(movies);
         }
 
-        [Authorize]
+        [Authorize(Roles = "admin,user")]
         [HttpGet("UserFantasyMovies")]
         public async Task<IActionResult> GetUserFantasyMovies()
         {
@@ -260,7 +260,7 @@ namespace intex2.Controllers
             return Ok(movies);
         }
 
-        [Authorize]
+        [Authorize(Roles = "admin,user")]
         [HttpGet("UserMovies")]
         public async Task<IActionResult> GetUserMovies()
         {
@@ -345,6 +345,7 @@ namespace intex2.Controllers
             return Ok(popularMovies);
         }
         
+        [Authorize(Roles = "admin")]
         [HttpGet("AllMovies")]
         public IActionResult GetMovies(int pageNum, int resultsPerPage)
         {
@@ -355,6 +356,7 @@ namespace intex2.Controllers
             var movies = query
                 .Skip((pageNum - 1) * resultsPerPage)
                 .Take(resultsPerPage)
+                .OrderBy(m => m.ShowId)
                 .ToList();
 
             return Ok(new
@@ -363,20 +365,8 @@ namespace intex2.Controllers
                 totalNumMovies = totalMovies
             });
         }
-
-
-
-        // [HttpGet ("getCategories")]
-        // public List<string> GetCategories()
-        // {
-        //     var categories = _context.Books
-        //         .Select(x => x.Category)
-        //         .Distinct()
-        //         .ToList();
-        //
-        //     return categories;
-        // }
-
+        
+        [Authorize(Roles = "admin")]
         [HttpPost("AddMovie")]
         public IActionResult AddMovie([FromBody] MoviesTitle newMovie)
         {
@@ -385,6 +375,7 @@ namespace intex2.Controllers
             return Ok(newMovie);
         }
 
+        [Authorize(Roles = "admin")]
         [HttpDelete("DeleteMovie/{id}")]
         public IActionResult DeleteMovie(string id)
         {
@@ -399,6 +390,7 @@ namespace intex2.Controllers
             return Ok(movie);
         }
 
+        [Authorize(Roles = "admin")]
         [HttpPut("UpdateMovie/{id}")]
         public IActionResult UpdateMovie(string id,[FromBody] MoviesTitle updatedMovie)
         {

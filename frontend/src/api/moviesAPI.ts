@@ -119,6 +119,7 @@ export const handleRegister = async (
   try {
     const response = await fetch(`${API_URL}/register`, {
       method: 'POST',
+      credentials: 'include',
       headers: {
         'Content-Type': 'application/json',
       },
@@ -174,7 +175,8 @@ export const fetchMovies = async (
   resultsPerPage: number
 ): Promise<fetchMoviesResponse> => {
   const response = await fetch(
-    `${API_URL}/Movies/AllMovies?pageNum=${page}&resultsPerPage=${resultsPerPage}`
+    `${API_URL}/Movies/AllMovies?pageNum=${page}&resultsPerPage=${resultsPerPage}`,{
+        credentials: 'include'}
   );
 
   if (!response.ok) {
@@ -193,6 +195,7 @@ export const addMovie = async (newMovie: Movie): Promise<Movie> => {
       headers: {
         'Content-Type': 'application/json',
       },
+      credentials: 'include',
       body: JSON.stringify(newMovie),
     });
     if (!response.ok) {
@@ -216,6 +219,7 @@ export const updateMovie = async (
       headers: {
         'Content-Type': 'application/json',
       },
+      credentials: 'include',
       body: JSON.stringify(updatedMovie),
     });
     if (!response.ok) {
@@ -233,6 +237,7 @@ export const deleteMovie = async (showId: string): Promise<void> => {
   try {
     const response = await fetch(`${API_URL}/Movies/DeleteMovie/${showId}`, {
       method: 'DELETE',
+      credentials: 'include',
     });
     if (!response.ok) {
       throw new Error(`HTTP error! status: ${response.status}`);
