@@ -72,11 +72,11 @@ function Login() {
       const endpoints = [
         {
           key: 'Top Rated',
-          url: 'https://localhost:5000/Movies/TopRatedMovies',
+          url: 'https://intex2-backend-ezargqcgdwbgd4hq.westus3-01.azurewebsites.net/Movies/TopRatedMovies',
         },
         {
           key: 'Trending Now',
-          url: 'https://localhost:5000/Movies/PopularMovies',
+          url: 'https://intex2-backend-ezargqcgdwbgd4hq.westus3-01.azurewebsites.net/Movies/PopularMovies',
         },
       ];
 

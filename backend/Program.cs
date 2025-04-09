@@ -24,7 +24,7 @@ builder.Services.AddDbContext<AuthDbContext>(options =>
 builder.Services.AddCors(options =>
     options.AddPolicy("AllowReactApp", policy =>
     {
-        policy.WithOrigins("http://localhost:3000")
+        policy.WithOrigins("http://localhost:3000", "https://icy-sky-018ec221e.6.azurestaticapps.net")
             .AllowAnyMethod()
             .AllowAnyHeader()
             .AllowCredentials(); // Add this if you're using credentials
@@ -38,7 +38,7 @@ builder.Services.AddCors(options =>
 builder.Services.AddIdentity<AppIdentityUser, IdentityRole<int>>(options =>
     {
          options.Password.RequireDigit = false;
-         options.Password.RequiredLength = 6;
+         options.Password.RequiredLength = 14;
          options.Password.RequireNonAlphanumeric = false;
          options.Password.RequireUppercase = false;
          options.Password.RequireLowercase = false;
@@ -158,6 +158,13 @@ app.MapPost("/logout", async (HttpContext context, SignInManager<AppIdentityUser
         Secure = true,
         SameSite = SameSiteMode.None
     });
+    context.Response.Cookies.Delete("cookie_consent_session", new CookieOptions
+    {
+        Path = "/",
+        Secure = true,
+        SameSite = SameSiteMode.None
+    });
+
 
     return Results.Ok(new {
         // success = true,

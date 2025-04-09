@@ -1,11 +1,14 @@
 import { Movie } from '../types/movies';
+import { NewMovie } from '../types/newMovie';
 
 interface fetchMoviesResponse {
   movies: Movie[];
   totalNumMovies: number;
 }
 
-const API_URL = 'https://localhost:5000'; // For local development
+// const API_URL = 'https://localhost:5000'; // For local development
+const API_URL =
+  'https://intex2-backend-ezargqcgdwbgd4hq.westus3-01.azurewebsites.net';
 
 // Handle login using plain username/password
 export const handleLogin = async (
@@ -172,10 +175,10 @@ export const handleRegister = async (
 export const fetchMovies = async (
   page: number,
   resultsPerPage: number,
-  searchTerm: string = ""
+  // searchTerm: string = ""
 ): Promise<fetchMoviesResponse> => {
   const response = await fetch(
-    `${API_URL}/Movies/AllMovies?pageNum=${page}&resultsPerPage=${resultsPerPage}&searchTerm=${encodeURIComponent(searchTerm)}`
+    `${API_URL}/Movies/AllMovies?pageNum=${page}&resultsPerPage=${resultsPerPage}`// &searchTerm=${encodeURIComponent(searchTerm)}`
   );
 
   if (!response.ok) {
@@ -188,7 +191,7 @@ export const fetchMovies = async (
 };
 
 
-export const addMovie = async (newMovie: Movie): Promise<Movie> => {
+export const addMovie = async (newMovie: NewMovie): Promise<NewMovie> => {
   try {
     const response = await fetch(`${API_URL}/Movies/AddMovie`, {
       method: 'POST',

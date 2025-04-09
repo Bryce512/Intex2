@@ -52,7 +52,7 @@ function RegisterForm({
           setErrorMessage,
           setLoading,
           setFailedAttempts,
-          handleClose()
+          handleClose
         )
       }
     >

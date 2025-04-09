@@ -1,32 +1,32 @@
-.page-wrapper {
-  position: relative;
-  padding: 2rem 1rem;
-  max-width: 1200px;
-  margin: 0 auto;
+.details-layout {
+  display: flex;
+  align-items: flex-start; /* aligns the top edges of children */
+  padding: 20px;
+  gap: 20px; /* space between button and details */
+}
+
+.back-button-container {
+  flex-shrink: 0; /* prevent it from stretching */
 }
 
 .back-button {
-  position: absolute;
-  top: 0;
-  left: 0;
-  margin: 1rem;
-  font-size: 1.1rem;
-  cursor: pointer;
-  background: white;
-  padding: 0.3rem 0.75rem;
+  position: fixed; /* Fix the button in place */
+  top: calc(
+    var(--header-height, 60px) + 10px
+  ); /* Dynamically adjust based on header height */
+  left: calc(
+    var(--side-padding, 20px)
+  ); /* Dynamically adjust based on side padding */
+  z-index: 1000; /* Ensure it is above other elements */
+  padding: 10px 16px;
+  font-size: 16px;
+  background-color: #f0f0f0;
+  border: none;
   border-radius: 6px;
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
-  z-index: 10;
-  transition: background 0.2s ease;
+  cursor: pointer;
+  transition: background-color 0.2s;
 }
 
 .back-button:hover {
-  background: #f5f5f5;
-}
-
-.invalid-id-message {
-  margin-top: 4rem;
-  font-size: 1.5rem;
-  text-align: center;
-  color: #666;
+  background-color: #ddd;
 }

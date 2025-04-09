@@ -1,4 +1,4 @@
-import React, { useRef, useState, forwardRef, useEffect } from "react";
+import { useRef, useState, forwardRef, useEffect } from "react";
 import styles from "../css/Header.module.css";
 import GenreFilterDropdown from "./GenreFilterDropdown";
 
@@ -9,7 +9,7 @@ type Props = {
 };
 
 const AllMoviesDropdown = forwardRef<HTMLButtonElement, Props>(
-  ({ onToggle, isOpen, dropdownPosition }, ref) => {
+  ({ onToggle, isOpen }) => {
     const buttonRef = useRef<HTMLButtonElement | null>(null);
     const [calculatedPosition, setCalculatedPosition] = useState({ top: 0, left: 0 });
 

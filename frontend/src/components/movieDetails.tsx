@@ -31,7 +31,12 @@ export default function MovieDetails({ id }: MovieDetailsProps) {
   const displayCommaList = (value?: string) => {
     if (!value || value.trim() === '') return 'Not available';
 
-    // Split by whitespace and filter out blanks
+    // If it already has commas, return it as-is
+    if (value.includes(',')) {
+      return value.trim();
+    }
+
+    // Otherwise, try to group every 2 words into names
     const words = value.trim().split(/\s+/).filter(Boolean);
 
     const pairs: string[] = [];
@@ -44,43 +49,6 @@ export default function MovieDetails({ id }: MovieDetailsProps) {
   };
 
   if (!movie) return <div>Loading...</div>;
-
-  const genreKeys = [
-    'action',
-    'adventure',
-    'animeSeriesInternationalTvShows',
-    'britishTvShowsDocuseriesInternationalTvShows',
-    'children',
-    'comedies',
-    'comediesDramasInternationalMovies',
-    'comediesInternationalMovies',
-    'comediesRomanticMovies',
-    'crimeTvShowsDocuseries',
-    'documentaries',
-    'documentariesInternationalMovies',
-    'docuseries',
-    'dramas',
-    'dramasInternationalMovies',
-    'dramasRomanticMovies',
-    'familyMovies',
-    'fantasy',
-    'horrorMovies',
-    'internationalMoviesThrillers',
-    'internationalTvShowsRomanticTvShowsTvDramas',
-    'kidsTv',
-    'languageTvShows',
-    'musicals',
-    'natureTv',
-    'realityTv',
-    'spirituality',
-    'tvAction',
-    'tvComedies',
-    'tvDramas',
-    'talkShowsTvComedies',
-    'thrillers',
-  ];
-
-  const genres = genreKeys.filter((key) => movie[key as keyof Movie] === 1);
 
   return (
     <div className="movie-details-container">
@@ -104,6 +72,7 @@ export default function MovieDetails({ id }: MovieDetailsProps) {
 
           <ul className="movie-meta">
             <li>{displayValue(movie.description)}</li>
+            <br></br>
             <li>
               <strong>Rating:</strong> {displayValue(movie.rating)}
             </li>
@@ -121,15 +90,13 @@ export default function MovieDetails({ id }: MovieDetailsProps) {
             </li>
           </ul>
 
-          {genres.length > 0 && (
+          {movie.genres.length > 0 && (
             <div className="movie-genres">
               <h2>Genres</h2>
               <div className="genre-badges">
-                {genres.map((genre) => (
+                {movie.genres.map((genre) => (
                   <span key={genre} className="genre-badge">
-                    {genre
-                      .replace(/([A-Z])/g, ' $1')
-                      .replace(/^./, (str) => str.toUpperCase())}
+                    {genre}
                   </span>
                 ))}
               </div>
@@ -137,12 +104,12 @@ export default function MovieDetails({ id }: MovieDetailsProps) {
           )}
 
           <div className="movie-rating">
-            <h3>Rate this movie:</h3>
+            <h3>Rate this {movie.type}:</h3>
             {[1, 2, 3, 4, 5].map((star) => (
               <span
                 key={star}
                 className={`star ${star <= rating ? 'filled' : ''}`}
-                onClick={() => setRating(star)}
+                onClick={() => setRating(star === rating ? 0 : star)}
               >
                 ★
               </span>

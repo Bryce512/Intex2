@@ -19,7 +19,7 @@ function MovieDetailsPage() {
       const endpoints = [
         {
           key: 'Similar Titles',
-          url: `https://localhost:5000/Movies/MovieToMovieRecommendations/${id}`,
+          url: `https://intex2-backend-ezargqcgdwbgd4hq.westus3-01.azurewebsites.net/Movies/MovieToMovieRecommendations/${id}`,
         },
       ];
 
@@ -61,18 +61,19 @@ function MovieDetailsPage() {
     <>
       <HeaderHome />
 
-      <div className="page-wrapper">
-        {!id ? (
-          <div className="invalid-id-message">Invalid movie ID</div>
-        ) : (
-          <>
-            <div className="back-button" onClick={() => navigate(-1)}>
-              ← Back
-            </div>
-            <MovieDetails id={id} />
-          </>
-        )}
-      </div>
+      {!id ? (
+        <div className="invalid-id-wrapper">
+          <p className="invalid-id-message">Invalid movie ID</p>
+        </div>
+      ) : (
+        <>
+          <button className="back-button" onClick={() => navigate(-1)}>
+            ← Back
+          </button>
+
+          <MovieDetails id={id} />
+        </>
+      )}
 
       {/* Carousels */}
       <div className="mt-5">

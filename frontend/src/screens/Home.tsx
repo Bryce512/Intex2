@@ -2,9 +2,9 @@ import { useEffect, useState } from 'react';
 import HeaderHome from '../components/HeaderHome';
 import TopMovieRecommendation from '../components/TopMovie';
 import HorizontalCarousel from '../components/HorizontalCarousel';
-import AuthorizeView, { AuthorizedUser } from '../components/AuthorizeView';
-import Logout from '../components/Logout';
+import AuthorizeView from '../components/AuthorizeView';
 import Footer from '../components/Footer';
+import CookieConsent from '../components/CookieConsent';
 
 function Home() {
   // State to hold multiple categories of movies
@@ -18,31 +18,31 @@ function Home() {
       const endpoints = [
         {
           key: 'Top Rated',
-          url: 'https://localhost:5000/Movies/TopRatedMovies',
+          url: 'https://intex2-backend-ezargqcgdwbgd4hq.westus3-01.azurewebsites.net/Movies/TopRatedMovies',
         },
         {
           key: 'Trending Now',
-          url: 'https://localhost:5000/Movies/PopularMovies',
+          url: 'https://intex2-backend-ezargqcgdwbgd4hq.westus3-01.azurewebsites.net/Movies/PopularMovies',
         },
         {
           key: 'Your Top Picks',
-          url: 'https://localhost:5000/Movies/UserMovies',
+          url: 'https://intex2-backend-ezargqcgdwbgd4hq.westus3-01.azurewebsites.net/Movies/UserMovies',
         },
         {
           key: 'Comedy',
-          url: 'https://localhost:5000/Movies/UserComedyMovies',
+          url: 'https://intex2-backend-ezargqcgdwbgd4hq.westus3-01.azurewebsites.net/Movies/UserComedyMovies',
         },
         {
           key: 'Fantasy',
-          url: 'https://localhost:5000/Movies/UserFantasyMovies',
+          url: 'https://intex2-backend-ezargqcgdwbgd4hq.westus3-01.azurewebsites.net/Movies/UserFantasyMovies',
         },
         {
           key: 'Kids',
-          url: 'https://localhost:5000/Movies/UserChildrenMovies',
+          url: 'https://intex2-backend-ezargqcgdwbgd4hq.westus3-01.azurewebsites.net/Movies/UserChildrenMovies',
         },
         {
           key: 'Action',
-          url: 'https://localhost:5000/Movies/UserActionMovies',
+          url: 'https://intex2-backend-ezargqcgdwbgd4hq.westus3-01.azurewebsites.net/Movies/UserActionMovies',
         },
       ];
 
@@ -93,6 +93,7 @@ function Home() {
             items={getMovieItems(movies)}
           />
         ))}
+        <CookieConsent />
         <Footer />
       </AuthorizeView>
     </>

@@ -1,7 +1,4 @@
 import { useNavigate } from 'react-router-dom';
-import { useState } from 'react';
-import AllMoviesDropdown from './DropdownButton';
-import SearchBar from './SearchBar';
 import UserInfo from './UserInfo';
 import styles from '../css/Header.module.css';
 

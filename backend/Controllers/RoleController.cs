@@ -9,7 +9,7 @@ using Microsoft.AspNetCore.Identity;
 
 [Route("[controller]")]
 [ApiController]
-// [Authorize(Roles = "admin")]
+[Authorize(Roles = "admin")]
 public class RoleController : Controller
 {
     private readonly RoleManager<IdentityRole<int>> _roleManager;
