@@ -75,7 +75,7 @@ function Home() {
   const getMovieItems = (movies: { title: string; showId: string }[]) => {
     return movies.map((movie) => ({
       id: movie.showId,
-      imageUrl: `images/Movie Posters/${movie.title}.jpg`,
+      imageUrl: `https://movieposters123.blob.core.windows.net/movieposters/${movie.title}.jpg`,
       linkUrl: `/MovieDetailsPage/${movie.showId}`,
     }));
   };
