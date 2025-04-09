@@ -12,6 +12,7 @@ namespace intex2.Models
 
         //public virtual DbSet<EfmigrationHistory> EfmigrationHistories { get; set; } = null!;
         
+        //public virtual DbSet<EfmigrationHistory> EfmigrationHistories { get; set; } = null!;
         public virtual DbSet<MoviesRating> MoviesRatings { get; set; } = null!;
         public virtual DbSet<MoviesTitle> MoviesTitles { get; set; } = null!;
         public virtual DbSet<MoviesUser> MoviesUsers { get; set; } = null!;
@@ -113,6 +114,7 @@ namespace intex2.Models
 
             OnModelCreatingPartial(modelBuilder);
         }
+
 
         partial void OnModelCreatingPartial(ModelBuilder modelBuilder);
     }

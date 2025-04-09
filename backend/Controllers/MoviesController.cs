@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Authorization;
 
 namespace intex2.Controllers
 {
@@ -46,34 +47,42 @@ namespace intex2.Controllers
             _signInManager = signInManager;
         }
 
-
+        [Authorize]
         [HttpGet("UserActionMovies")]
         public async Task<IActionResult> GetUserActionMovies()
         {
             // Step 1: Get the currently logged-in user
             var user = await _userManager.GetUserAsync(User);
+
+            Console.WriteLine($"CURRENT USER: {user}");
+
             if (user == null)
             {
                 // return Unauthorized(new { message = "User not logged in." });
                 // Mock data for testing
                 var mockMovies = new List<object>
                 {
-                    new { ShowId = "1", Title = "3022" },
-                    new { ShowId = "2", Title = "A Mission in an Old Movie" },
-                    new { ShowId = "3", Title = "Dogs of Berlin" },
-                    new { ShowId = "4", Title = "Afflicted" },
-                    new { ShowId = "5", Title = "Feel Rich" },
-                    new { ShowId = "6", Title = "100 Hotter" },
-                    new { ShowId = "7", Title = "Follow This" },
-                    new { ShowId = "8", Title = "1 Chance 2 Dance" },
-                    new { ShowId = "9", Title = "Slow Country" },
-                    new { ShowId = "10", Title = "Small Town Crime" }
+                    new { ShowId = "s1", Title = "3022" },
+                    new { ShowId = "s2", Title = "A Mission in an Old Movie" },
+                    new { ShowId = "s3", Title = "Dogs of Berlin" },
+                    new { ShowId = "s4", Title = "Afflicted" },
+                    new { ShowId = "s5", Title = "Feel Rich" },
+                    new { ShowId = "s6", Title = "100 Hotter" },
+                    new { ShowId = "s7", Title = "Follow This" },
+                    new { ShowId = "s8", Title = "1 Chance 2 Dance" },
+                    new { ShowId = "s9", Title = "Slow Country" },
+                    new { ShowId = "s10", Title = "Small Town Crime" }
                 };
                 return Ok(mockMovies);
             }
 
+
+            Console.WriteLine($"CURRENT USER ID: {user.Id}");
+
             // Step 2: Look up this user's recommendations
             var recs = _actionRecommendationsContext.Recommendations.FirstOrDefault(r => r.UserId == user.Id);
+
+            Console.WriteLine($"CURRENT RECS: {System.Text.Json.JsonSerializer.Serialize(recs)}");
 
             if (recs == null)
             {
@@ -87,36 +96,42 @@ namespace intex2.Controllers
                 recs.Rec6, recs.Rec7, recs.Rec8, recs.Rec9, recs.Rec10
             }.Where(id => !string.IsNullOrEmpty(id)).ToList();
 
+            Console.WriteLine($"CURRENT SHOWIDS: {string.Join(", ", showIds)}");
+
             // Step 4: Match those show IDs with movies from Movies.db
             var movies = _moviesContext.MoviesTitles
                 .Where(m => showIds.Contains(m.ShowId))
                 .Select(m => new { m.ShowId, m.Title })
                 .ToList();
 
+            Console.WriteLine($"CURRENT MOVIES: {movies}");
+
             return Ok(movies);
         }
 
+        [Authorize]
         [HttpGet("UserComedyMovies")]
         public async Task<IActionResult> GetUserComedyMovies()
         {
             // Step 1: Get the currently logged-in user
             var user = await _userManager.GetUserAsync(User);
+
             if (user == null)
             {
                 // return Unauthorized(new { message = "User not logged in." });
                 // Mock data for testing
                 var mockMovies = new List<object>
                 {
-                    new { ShowId = "1", Title = "Small Chops" },
-                    new { ShowId = "2", Title = "A Mission in an Old Movie" },
-                    new { ShowId = "3", Title = "Dogs of Berlin" },
-                    new { ShowId = "4", Title = "Afflicted" },
-                    new { ShowId = "5", Title = "Feel Rich" },
-                    new { ShowId = "6", Title = "100 Hotter" },
-                    new { ShowId = "7", Title = "Follow This" },
-                    new { ShowId = "8", Title = "1 Chance 2 Dance" },
-                    new { ShowId = "9", Title = "Slow Country" },
-                    new { ShowId = "10", Title = "Small Town Crime" }
+                    new { ShowId = "s1", Title = "Small Chops" },
+                    new { ShowId = "s2", Title = "A Mission in an Old Movie" },
+                    new { ShowId = "s3", Title = "Dogs of Berlin" },
+                    new { ShowId = "s4", Title = "Afflicted" },
+                    new { ShowId = "s5", Title = "Feel Rich" },
+                    new { ShowId = "s6", Title = "100 Hotter" },
+                    new { ShowId = "s7", Title = "Follow This" },
+                    new { ShowId = "s8", Title = "1 Chance 2 Dance" },
+                    new { ShowId = "s9", Title = "Slow Country" },
+                    new { ShowId = "s10", Title = "Small Town Crime" }
                 };
                 return Ok(mockMovies);
             }
@@ -145,6 +160,7 @@ namespace intex2.Controllers
             return Ok(movies);
         }
 
+        [Authorize]
         [HttpGet("UserChildrenMovies")]
         public async Task<IActionResult> GetUserChildrenMovies()
         {
@@ -156,16 +172,16 @@ namespace intex2.Controllers
                 // Mock data for testing
                 var mockMovies = new List<object>
                 {
-                    new { ShowId = "1", Title = "Shooter" },
-                    new { ShowId = "2", Title = "A Mission in an Old Movie" },
-                    new { ShowId = "3", Title = "Dogs of Berlin" },
-                    new { ShowId = "4", Title = "Afflicted" },
-                    new { ShowId = "5", Title = "Feel Rich" },
-                    new { ShowId = "6", Title = "100 Hotter" },
-                    new { ShowId = "7", Title = "Follow This" },
-                    new { ShowId = "8", Title = "1 Chance 2 Dance" },
-                    new { ShowId = "9", Title = "Slow Country" },
-                    new { ShowId = "10", Title = "Small Town Crime" }
+                    new { ShowId = "s1", Title = "Shooter" },
+                    new { ShowId = "s2", Title = "A Mission in an Old Movie" },
+                    new { ShowId = "s3", Title = "Dogs of Berlin" },
+                    new { ShowId = "s4", Title = "Afflicted" },
+                    new { ShowId = "s5", Title = "Feel Rich" },
+                    new { ShowId = "s6", Title = "100 Hotter" },
+                    new { ShowId = "s7", Title = "Follow This" },
+                    new { ShowId = "s8", Title = "1 Chance 2 Dance" },
+                    new { ShowId = "s9", Title = "Slow Country" },
+                    new { ShowId = "s10", Title = "Small Town Crime" }
                 };
                 return Ok(mockMovies);
             }
@@ -194,6 +210,7 @@ namespace intex2.Controllers
             return Ok(movies);
         }
 
+        [Authorize]
         [HttpGet("UserFantasyMovies")]
         public async Task<IActionResult> GetUserFantasyMovies()
         {
@@ -205,16 +222,16 @@ namespace intex2.Controllers
                 // Mock data for testing
                 var mockMovies = new List<object>
                 {
-                    new { ShowId = "1", Title = "Scissor Seven" },
-                    new { ShowId = "2", Title = "A Mission in an Old Movie" },
-                    new { ShowId = "3", Title = "Dogs of Berlin" },
-                    new { ShowId = "4", Title = "Afflicted" },
-                    new { ShowId = "5", Title = "Feel Rich" },
-                    new { ShowId = "6", Title = "100 Hotter" },
-                    new { ShowId = "7", Title = "Follow This" },
-                    new { ShowId = "8", Title = "1 Chance 2 Dance" },
-                    new { ShowId = "9", Title = "Slow Country" },
-                    new { ShowId = "10", Title = "Small Town Crime" }
+                    new { ShowId = "s1", Title = "Scissor Seven" },
+                    new { ShowId = "s2", Title = "A Mission in an Old Movie" },
+                    new { ShowId = "s3", Title = "Dogs of Berlin" },
+                    new { ShowId = "s4", Title = "Afflicted" },
+                    new { ShowId = "s5", Title = "Feel Rich" },
+                    new { ShowId = "s6", Title = "100 Hotter" },
+                    new { ShowId = "s7", Title = "Follow This" },
+                    new { ShowId = "s8", Title = "1 Chance 2 Dance" },
+                    new { ShowId = "s9", Title = "Slow Country" },
+                    new { ShowId = "s10", Title = "Small Town Crime" }
                 };
                 return Ok(mockMovies);
             }
@@ -243,27 +260,29 @@ namespace intex2.Controllers
             return Ok(movies);
         }
 
+        [Authorize]
         [HttpGet("UserMovies")]
         public async Task<IActionResult> GetUserMovies()
         {
             // Step 1: Get the currently logged-in user
             var user = await _userManager.GetUserAsync(User);
+
             if (user == null)
             {
                 // return Unauthorized(new { message = "User not logged in." });
                 // Mock data for testing
                 var mockMovies = new List<object>
                 {
-                    new { ShowId = "1", Title = "Sweet Girl" },
-                    new { ShowId = "2", Title = "A Mission in an Old Movie" },
-                    new { ShowId = "3", Title = "Dogs of Berlin" },
-                    new { ShowId = "4", Title = "Afflicted" },
-                    new { ShowId = "5", Title = "Feel Rich" },
-                    new { ShowId = "6", Title = "100 Hotter" },
-                    new { ShowId = "7", Title = "Follow This" },
-                    new { ShowId = "8", Title = "1 Chance 2 Dance" },
-                    new { ShowId = "9", Title = "Slow Country" },
-                    new { ShowId = "10", Title = "Small Town Crime" }
+                    new { ShowId = "s1", Title = "Sweet Girl" },
+                    new { ShowId = "s2", Title = "A Mission in an Old Movie" },
+                    new { ShowId = "s3", Title = "Dogs of Berlin" },
+                    new { ShowId = "s4", Title = "Afflicted" },
+                    new { ShowId = "s5", Title = "Feel Rich" },
+                    new { ShowId = "s6", Title = "100 Hotter" },
+                    new { ShowId = "s7", Title = "Follow This" },
+                    new { ShowId = "s8", Title = "1 Chance 2 Dance" },
+                    new { ShowId = "s9", Title = "Slow Country" },
+                    new { ShowId = "s10", Title = "Small Town Crime" }
                 };
                 return Ok(mockMovies);
             }

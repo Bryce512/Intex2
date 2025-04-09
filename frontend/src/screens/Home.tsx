@@ -2,8 +2,8 @@ import { useEffect, useState } from 'react';
 import HeaderHome from '../components/HeaderHome';
 import TopMovieRecommendation from '../components/TopMovie';
 import HorizontalCarousel from '../components/HorizontalCarousel';
-//import AuthorizeView, { AuthorizedUser } from "../components/AuthorizeView";
-import Logout from "../components/Logout";
+import AuthorizeView, { AuthorizedUser } from '../components/AuthorizeView';
+import Logout from '../components/Logout';
 import Footer from '../components/Footer';
 
 function Home() {
@@ -52,7 +52,9 @@ function Home() {
 
       for (const { key, url } of endpoints) {
         try {
-          const response = await fetch(url);
+          const response = await fetch(url, {
+            credentials: 'include',
+          });
           if (response.ok) {
             const data = await response.json();
             results[key] = data;
@@ -63,7 +65,6 @@ function Home() {
           console.error(`Error fetching ${key}:`, error);
         }
       }
-
       setCarouselMovies(results);
     };
 
@@ -81,12 +82,12 @@ function Home() {
 
   return (
     <>
-      {/* <AuthorizeView>
+      <AuthorizeView>
         <span>
           <Logout>
             Logout <AuthorizedUser value="email" />
           </Logout>{' '}
-        </span> */}
+        </span>
         <HeaderHome />
         <TopMovieRecommendation />
         <br />
@@ -98,7 +99,7 @@ function Home() {
           />
         ))}
         <Footer />
-      {/* </AuthorizeView> */}
+      </AuthorizeView> 
     </>
   );
 }

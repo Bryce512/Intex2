@@ -14,8 +14,14 @@ public class AuthDbContext : IdentityDbContext<AppIdentityUser, IdentityRole<int
     protected override void OnModelCreating(ModelBuilder builder)
     {
         base.OnModelCreating(builder);
-
-        // builder.Entity<AppIdentityUser>().ToTable("AspNetUsers");
-
+    
+        // Explicitly specify the table names for Identity entities
+        builder.Entity<AppIdentityUser>().ToTable("AspNetUsers");  // Mapping to AspNetUsers table
+        builder.Entity<IdentityRole<int>>().ToTable("AspNetRoles");  // Mapping to AspNetRoles table
+        builder.Entity<IdentityUserRole<int>>().ToTable("AspNetUserRoles"); // Mapping to AspNetUserRoles table
+        builder.Entity<IdentityUserClaim<int>>().ToTable("AspNetUserClaims"); // Mapping to AspNetUserClaims table
+        builder.Entity<IdentityUserLogin<int>>().ToTable("AspNetUserLogins"); // Mapping to AspNetUserLogins table
+        builder.Entity<IdentityRoleClaim<int>>().ToTable("AspNetRoleClaims"); // Mapping to AspNetRoleClaims table
+        builder.Entity<IdentityUserToken<int>>().ToTable("AspNetUserTokens"); // Mapping to AspNetUserTokens table
     }
 }

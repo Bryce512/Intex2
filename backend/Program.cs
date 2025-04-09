@@ -1,4 +1,5 @@
 using System.Security.Claims;
+using intex2.Data;
 using Microsoft.EntityFrameworkCore;
 using intex2.Models;
 using intex2.Services;
@@ -38,7 +39,7 @@ builder.Services.AddCors(options =>
     }));
 
 builder.Services.AddAuthorization();
-builder.Services.AddIdentityApiEndpoints<AppIdentityUser>(options =>
+builder.Services.AddIdentity<AppIdentityUser, IdentityRole<int>>(options =>
     {
          options.Password.RequireDigit = false;
          options.Password.RequiredLength = 6;
@@ -102,7 +103,15 @@ builder.Services.AddDbContext<PopularRecommendationsDbContext>(options =>
 builder.Services.AddDbContext<UserRecommendationsDbContext>(options =>
     options.UseSqlite("Data Source=user_recommendations.db"));
 
+builder.Services.AddSingleton<IEmailSender<AppIdentityUser>, NoOpEmailSender<AppIdentityUser>>();
+
 var app = builder.Build();
+
+using (var scope = app.Services.CreateScope())
+{
+    var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<IdentityRole<int>>>();
+    await SeedRoles(roleManager);
+}
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
@@ -111,8 +120,7 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
-
-static async Task SeedRoles(RoleManager<AppIdentityUser>roleManager)
+static async Task SeedRoles(RoleManager<IdentityRole<int>>roleManager)
 {
     string[] roleNames = { "Admin", "User" };
     
@@ -123,7 +131,7 @@ static async Task SeedRoles(RoleManager<AppIdentityUser>roleManager)
         if (!roleExists)
         {
             // Create the role
-            var role = new AppIdentityUser();
+            var role = new IdentityRole<int>();
             await roleManager.CreateAsync(role);
             Console.WriteLine($"Created role: {roleName}");
         }
@@ -145,10 +153,19 @@ app.MapPost("/logout", async (HttpContext context, SignInManager<AppIdentityUser
     await signInManager.SignOutAsync();
     
     // Ensure authentication cookie is removed
-    context.Response.Cookies.Delete(".AspNetCore.Identity.Application");
+    context.Response.Cookies.Delete(".AspNetCore.Identity.Application", new CookieOptions
+    {
+        HttpOnly = true,
+        Secure = true,
+        SameSite = SameSiteMode.None
+    });
 
-    return Results.Ok(new { message = "Logout successful" });
-}).RequireAuthorization();
+    return Results.Ok(new {
+        // success = true,
+        // redirect = "/login",
+        message = "Logout successful",  
+        timestamp = DateTime.UtcNow
+});}).RequireAuthorization();
 
 
 app.MapGet("/pingauth", (ClaimsPrincipal user) =>
@@ -165,10 +182,4 @@ app.MapGet("/pingauth", (ClaimsPrincipal user) =>
 
 app.Run();
 
-public class DummyEmailSender : IEmailSender<AppIdentityUser>
-{
-    public Task SendConfirmationLinkAsync(AppIdentityUser user, string email, string confirmationLink) => Task.CompletedTask;
-    public Task SendPasswordResetLinkAsync(AppIdentityUser user, string email, string resetLink) => Task.CompletedTask;
-    public Task SendPasswordResetCodeAsync(AppIdentityUser user, string email, string resetCode) => Task.CompletedTask;
-}
 
