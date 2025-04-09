@@ -434,6 +434,17 @@ namespace intex2.Controllers
             _moviesContext.SaveChanges();
             return Ok(movie);
         }
+
+        [HttpGet("GetMovieDetails/{id}")]
+        public IActionResult GetMovieDetails(string id)
+        {
+            var movie = _moviesContext.MoviesTitles.Find(id);
+            if (movie == null)
+            {
+                return NotFound();
+            }
+            return Ok(movie);
+        }
         
     }
 }
