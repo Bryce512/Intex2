@@ -1,12 +1,12 @@
 import Footer from '../components/Footer';
-import Header from '../components/Header';
+import HeaderHome from '../components/HeaderHome';
 import PrivacyPolicy from '../components/privacyPolicy';
 import '../css/privacyPage.css';
 
 function Privacy() {
   return (
     <>
-      <Header />
+      <HeaderHome />
       <PrivacyPolicy />
       <Footer />
     </>

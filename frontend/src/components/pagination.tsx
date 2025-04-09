@@ -14,7 +14,7 @@ const Pagination = ({
   onPageSizeChange,
 }: Pagination) => {
   return (
-    <div className="flex item-center justify-center mt-4" >
+    <div className="flex item-center justify-center mt-4">
       <button
         onClick={() => onPageChange(Math.max(1, currentPage - 1))}
         disabled={currentPage <= 1}
@@ -36,7 +36,7 @@ const Pagination = ({
         value={itemsPerPage}
         onChange={(e) => onPageSizeChange(Number(e.target.value))}
       >
-        {[5, 10, 20, 50].map((size) => (
+        {[50, 100, 200, 500].map((size) => (
           <option key={size} value={size}>
             {size} per page
           </option>
@@ -44,7 +44,6 @@ const Pagination = ({
       </select>
     </div>
   );
-}
+};
 
 export default Pagination;
-

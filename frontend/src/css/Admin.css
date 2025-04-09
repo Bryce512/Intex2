@@ -1,0 +1,59 @@
+/* Add this to your CSS file */
+.btn-blue {
+  background-color: #004883;
+  border-color: #007bff;
+  color: white;
+  transition: background-color 0.3s;
+  width: 100px;
+}
+
+.btn-blue:hover {
+  background-color: #007bff;
+}
+
+.btn-red {
+  background-color: #e16f7c;
+  border-color: #e16f7c;
+  color: white;
+  transition: background-color 0.3s;
+  width: 100px;
+}
+
+.btn-red:hover {
+  background-color: #bd2130;
+}
+
+.btn-success {
+  width: 200px;
+  background-color: #f5b700;
+  border-color: #011627;
+  color: #011627;
+  font-weight: bold;
+}
+
+input {
+  width: 50%;
+  background-color: #c4cbca;
+  color: #011627;
+}
+
+input::placeholder {
+  color: #636b61; /* Replace with your desired color */
+}
+
+/* Change the background color of the table header */
+.table th {
+  background-color: #636b61; /* Choose your desired color */
+  color: white; /* Text color */
+  font-weight: bold;
+}
+
+/* Striping for table rows */
+.table tbody tr:nth-child(even) {
+  background-color: #c4cbca; /* Light gray for even rows */
+}
+
+.table tbody tr:nth-child(odd) {
+  background-color: #c4cbca; /* White for odd rows */
+}
+

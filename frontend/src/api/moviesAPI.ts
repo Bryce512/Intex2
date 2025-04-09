@@ -169,10 +169,11 @@ export const handleRegister = async (
 
 export const fetchMovies = async (
   page: number,
-  resultsPerPage: number
+  resultsPerPage: number,
+  searchTerm: string = ""
 ): Promise<fetchMoviesResponse> => {
   const response = await fetch(
-    `${API_URL}/Movies/AllMovies?pageNum=${page}&resultsPerPage=${resultsPerPage}`
+    `${API_URL}/Movies/AllMovies?pageNum=${page}&resultsPerPage=${resultsPerPage}&searchTerm=${encodeURIComponent(searchTerm)}`
   );
 
   if (!response.ok) {
@@ -183,6 +184,7 @@ export const fetchMovies = async (
 
   return data;
 };
+
 
 export const addMovie = async (newMovie: Movie): Promise<Movie> => {
   try {

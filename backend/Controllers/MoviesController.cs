@@ -324,9 +324,19 @@ namespace intex2.Controllers
         }
         
         [HttpGet("AllMovies")]
-        public IActionResult GetMovies(int pageNum, int resultsPerPage)
+        public IActionResult GetMovies(int pageNum, int resultsPerPage, string searchTerm = "")
         {
+            // Convert searchTerm to lowercase once
+            searchTerm = searchTerm?.ToLower() ?? "";
+    
             var query = _moviesContext.MoviesTitles.AsQueryable();
+    
+            // Apply case-insensitive search filter if searchTerm is provided
+            if (!string.IsNullOrEmpty(searchTerm))
+            {
+                // Convert title to lowercase for comparison
+                query = query.Where(m => m.Title.ToLower().Contains(searchTerm));
+            }
 
             var totalMovies = query.Count();
 
@@ -341,19 +351,6 @@ namespace intex2.Controllers
                 totalNumMovies = totalMovies
             });
         }
-
-
-
-        // [HttpGet ("getCategories")]
-        // public List<string> GetCategories()
-        // {
-        //     var categories = _context.Books
-        //         .Select(x => x.Category)
-        //         .Distinct()
-        //         .ToList();
-        //
-        //     return categories;
-        // }
 
         [HttpPost("AddMovie")]
         public async Task<IActionResult> AddMovie([FromBody] MoviesTitle newMovie)
