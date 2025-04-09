@@ -4,7 +4,6 @@ using Microsoft.EntityFrameworkCore;
 using intex2.Models;
 using intex2.Services;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.CodeAnalysis.CodeActions;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -21,14 +20,6 @@ builder.Services.AddDbContext<MoviesDbContext>(options =>
 builder.Services.AddDbContext<AuthDbContext>(options => 
     options.UseSqlite(builder.Configuration.GetConnectionString("AuthConnection")));
 
-builder.Services.AddCors(options =>
-    options.AddPolicy("AllowReactApp", policy =>
-    {
-        policy.WithOrigins("http://localhost:3000", "https://icy-sky-018ec221e.6.azurestaticapps.net")
-            .AllowAnyMethod()
-            .AllowAnyHeader()
-            .AllowCredentials(); // Add this if you're using credentials
-    }));
 
     builder.Services.AddAuthorization(options =>
     {
@@ -79,28 +70,42 @@ builder.Services.ConfigureApplicationCookie(options =>
 
 // Added DbContexts for each of the .db recommendation files to builder
 builder.Services.AddDbContext<ActionRecommendationsDbContext>(options =>
-    options.UseSqlite("Data Source=action_recommendations.db"));
+    options.UseSqlite("Data Source=Databases/action_recommendations.db"));
 
 builder.Services.AddDbContext<TopRatedRecommendationsDbContext>(options =>
-    options.UseSqlite("Data Source=top_rated.db"));
+    options.UseSqlite("Data Source=Databases/top_rated.db"));
 
 builder.Services.AddDbContext<ChildrenRecommendationsDbContext>(options =>
-    options.UseSqlite("Data Source=children_recommendations.db"));
+    options.UseSqlite("Data Source=Databases/children_recommendations.db"));
 
 builder.Services.AddDbContext<FantasyRecommendationsDbContext>(options =>
-    options.UseSqlite("Data Source=fantasy_recommendations.db"));
+    options.UseSqlite("Data Source=Databases/fantasy_recommendations.db"));
 
 builder.Services.AddDbContext<ComedyRecommendationsDbContext>(options =>
-    options.UseSqlite("Data Source=comedy_recommendations.db"));
+    options.UseSqlite("Data Source=Databases/comedy_recommendations.db"));
 
 builder.Services.AddDbContext<PopularRecommendationsDbContext>(options =>
-    options.UseSqlite("Data Source=popular.db"));
+    options.UseSqlite("Data Source=Databases/popular.db"));
 
 builder.Services.AddDbContext<UserRecommendationsDbContext>(options =>
-    options.UseSqlite("Data Source=user_recommendations.db"));
+    options.UseSqlite("Data Source=Databases/user_recommendations.db"));
 
 builder.Services.AddDbContext<MovieToMovieRecommendationsDbContext>(options =>
-    options.UseSqlite("Data Source=movie_to_movie_hybrid_recommendations.db"));
+    options.UseSqlite("Data Source=Databases/movie_to_movie_hybrid_recommendations.db"));
+
+
+builder.Services.AddCors(options =>
+    options.AddPolicy(name: "AllowReactApp", policy =>
+    {
+        policy.WithOrigins(
+                "http://localhost:3000",
+                "https://icy-sky-018ec221e.6.azurestaticapps.net")
+            .AllowAnyMethod()
+            .AllowAnyHeader()
+            .AllowCredentials()
+            .WithExposedHeaders("Content-Security-Policy");
+
+    }));
 
 builder.Services.AddSingleton<IEmailSender<AppIdentityUser>, NoOpEmailSender<AppIdentityUser>>();
 
@@ -184,7 +189,7 @@ app.MapGet("/pingauth", (ClaimsPrincipal user) =>
     var email = user.FindFirstValue(ClaimTypes.Email) ?? "unknown@example.com"; // Ensure it's never null
     var roles = user.FindAll(ClaimTypes.Role).Select(c => c.Value).ToList();
 
-    return Results.Json(new { email = email, roles = roles }); // Check if roles are attached
+    return Results.Json(new { email, roles }); // Check if roles are attached
 }).RequireAuthorization();
 
 

@@ -377,7 +377,7 @@ namespace intex2.Controllers
             return Ok(popularMovies);
         }
         
-        // [Authorize(Roles = "admin")]
+        [Authorize(Roles = "admin")]
         [HttpGet("AllMovies")]
         public IActionResult GetMovies(int pageNum, int resultsPerPage, string searchTerm = "")
         {
