@@ -12,6 +12,7 @@ namespace intex2.Controllers
     [Route("[controller]")]
     public class MoviesController : ControllerBase
     {
+        private readonly MovieToMovieRecommendationsDbContext _movieToMovieRecommendationsContext;
         private readonly TopRatedRecommendationsDbContext _topRatedRecommendationsContext;
         private readonly UserRecommendationsDbContext _userRecommendationsContext;
         private readonly PopularRecommendationsDbContext _popularRecommendationsContext;
@@ -26,6 +27,7 @@ namespace intex2.Controllers
 
 
         public MoviesController(
+            MovieToMovieRecommendationsDbContext movieToMovieRecommendationsContext,
             TopRatedRecommendationsDbContext topRatedRecommendationsContext,
             UserRecommendationsDbContext userRecommendationsContext,
             PopularRecommendationsDbContext popularRecommendationsContext,
@@ -38,6 +40,7 @@ namespace intex2.Controllers
             SignInManager<AppIdentityUser> signInManager,
             IConfiguration config)
         {
+            _movieToMovieRecommendationsContext = movieToMovieRecommendationsContext;
             _topRatedRecommendationsContext = topRatedRecommendationsContext;
             _userRecommendationsContext = userRecommendationsContext;
             _popularRecommendationsContext = popularRecommendationsContext;
@@ -51,14 +54,48 @@ namespace intex2.Controllers
             _config = config;
         }
 
-        [Authorize]
+        [Authorize(Roles = "admin,user")]
+        [HttpGet("MovieToMovieRecommendations/{showId}")]
+        public async Task<IActionResult> GetMovieRecommendations(string showId)
+        {
+            // Step 1: Validate the input `showId`
+            if (string.IsNullOrEmpty(showId))
+            {
+                return BadRequest(new { message = "Movie showId is null or empty." });
+            }
+
+            // Step 2: Look up movie-to-movie recommendations for the given showId
+            var recs = _movieToMovieRecommendationsContext.MovieRecommendations
+                .FirstOrDefault(r => r.ShowId == showId);
+
+            if (recs == null)
+            {
+                return NotFound(new { message = "No movie recommendations found for this movie." });
+            }
+
+            // Step 3: Collect all the recommended movie show IDs (rec_1 to rec_10)
+            var showIds = new List<string?>
+            {
+                recs.Rec1, recs.Rec2, recs.Rec3, recs.Rec4, recs.Rec5,
+                recs.Rec6, recs.Rec7, recs.Rec8, recs.Rec9, recs.Rec10
+            }.Where(id => !string.IsNullOrEmpty(id)).ToList();
+
+            // Step 4: Match those show IDs with movies from Movies.db
+            var movies = _moviesContext.MoviesTitles
+                .Where(m => showIds.Contains(m.ShowId))
+                .Select(m => new { m.ShowId, m.Title })
+                .ToList();
+
+            // Return the recommended movies
+            return Ok(movies);
+        }
+
+        [Authorize(Roles = "admin,user")]
         [HttpGet("UserActionMovies")]
         public async Task<IActionResult> GetUserActionMovies()
         {
             // Step 1: Get the currently logged-in user
             var user = await _userManager.GetUserAsync(User);
-
-            Console.WriteLine($"CURRENT USER: {user}");
 
             if (user == null)
             {
@@ -80,13 +117,8 @@ namespace intex2.Controllers
                 return Ok(mockMovies);
             }
 
-
-            Console.WriteLine($"CURRENT USER ID: {user.Id}");
-
             // Step 2: Look up this user's recommendations
             var recs = _actionRecommendationsContext.Recommendations.FirstOrDefault(r => r.UserId == user.Id);
-
-            Console.WriteLine($"CURRENT RECS: {System.Text.Json.JsonSerializer.Serialize(recs)}");
 
             if (recs == null)
             {
@@ -100,20 +132,16 @@ namespace intex2.Controllers
                 recs.Rec6, recs.Rec7, recs.Rec8, recs.Rec9, recs.Rec10
             }.Where(id => !string.IsNullOrEmpty(id)).ToList();
 
-            Console.WriteLine($"CURRENT SHOWIDS: {string.Join(", ", showIds)}");
-
             // Step 4: Match those show IDs with movies from Movies.db
             var movies = _moviesContext.MoviesTitles
                 .Where(m => showIds.Contains(m.ShowId))
                 .Select(m => new { m.ShowId, m.Title })
                 .ToList();
 
-            Console.WriteLine($"CURRENT MOVIES: {movies}");
-
             return Ok(movies);
         }
 
-        [Authorize]
+        [Authorize(Roles = "admin,user")]
         [HttpGet("UserComedyMovies")]
         public async Task<IActionResult> GetUserComedyMovies()
         {
@@ -164,7 +192,7 @@ namespace intex2.Controllers
             return Ok(movies);
         }
 
-        [Authorize]
+        [Authorize(Roles = "admin,user")]
         [HttpGet("UserChildrenMovies")]
         public async Task<IActionResult> GetUserChildrenMovies()
         {
@@ -214,7 +242,7 @@ namespace intex2.Controllers
             return Ok(movies);
         }
 
-        [Authorize]
+        [Authorize(Roles = "admin,user")]
         [HttpGet("UserFantasyMovies")]
         public async Task<IActionResult> GetUserFantasyMovies()
         {
@@ -264,7 +292,7 @@ namespace intex2.Controllers
             return Ok(movies);
         }
 
-        [Authorize]
+        [Authorize(Roles = "admin,user")]
         [HttpGet("UserMovies")]
         public async Task<IActionResult> GetUserMovies()
         {
@@ -349,16 +377,28 @@ namespace intex2.Controllers
             return Ok(popularMovies);
         }
         
+        [Authorize(Roles = "admin")]
         [HttpGet("AllMovies")]
-        public IActionResult GetMovies(int pageNum, int resultsPerPage)
+        public IActionResult GetMovies(int pageNum, int resultsPerPage, string searchTerm = "")
         {
+            // Convert searchTerm to lowercase once
+            searchTerm = searchTerm?.ToLower() ?? "";
+    
             var query = _moviesContext.MoviesTitles.AsQueryable();
+    
+            // Apply case-insensitive search filter if searchTerm is provided
+            if (!string.IsNullOrEmpty(searchTerm))
+            {
+                // Convert title to lowercase for comparison
+                query = query.Where(m => m.Title.ToLower().Contains(searchTerm));
+            }
 
             var totalMovies = query.Count();
 
             var movies = query
                 .Skip((pageNum - 1) * resultsPerPage)
                 .Take(resultsPerPage)
+                .OrderBy(m => m.ShowId)
                 .ToList();
 
             return Ok(new
@@ -367,28 +407,18 @@ namespace intex2.Controllers
                 totalNumMovies = totalMovies
             });
         }
-
-
-
-        // [HttpGet ("getCategories")]
-        // public List<string> GetCategories()
-        // {
-        //     var categories = _context.Books
-        //         .Select(x => x.Category)
-        //         .Distinct()
-        //         .ToList();
-        //
-        //     return categories;
-        // }
-
+        
+        [Authorize(Roles = "admin")]
         [HttpPost("AddMovie")]
-        public IActionResult AddMovie([FromBody] MoviesTitle newMovie)
+        public async Task<IActionResult> AddMovie([FromBody] MoviesTitle newMovie)
         {
+            newMovie.ShowId = await GenerateNextShowIdAsync(); // Assign new ID here
             _moviesContext.MoviesTitles.Add(newMovie);
-            _moviesContext.SaveChanges();
+            await _moviesContext.SaveChangesAsync();
             return Ok(newMovie);
         }
 
+        [Authorize(Roles = "admin")]
         [HttpDelete("DeleteMovie/{id}")]
         public IActionResult DeleteMovie(string id)
         {
@@ -403,6 +433,7 @@ namespace intex2.Controllers
             return Ok(movie);
         }
 
+        [Authorize(Roles = "admin")]
         [HttpPut("UpdateMovie/{id}")]
         public IActionResult UpdateMovie(string id,[FromBody] MoviesTitle updatedMovie)
         {
@@ -456,6 +487,21 @@ namespace intex2.Controllers
             _moviesContext.MoviesTitles.Update(movie);
             _moviesContext.SaveChanges();
             return Ok(movie);
+        }
+
+private async Task<string> GenerateNextShowIdAsync()
+        {
+            var allIds = await _moviesContext.MoviesTitles
+                .Where(m => m.ShowId.StartsWith("s"))
+                .Select(m => m.ShowId.Substring(1)) // get numeric part as string
+                .ToListAsync(); // still just strings here
+
+            var maxNumber = allIds
+                .AsEnumerable() // switch to LINQ-to-Objects so we can use TryParse
+                .Select(id => int.TryParse(id, out int number) ? number : 0)
+                .Max();
+
+            return $"s{maxNumber + 1}";
         }
 
         [HttpGet("GetMovieDetails/{id}")]

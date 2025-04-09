@@ -1,9 +1,11 @@
 import React, { useState, useRef, useEffect } from "react";
 import styles from "../css/Header.module.css";
+import { useNavigate } from "react-router-dom";
 
 export default function UserInfo() {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
+  const navigate = useNavigate();
 
   const toggleDropdown = () => {
     setIsDropdownOpen((prev) => !prev);
@@ -60,7 +62,7 @@ export default function UserInfo() {
       />
       {isDropdownOpen && (
         <div className={styles.dropdownMenuUser}>
-          <button className={styles.dropdownItem} onClick={handleLogout}>
+          <button className={styles.dropdownItem} onClick={() => navigate('/Privacy')}>
             Privacy Policy
           </button>
           <button className={styles.dropdownItem} onClick={handleLogout}>

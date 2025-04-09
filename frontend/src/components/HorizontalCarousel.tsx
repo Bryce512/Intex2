@@ -27,7 +27,7 @@ const HorizontalCarousel: React.FC<HorizontalCarouselProps> = ({
     event: React.SyntheticEvent<HTMLImageElement, Event>
   ) => {
     const target = event.target as HTMLImageElement;
-    target.src = 'images/Movie Posters/placeholder.jpg';
+    target.src = '/images/Movie Posters/placeholder.jpg';
   };
 
   const scroll = (direction: 'left' | 'right') => {
