@@ -1,6 +1,8 @@
 import { useEffect, useState } from 'react';
 import { fetchMovieById } from '../api/moviesAPI';
 import { Movie } from '../types/movies';
+import { FaStar } from 'react-icons/fa';
+import '../css/movieDetails.css';
 
 type MovieDetailsProps = {
   id: string;
@@ -8,27 +10,40 @@ type MovieDetailsProps = {
 
 export default function MovieDetails({ id }: MovieDetailsProps) {
   const [movie, setMovie] = useState<Movie | null>(null);
-  const [error, setError] = useState<string | null>(null);
+  const [rating, setRating] = useState<number>(0);
 
   useEffect(() => {
     const fetchMovie = async () => {
       try {
         const data = await fetchMovieById(id);
-        if (!data || Object.keys(data).length === 0) {
-          setError('Movie not found');
-          return;
-        }
         setMovie(data);
       } catch (err) {
-        setError('Failed to load movie');
-        console.error(err);
+        console.error('Failed to fetch movie:', err);
       }
     };
 
     fetchMovie();
   }, [id]);
 
-  if (error) return <div>{error}</div>;
+  const displayValue = (value?: string | number) => {
+    return value && value.toString().trim() !== '' ? value : 'Not available';
+  };
+
+  const displayCommaList = (value?: string) => {
+    if (!value || value.trim() === '') return 'Not available';
+
+    // Split by whitespace and filter out blanks
+    const words = value.trim().split(/\s+/).filter(Boolean);
+
+    const pairs: string[] = [];
+    for (let i = 0; i < words.length; i += 2) {
+      const name = words[i] + (words[i + 1] ? ' ' + words[i + 1] : '');
+      pairs.push(name);
+    }
+
+    return pairs.join(', ');
+  };
+
   if (!movie) return <div>Loading...</div>;
 
   const genreKeys = [
@@ -69,51 +84,68 @@ export default function MovieDetails({ id }: MovieDetailsProps) {
   const genres = genreKeys.filter((key) => movie[key as keyof Movie] === 1);
 
   return (
-    <div className="p-6 rounded-xl shadow-lg bg-white max-w-2xl mx-auto">
-      <h1 className="text-3xl font-bold mb-2">{movie.title}</h1>
-      <p className="text-gray-600 italic mb-4">{movie.type}</p>
+    <div className="movie-details-container">
+      <div className="movie-details-content">
+        <div className="movie-poster">
+          <img src="/images/placeholder.jpg" alt={`${movie.title} poster`} />
+        </div>
 
-      <ul className="space-y-1 text-base text-gray-700">
-        <li>
-          <strong>Director:</strong> {movie.director}
-        </li>
-        <li>
-          <strong>Cast:</strong> {movie.cast}
-        </li>
-        <li>
-          <strong>Country:</strong> {movie.country}
-        </li>
-        <li>
-          <strong>Release Year:</strong> {movie.releaseYear}
-        </li>
-        <li>
-          <strong>Rating:</strong> {movie.rating}
-        </li>
-        <li>
-          <strong>Duration:</strong> {movie.duration}
-        </li>
-        <li>
-          <strong>Description:</strong> {movie.description}
-        </li>
-      </ul>
+        <div className="movie-info">
+          <h1 className="movie-title">{displayValue(movie.title)}</h1>
+          <p className="movie-type">
+            {displayValue(movie.type)} — {displayValue(movie.releaseYear)}
+          </p>
 
-      {genres.length > 0 && (
-        <>
-          <h2 className="mt-6 text-xl font-semibold">Genres</h2>
-          <ul className="flex flex-wrap gap-2 mt-2">
-            {genres.map((genre) => (
-              <li
-                key={genre}
-                className="px-3 py-1 rounded-full bg-yellow-200 text-sm text-gray-800"
-              >
-                {genre
-                  .replace(/([A-Z])/g, ' $1')
-                  .replace(/^./, (str) => str.toUpperCase())}
+          <ul className="movie-meta">
+            <li>{displayValue(movie.description)}</li>
+            <li>
+              <strong>Rating:</strong> {displayValue(movie.rating)}
+            </li>
+            <li>
+              <li>
+                <strong>Duration:</strong> {displayValue(movie.duration)}
               </li>
-            ))}
+              <li>
+                <strong>Country:</strong> {displayCommaList(movie.country)}
+              </li>
+              <strong>Director:</strong> {displayValue(movie.director)}
+            </li>
+            <li>
+              <strong>Cast:</strong> {displayCommaList(movie.cast)}
+            </li>
           </ul>
-        </>
-      )}
+
+          {genres.length > 0 && (
+            <div className="movie-genres">
+              <h2>Genres</h2>
+              <div className="genre-badges">
+                {genres.map((genre) => (
+                  <span key={genre} className="genre-badge">
+                    {genre
+                      .replace(/([A-Z])/g, ' $1')
+                      .replace(/^./, (str) => str.toUpperCase())}
+                  </span>
+                ))}
+              </div>
+            </div>
+          )}
+
+          <div className="movie-rating">
+            <h3>Rate this movie:</h3>
+            {[1, 2, 3, 4, 5].map((star) => (
+              <span
+                key={star}
+                className={`star ${star <= rating ? 'filled' : ''}`}
+                onClick={() => setRating(star)}
+              >
+                ★
+              </span>
+            ))}
+          </div>
+
+          <button className="play-button">▶️ Watch Now</button>
+        </div>
+      </div>
     </div>
   );
 }

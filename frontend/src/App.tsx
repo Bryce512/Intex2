@@ -21,7 +21,19 @@ function App() {
           <Route path="/Admin" element={<AdminBooklist />}></Route>
           <Route path="/All" element={<AllMovies />}></Route>
           <Route path="/Privacy" element={<Privacy />}></Route>
-          <Route path="/NewMovie" element={<NewMovieForm />}></Route>
+          <Route
+            path="/NewMovie"
+            element={
+              <NewMovieForm
+                onSuccess={function (): void {
+                  throw new Error('Function not implemented.');
+                }}
+                onCancel={function (): void {
+                  throw new Error('Function not implemented.');
+                }}
+              />
+            }
+          ></Route>
           <Route
             path="/MovieDetailsPage/:id"
             element={<MovieDetailsPage />}
