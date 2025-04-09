@@ -55,6 +55,76 @@ namespace intex2.Controllers
         }
 
         [Authorize(Roles = "admin,user")]
+        [HttpGet("AllMoviesMax")]
+        public async Task<IActionResult> GetMovies(int page = 1, int pageSize = 20)
+        {
+            var user = await _userManager.GetUserAsync(User);
+            if (user == null)
+            {
+                return Unauthorized(new { message = "User not logged in." });
+            }
+
+            // Step 1: Pull the data into memory FIRST
+            var moviesRaw = await _moviesContext.MoviesTitles
+                .Skip((page - 1) * pageSize)
+                .Take(pageSize)
+                .ToListAsync(); // This runs the query and materializes it in memory
+
+            // Step 2: Now use your helper method safely
+            var movies = moviesRaw.Select(m => new 
+            {
+                m.ShowId,
+                m.Title,
+                Genres = GetGenresForMovie(m) // ✅ Safe now
+            }).ToList();
+
+            return Ok(new { result = movies });
+        }
+
+        // Helper method to dynamically extract genres
+        private static List<string> GetGenresForMovie(MoviesTitle movie)
+        {
+            var genres = new List<string>();
+
+            // Check each genre column and add to the list if the value is 1
+            if (movie.Action == 1) genres.Add("Action");
+            if (movie.Adventure == 1) genres.Add("Adventure");
+            if (movie.AnimeSeriesInternationalTvShows == 1) genres.Add("Anime Series International TV Shows");
+            if (movie.BritishTvShowsDocuseriesInternationalTvShows == 1) genres.Add("British TV Shows Docuseries International TV Shows");
+            if (movie.Children == 1) genres.Add("Children");
+            if (movie.Comedies == 1) genres.Add("Comedies");
+            if (movie.ComediesDramasInternationalMovies == 1) genres.Add("Comedies Dramas International Movies");
+            if (movie.ComediesInternationalMovies == 1) genres.Add("Comedies International Movies");
+            if (movie.ComediesRomanticMovies == 1) genres.Add("Comedies Romantic Movies");
+            if (movie.CrimeTvShowsDocuseries == 1) genres.Add("Crime TV Shows Docuseries");
+            if (movie.Documentaries == 1) genres.Add("Documentaries");
+            if (movie.DocumentariesInternationalMovies == 1) genres.Add("Documentaries International Movies");
+            if (movie.Docuseries == 1) genres.Add("Docuseries");
+            if (movie.Dramas == 1) genres.Add("Dramas");
+            if (movie.DramasInternationalMovies == 1) genres.Add("Dramas International Movies");
+            if (movie.DramasRomanticMovies == 1) genres.Add("Dramas Romantic Movies");
+            if (movie.FamilyMovies == 1) genres.Add("Family Movies");
+            if (movie.Fantasy == 1) genres.Add("Fantasy");
+            if (movie.HorrorMovies == 1) genres.Add("Horror Movies");
+            if (movie.InternationalMoviesThrillers == 1) genres.Add("International Movies Thrillers");
+            if (movie.InternationalTvShowsRomanticTvShowsTvDramas == 1) genres.Add("International TV Shows Romantic TV Shows TV Dramas");
+            if (movie.KidsTv == 1) genres.Add("Kids' TV");
+            if (movie.LanguageTvShows == 1) genres.Add("Language TV Shows");
+            if (movie.Musicals == 1) genres.Add("Musicals");
+            if (movie.NatureTv == 1) genres.Add("Nature TV");
+            if (movie.RealityTv == 1) genres.Add("Reality TV");
+            if (movie.Spirituality == 1) genres.Add("Spirituality");
+            if (movie.TvAction == 1) genres.Add("TV Action");
+            if (movie.TvComedies == 1) genres.Add("TV Comedies");
+            if (movie.TvDramas == 1) genres.Add("TV Dramas");
+            if (movie.TalkShowsTvComedies == 1) genres.Add("Talk Shows TV Comedies");
+            if (movie.Thrillers == 1) genres.Add("Thrillers");
+
+            return genres;
+        }
+
+
+        [Authorize(Roles = "admin,user")]
         [HttpGet("MovieToMovieRecommendations/{showId}")]
         public async Task<IActionResult> GetMovieRecommendations(string showId)
         {

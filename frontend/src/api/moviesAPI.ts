@@ -264,3 +264,17 @@ export const fetchMovieById = async (showId: string): Promise<Movie> => {
 
   return data;
 };
+
+export const fetchAllMoviesMax = async (): Promise<Array<Movie>> => {
+  const response = await fetch(`${API_URL}/Movies/AllMoviesMax`, {
+    method: 'GET',
+  });
+
+  if (!response.ok) {
+    throw new Error(`HTTP error! status: ${response.status}`);
+  }
+  const data = await response.json();
+  console.log('Fetched all moives:', data);
+
+  return data;
+};
