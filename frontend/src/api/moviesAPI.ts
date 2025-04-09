@@ -1,4 +1,5 @@
 import { Movie } from '../types/movies';
+import { NewMovie } from '../types/newMovie';
 
 interface fetchMoviesResponse {
   movies: Movie[];
@@ -172,10 +173,10 @@ export const handleRegister = async (
 export const fetchMovies = async (
   page: number,
   resultsPerPage: number,
-  searchTerm: string = ""
+  // searchTerm: string = ""
 ): Promise<fetchMoviesResponse> => {
   const response = await fetch(
-    `${API_URL}/Movies/AllMovies?pageNum=${page}&resultsPerPage=${resultsPerPage}&searchTerm=${encodeURIComponent(searchTerm)}`
+    `${API_URL}/Movies/AllMovies?pageNum=${page}&resultsPerPage=${resultsPerPage}`// &searchTerm=${encodeURIComponent(searchTerm)}`
   );
 
   if (!response.ok) {
@@ -188,7 +189,7 @@ export const fetchMovies = async (
 };
 
 
-export const addMovie = async (newMovie: Movie): Promise<Movie> => {
+export const addMovie = async (newMovie: NewMovie): Promise<NewMovie> => {
   try {
     const response = await fetch(`${API_URL}/Movies/AddMovie`, {
       method: 'POST',

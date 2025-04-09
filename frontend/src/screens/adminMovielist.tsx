@@ -51,7 +51,7 @@ function AdminMovielist() {
         const data = await fetchMovies(
           page,
           resultsPerPage,
-          debouncedSearchTerm
+          // debouncedSearchTerm
         );
         setMovies(data.movies);
         setTotalPages(Math.ceil(data.totalNumMovies / resultsPerPage));
@@ -75,7 +75,7 @@ function AdminMovielist() {
         const data = await fetchMovies(
           page,
           resultsPerPage,
-          debouncedSearchTerm
+          // debouncedSearchTerm
         );
         setMovies(data.movies);
         setTotalPages(Math.ceil(data.totalNumMovies / resultsPerPage));
@@ -122,7 +122,7 @@ function AdminMovielist() {
           <NewMovieForm
             onSuccess={() => {
               setShowForm(false);
-              fetchMovies(page, resultsPerPage, debouncedSearchTerm).then(
+              fetchMovies(page, resultsPerPage, ).then(
                 (data) => {
                   setMovies(data.movies);
                   setTotalPages(
@@ -142,7 +142,7 @@ function AdminMovielist() {
             movie={editingMovie}
             onSuccess={() => {
               setEditingMovie(null);
-              fetchMovies(page, resultsPerPage, debouncedSearchTerm).then(
+              fetchMovies(page, resultsPerPage).then(
                 (data) => {
                   setMovies(data.movies);
                   setTotalPages(

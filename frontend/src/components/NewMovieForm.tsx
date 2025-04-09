@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { addMovie } from '../api/moviesAPI';
-import { Movie } from '../types/movies';
+import { NewMovie } from '../types/newMovie';
 import HeaderHome from './HeaderHome';
 import '../css/NewMovie.css';
 
@@ -10,7 +10,7 @@ interface NewMovieFormProps {
 }
 
 function NewMovieForm({ onSuccess, onCancel }: NewMovieFormProps) {
-  const [formData, setFormData] = useState<Movie>({
+  const [formData, setFormData] = useState<NewMovie>({
     showId: '',
     title: '',
     type: '',
@@ -21,39 +21,39 @@ function NewMovieForm({ onSuccess, onCancel }: NewMovieFormProps) {
     rating: '',
     duration: '',
     description: '',
-
-    action: 0,
-    adventure: 0,
-    animeSeriesInternationalTvShows: 0,
-    britishTvShowsDocuseriesInternationalTvShows: 0,
-    children: 0,
-    comedies: 0,
-    comediesDramasInternationalMovies: 0,
-    comediesInternationalMovies: 0,
-    comediesRomanticMovies: 0,
-    crimeTvShowsDocuseries: 0,
-    documentaries: 0,
-    documentariesInternationalMovies: 0,
-    docuseries: 0,
-    dramas: 0,
-    dramasInternationalMovies: 0,
-    dramasRomanticMovies: 0,
-    familyMovies: 0,
-    fantasy: 0,
-    horrorMovies: 0,
-    internationalMoviesThrillers: 0,
-    internationalTvShowsRomanticTvShowsTvDramas: 0,
-    kidsTv: 0,
-    languageTvShows: 0,
-    musicals: 0,
-    natureTv: 0,
-    realityTv: 0,
-    spirituality: 0,
-    tvAction: 0,
-    tvComedies: 0,
-    tvDramas: 0,
-    talkShowsTvComedies: 0,
-    thrillers: 0,
+    action: false,
+    adventure: false,
+    animeSeriesInternationalTvShows: false,
+    britishTvShowsDocuseriesInternationalTvShows: false,
+    children: false,
+    comedies: false,
+    comediesDramasInternationalMovies: false,
+    comediesInternationalMovies: false,
+    comediesRomanticMovies: false,
+    crimeTvShowsDocuseries: false,
+    documentaries: false,
+    documentariesInternationalMovies: false,
+    docuseries: false,
+    dramas: false,
+    dramasInternationalMovies: false,
+    dramasRomanticMovies: false,
+    familyMovies: false,
+    fantasy: false,
+    horrorMovies: false,
+    internationalMoviesThrillers: false,
+    internationalTvShowsRomanticTvShowsTvDramas: false,
+    kidsTv: false,
+    languageTvShows: false,
+    musicals: false,
+    natureTv: false,
+    realityTv: false,
+    spirituality: false,
+    tvAction: false,
+    tvComedies: false,
+    tvDramas: false,
+    talkShowsTvComedies: false,
+    thrillers: false,
+    posterUrl: '',
   });
 
   const handleChange = (
@@ -63,7 +63,7 @@ function NewMovieForm({ onSuccess, onCancel }: NewMovieFormProps) {
 
     setFormData((prev) => ({
       ...prev,
-      [name]: name === 'releaseYear' ? parseInt(value) || 0 : value,
+      [name]: name === 'releaseYear' ? parseInt(value) || false : value,
     }));
   };
 
@@ -71,7 +71,7 @@ function NewMovieForm({ onSuccess, onCancel }: NewMovieFormProps) {
     const { name, checked } = e.target;
     setFormData((prev) => ({
       ...prev,
-      [name]: checked ? 1 : 0,
+      [name]: checked ? 1 : false,
     }));
   };
 
@@ -84,7 +84,7 @@ function NewMovieForm({ onSuccess, onCancel }: NewMovieFormProps) {
   // Dynamically get all genre keys
   const genreKeys = Object.keys(formData).filter(
     (key) =>
-      typeof formData[key as keyof Movie] === 'number' && key !== 'releaseYear'
+      typeof formData[key as keyof NewMovie] === 'number' && key !== 'releaseYear'
   );
 
   const formatGenreLabel = (key: string): string =>
@@ -208,7 +208,7 @@ function NewMovieForm({ onSuccess, onCancel }: NewMovieFormProps) {
             <input
               type="checkbox"
               name={key}
-              checked={formData[key as keyof Movie] === 1}
+              checked={formData[key as keyof NewMovie] === 1}
               onChange={handleCheckboxChange}
             />
           </label>
