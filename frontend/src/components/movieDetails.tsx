@@ -1,7 +1,6 @@
 import { useEffect, useState } from 'react';
 import { fetchMovieById } from '../api/moviesAPI';
 import { Movie } from '../types/movies';
-import { FaStar } from 'react-icons/fa';
 import '../css/movieDetails.css';
 
 type MovieDetailsProps = {
@@ -87,7 +86,14 @@ export default function MovieDetails({ id }: MovieDetailsProps) {
     <div className="movie-details-container">
       <div className="movie-details-content">
         <div className="movie-poster">
-          <img src="/images/placeholder.jpg" alt={`${movie.title} poster`} />
+          <img
+            src={movie.posterUrl}
+            alt={`${movie.title} poster`}
+            onError={(e) => {
+              e.currentTarget.onerror = null;
+              e.currentTarget.src = '/images/placeholder.jpg'; // fallback image
+            }}
+          />
         </div>
 
         <div className="movie-info">
