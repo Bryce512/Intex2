@@ -18,6 +18,7 @@ export const handleLogin = async (
 ): Promise<void> => {
   e.preventDefault();
   setErrorMessage('');
+  setErrorMessage('');
   setLoading(true);
 
   try {

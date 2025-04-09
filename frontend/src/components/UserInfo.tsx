@@ -25,11 +25,29 @@ export default function UserInfo() {
     };
   }, []);
 
-  const handleLogout = () => {
-    // Your logout logic here
-    console.log("Logging out...");
-    // e.g., clear token, redirect, etc.
+  const handleLogout = async () => {
+    try {
+      const response = await fetch('https://localhost:5000/logout', {
+        method: 'POST',
+        credentials: 'include', // 👈 this is important for cookie-based auth
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
+
+      if (response.ok) {
+        console.log('Logout resonse: ', response);
+        // Clear any client-side state if needed
+        // Redirect user to login or home
+        window.location.href = '/login';
+      } else {
+        console.error('Logout failed:', response);
+      }
+    } catch (error) {
+      console.error('Logout error:', error);
+    }
   };
+
 
   return (
     <div className={styles.userInfoWrapper} ref={dropdownRef}>

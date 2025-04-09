@@ -1,14 +1,15 @@
-import { addMovie} from '../api/moviesAPI';
-import { Movie } from '../types/movies';
 import { useState } from 'react';
+import { addMovie } from '../api/moviesAPI';
+import { Movie } from '../types/movies';
 import HeaderHome from './HeaderHome';
+import '../css/NewMovie.css';
 
-interface newMovieFormProps {
+interface NewMovieFormProps {
   onSuccess: () => void;
   onCancel: () => void;
 }
 
-function NewMovieForm({ onSuccess, onCancel }: newMovieFormProps) {
+function NewMovieForm({ onSuccess, onCancel }: NewMovieFormProps) {
   const [formData, setFormData] = useState<Movie>({
     showId: '',
     title: '',
@@ -16,7 +17,7 @@ function NewMovieForm({ onSuccess, onCancel }: newMovieFormProps) {
     director: '',
     cast: '',
     country: '',
-    releaseYear: 0,
+    releaseYear: new Date().getFullYear(),
     rating: '',
     duration: '',
     description: '',
@@ -59,7 +60,19 @@ function NewMovieForm({ onSuccess, onCancel }: newMovieFormProps) {
     e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
   ) => {
     const { name, value } = e.target;
-    setFormData({ ...formData, [name]: value });
+
+    setFormData((prev) => ({
+      ...prev,
+      [name]: name === 'releaseYear' ? parseInt(value) || 0 : value,
+    }));
+  };
+
+  const handleCheckboxChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, checked } = e.target;
+    setFormData((prev) => ({
+      ...prev,
+      [name]: checked ? 1 : 0,
+    }));
   };
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -68,30 +81,40 @@ function NewMovieForm({ onSuccess, onCancel }: newMovieFormProps) {
     onSuccess();
   };
 
-  const handleCheckboxChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, checked } = e.target;
-    setFormData({ ...formData, [name]: checked ? 1 : 0 });
-  };
+  // Dynamically get all genre keys
+  const genreKeys = Object.keys(formData).filter(
+    (key) =>
+      typeof formData[key as keyof Movie] === 'number' && key !== 'releaseYear'
+  );
 
-
+  const formatGenreLabel = (key: string): string =>
+    key.replace(/([A-Z])/g, ' $1').replace(/^./, (str) => str.toUpperCase());
 
   return (
     <>
       <HeaderHome />
       <form onSubmit={handleSubmit}>
         <h2>Add New Movie/Show</h2>
+
         <label>
-          Title:{' '}
+          Title:
           <input
             type="text"
             name="title"
             value={formData.title}
             onChange={handleChange}
+            required
           />
         </label>
+
         <label>
           Type:
-          <select name="type" value={formData.type} onChange={handleChange}>
+          <select
+            name="type"
+            value={formData.type}
+            onChange={handleChange}
+            required
+          >
             <option value="">Select Type</option>
             <option value="Movie">Movie</option>
             <option value="TV Show">TV Show</option>
@@ -99,7 +122,7 @@ function NewMovieForm({ onSuccess, onCancel }: newMovieFormProps) {
         </label>
 
         <label>
-          Director:{' '}
+          Director:
           <input
             type="text"
             name="director"
@@ -107,8 +130,9 @@ function NewMovieForm({ onSuccess, onCancel }: newMovieFormProps) {
             onChange={handleChange}
           />
         </label>
+
         <label>
-          Cast:{' '}
+          Cast:
           <input
             type="text"
             name="cast"
@@ -116,8 +140,9 @@ function NewMovieForm({ onSuccess, onCancel }: newMovieFormProps) {
             onChange={handleChange}
           />
         </label>
+
         <label>
-          Country:{' '}
+          Country:
           <input
             type="text"
             name="country"
@@ -125,8 +150,9 @@ function NewMovieForm({ onSuccess, onCancel }: newMovieFormProps) {
             onChange={handleChange}
           />
         </label>
+
         <label>
-          Release Year:{' '}
+          Release Year:
           <input
             type="number"
             name="releaseYear"
@@ -134,9 +160,10 @@ function NewMovieForm({ onSuccess, onCancel }: newMovieFormProps) {
             onChange={handleChange}
           />
         </label>
+
         <label>
           Rating:
-          <select name="rating" value={formData.type} onChange={handleChange}>
+          <select name="rating" value={formData.rating} onChange={handleChange}>
             <option value="">Select Rating</option>
             <option value="G">G</option>
             <option value="PG">PG</option>
@@ -155,7 +182,7 @@ function NewMovieForm({ onSuccess, onCancel }: newMovieFormProps) {
         </label>
 
         <label>
-          Duration:{' '}
+          Duration:
           <input
             type="text"
             name="duration"
@@ -163,8 +190,9 @@ function NewMovieForm({ onSuccess, onCancel }: newMovieFormProps) {
             onChange={handleChange}
           />
         </label>
+
         <label>
-          Description:{' '}
+          Description:
           <input
             type="text"
             name="description"
@@ -172,307 +200,33 @@ function NewMovieForm({ onSuccess, onCancel }: newMovieFormProps) {
             onChange={handleChange}
           />
         </label>
+
         <h3>Genres</h3>
-        <label>
-          Action:
-          <input
-            type="checkbox"
-            name="action"
-            checked={formData.action === 1}
-            onChange={handleCheckboxChange}
-          />
-        </label>
-        <label>
-          Adventure:
-          <input
-            type="checkbox"
-            name="adventure"
-            checked={formData.adventure === 1}
-            onChange={handleCheckboxChange}
-          />
-        </label>
-        <label>
-          Anime Series / International TV Shows:
-          <input
-            type="checkbox"
-            name="animeSeriesInternationalTvShows"
-            checked={formData.animeSeriesInternationalTvShows === 1}
-            onChange={handleCheckboxChange}
-          />
-        </label>
-        <label>
-          British TV Shows / Docuseries / International TV Shows:
-          <input
-            type="checkbox"
-            name="britishTvShowsDocuseriesInternationalTvShows"
-            checked={
-              formData.britishTvShowsDocuseriesInternationalTvShows === 1
-            }
-            onChange={handleCheckboxChange}
-          />
-        </label>
-        <label>
-          Children:
-          <input
-            type="checkbox"
-            name="children"
-            checked={formData.children === 1}
-            onChange={handleCheckboxChange}
-          />
-        </label>
-        <label>
-          Comedies:
-          <input
-            type="checkbox"
-            name="comedies"
-            checked={formData.comedies === 1}
-            onChange={handleCheckboxChange}
-          />
-        </label>
-        <label>
-          Comedies / Dramas / International Movies:
-          <input
-            type="checkbox"
-            name="comediesDramasInternationalMovies"
-            checked={formData.comediesDramasInternationalMovies === 1}
-            onChange={handleCheckboxChange}
-          />
-        </label>
-        <label>
-          Comedies / International Movies:
-          <input
-            type="checkbox"
-            name="comediesInternationalMovies"
-            checked={formData.comediesInternationalMovies === 1}
-            onChange={handleCheckboxChange}
-          />
-        </label>
-        <label>
-          Comedies / Romantic Movies:
-          <input
-            type="checkbox"
-            name="comediesRomanticMovies"
-            checked={formData.comediesRomanticMovies === 1}
-            onChange={handleCheckboxChange}
-          />
-        </label>
-        <label>
-          Crime TV Shows / Docuseries:
-          <input
-            type="checkbox"
-            name="crimeTvShowsDocuseries"
-            checked={formData.crimeTvShowsDocuseries === 1}
-            onChange={handleCheckboxChange}
-          />
-        </label>
-        <label>
-          Documentaries:
-          <input
-            type="checkbox"
-            name="documentaries"
-            checked={formData.documentaries === 1}
-            onChange={handleCheckboxChange}
-          />
-        </label>
-        <label>
-          Documentaries / International Movies:
-          <input
-            type="checkbox"
-            name="documentariesInternationalMovies"
-            checked={formData.documentariesInternationalMovies === 1}
-            onChange={handleCheckboxChange}
-          />
-        </label>
-        <label>
-          Docuseries:
-          <input
-            type="checkbox"
-            name="docuseries"
-            checked={formData.docuseries === 1}
-            onChange={handleCheckboxChange}
-          />
-        </label>
-        <label>
-          Dramas:
-          <input
-            type="checkbox"
-            name="dramas"
-            checked={formData.dramas === 1}
-            onChange={handleCheckboxChange}
-          />
-        </label>
-        <label>
-          Dramas / International Movies:
-          <input
-            type="checkbox"
-            name="dramasInternationalMovies"
-            checked={formData.dramasInternationalMovies === 1}
-            onChange={handleCheckboxChange}
-          />
-        </label>
-        <label>
-          Dramas / Romantic Movies:
-          <input
-            type="checkbox"
-            name="dramasRomanticMovies"
-            checked={formData.dramasRomanticMovies === 1}
-            onChange={handleCheckboxChange}
-          />
-        </label>
-        <label>
-          Family Movies:
-          <input
-            type="checkbox"
-            name="familyMovies"
-            checked={formData.familyMovies === 1}
-            onChange={handleCheckboxChange}
-          />
-        </label>
-        <label>
-          Fantasy:
-          <input
-            type="checkbox"
-            name="fantasy"
-            checked={formData.fantasy === 1}
-            onChange={handleCheckboxChange}
-          />
-        </label>
-        <label>
-          Horror Movies:
-          <input
-            type="checkbox"
-            name="horrorMovies"
-            checked={formData.horrorMovies === 1}
-            onChange={handleCheckboxChange}
-          />
-        </label>
-        <label>
-          International Movies / Thrillers:
-          <input
-            type="checkbox"
-            name="internationalMoviesThrillers"
-            checked={formData.internationalMoviesThrillers === 1}
-            onChange={handleCheckboxChange}
-          />
-        </label>
-        <label>
-          International TV Shows / Romantic TV Shows / TV Dramas:
-          <input
-            type="checkbox"
-            name="internationalTvShowsRomanticTvShowsTvDramas"
-            checked={formData.internationalTvShowsRomanticTvShowsTvDramas === 1}
-            onChange={handleCheckboxChange}
-          />
-        </label>
-        <label>
-          Kids TV:
-          <input
-            type="checkbox"
-            name="kidsTv"
-            checked={formData.kidsTv === 1}
-            onChange={handleCheckboxChange}
-          />
-        </label>
-        <label>
-          Language TV Shows:
-          <input
-            type="checkbox"
-            name="languageTvShows"
-            checked={formData.languageTvShows === 1}
-            onChange={handleCheckboxChange}
-          />
-        </label>
-        <label>
-          Musicals:
-          <input
-            type="checkbox"
-            name="musicals"
-            checked={formData.musicals === 1}
-            onChange={handleCheckboxChange}
-          />
-        </label>
-        <label>
-          Nature TV:
-          <input
-            type="checkbox"
-            name="natureTv"
-            checked={formData.natureTv === 1}
-            onChange={handleCheckboxChange}
-          />
-        </label>
-        <label>
-          Reality TV:
-          <input
-            type="checkbox"
-            name="realityTv"
-            checked={formData.realityTv === 1}
-            onChange={handleCheckboxChange}
-          />
-        </label>
-        <label>
-          Spirituality:
-          <input
-            type="checkbox"
-            name="spirituality"
-            checked={formData.spirituality === 1}
-            onChange={handleCheckboxChange}
-          />
-        </label>
-        <label>
-          TV Action:
-          <input
-            type="checkbox"
-            name="tvAction"
-            checked={formData.tvAction === 1}
-            onChange={handleCheckboxChange}
-          />
-        </label>
-        <label>
-          TV Comedies:
-          <input
-            type="checkbox"
-            name="tvComedies"
-            checked={formData.tvComedies === 1}
-            onChange={handleCheckboxChange}
-          />
-        </label>
-        <label>
-          TV Dramas:
-          <input
-            type="checkbox"
-            name="tvDramas"
-            checked={formData.tvDramas === 1}
-            onChange={handleCheckboxChange}
-          />
-        </label>
-        <label>
-          Talk Shows / TV Comedies:
-          <input
-            type="checkbox"
-            name="talkShowsTvComedies"
-            checked={formData.talkShowsTvComedies === 1}
-            onChange={handleCheckboxChange}
-          />
-        </label>
-        <label>
-          Thrillers:
-          <input
-            type="checkbox"
-            name="thrillers"
-            checked={formData.thrillers === 1}
-            onChange={handleCheckboxChange}
-          />
-        </label>
-        <button type="submit">Add Book</button>
-        <button type="reset" onClick={onCancel}>
-          Cancel
-        </button>
+        {genreKeys.map((key) => (
+          <label key={key}>
+            {formatGenreLabel(key)}:
+            <input
+              type="checkbox"
+              name={key}
+              checked={formData[key as keyof Movie] === 1}
+              onChange={handleCheckboxChange}
+            />
+          </label>
+        ))}
+
+        <div style={{ marginTop: '1rem' }}>
+          <button type="submit">Add Movie</button>
+          <button
+            type="button"
+            onClick={onCancel}
+            style={{ marginLeft: '1rem' }}
+          >
+            Cancel
+          </button>
+        </div>
       </form>
     </>
   );
 }
 
 export default NewMovieForm;
-function useEffect(arg0: () => void, arg1: never[]) {
-  throw new Error('Function not implemented.');
-}

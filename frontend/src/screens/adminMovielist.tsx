@@ -7,6 +7,7 @@ import EditMovieForm from '../components/EditMovieForm';
 import HeaderHome from '../components/HeaderHome';
 import { Movie } from '../types/movies';
 import { useNavigate } from 'react-router-dom';
+import NewMovieModal from '../components/NewMovieModal';
 
 function AdminMovielist() {
   const [movies, setMovies] = useState<Movie[]>([]);
@@ -63,22 +64,24 @@ function AdminMovielist() {
       {!showForm && (
         <button
           className="btn btn-success mb-3"
-          onClick={() => navigate('/NewMovie')}
+          onClick={() => setShowForm(true)}
         >
           Add Movie/TV Show
         </button>
       )}
 
       {showForm && (
-        <NewMovieForm
-          onSuccess={() => {
-            setShowForm(false);
-            fetchMovies(page, resultsPerPage).then((data) =>
-              setMovies(data.movies)
-            );
-          }}
-          onCancel={() => setShowForm(false)}
-        />
+        <NewMovieModal onClose={() => setShowForm(false)}>
+          <NewMovieForm
+            onSuccess={() => {
+              setShowForm(false);
+              fetchMovies(page, resultsPerPage).then((data) =>
+                setMovies(data.movies)
+              );
+            }}
+            onCancel={() => setShowForm(false)}
+          />
+        </NewMovieModal>
       )}
 
       {editingMovie && (
