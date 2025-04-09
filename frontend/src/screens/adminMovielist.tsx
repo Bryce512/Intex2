@@ -7,6 +7,7 @@ import EditMovieForm from '../components/EditMovieForm';
 import HeaderHome from '../components/HeaderHome';
 import { Movie } from '../types/movies';
 import NewMovieModal from '../components/NewMovieModal';
+import { useNavigate } from 'react-router-dom';
 
 function AdminMovielist() {
   const [movies, setMovies] = useState<Movie[]>([]);
@@ -19,6 +20,7 @@ function AdminMovielist() {
   const [editingMovie, setEditingMovie] = useState<Movie | null>(null);
   const [searchTerm, setSearchTerm] = useState('');
   const [debouncedSearchTerm, setDebouncedSearchTerm] = useState('');
+  const navigate = useNavigate();
 
   // Create a reference for the search input
   const searchInputRef = useRef<HTMLInputElement>(null);
