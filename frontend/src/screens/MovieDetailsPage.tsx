@@ -2,7 +2,7 @@ import { useNavigate, useParams } from 'react-router-dom';
 import HeaderHome from '../components/HeaderHome';
 import MovieDetails from '../components/movieDetails';
 import Footer from '../components/Footer';
-import '../css/movieDetailsPage.css'; // 👈 we'll define CSS here
+import '../css/movieDetailsPage.css';
 
 function MovieDetailsPage() {
   const navigate = useNavigate();
@@ -12,18 +12,19 @@ function MovieDetailsPage() {
     <>
       <HeaderHome />
 
-      <div className="page-wrapper">
-        {!id ? (
-          <div className="invalid-id-message">Invalid movie ID</div>
-        ) : (
-          <>
-            <div className="back-button" onClick={() => navigate(-1)}>
-              ← Back
-            </div>
-            <MovieDetails id={id} />
-          </>
-        )}
-      </div>
+      {!id ? (
+        <div className="invalid-id-wrapper">
+          <p className="invalid-id-message">Invalid movie ID</p>
+        </div>
+      ) : (
+        <>
+          <button className="back-button" onClick={() => navigate(-1)}>
+            ← Back
+          </button>
+
+          <MovieDetails id={id} />
+        </>
+      )}
 
       <Footer />
     </>
