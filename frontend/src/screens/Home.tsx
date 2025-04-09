@@ -80,12 +80,12 @@ function Home() {
 
   return (
     <>
-      <AuthorizeView>
+      {/* <AuthorizeView>
         <span>
           <Logout>
             Logout <AuthorizedUser value="email" />
           </Logout>{' '}
-        </span>
+        </span> */}
         <HeaderHome />
         <TopMovieRecommendation />
         <br />
@@ -97,7 +97,7 @@ function Home() {
           />
         ))}
         <Footer />
-      </AuthorizeView>
+      {/* </AuthorizeView> */}
     </>
   );
 }
