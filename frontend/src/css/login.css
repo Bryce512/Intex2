@@ -23,3 +23,19 @@
 .btn-dark {
   border-radius: 8px;
 }
+
+.login-form .form-control {
+  border-radius: 8px;
+  background-color: #ffffff !important;
+  color: #000000;
+}
+
+.login-form .form-control::placeholder {
+  color: #888888;
+  opacity: 1;
+}
+
+.login-form input:-webkit-autofill {
+  -webkit-box-shadow: 0 0 0px 1000px #ffffff inset !important;
+  -webkit-text-fill-color: #000000 !important;
+}

@@ -22,12 +22,18 @@ const HorizontalCarousel: React.FC<HorizontalCarouselProps> = ({
   const scrollRef = useRef<HTMLDivElement>(null);
   const navigate = useNavigate();
 
-  // Image error handler function
+  // Track failed image URLs to prevent infinite onError loops
+  const failedImagesRef = useRef<Set<string>>(new Set());
+
   const handleImageError = (
     event: React.SyntheticEvent<HTMLImageElement, Event>
   ) => {
     const target = event.target as HTMLImageElement;
-    target.src = '/images/placeholder.jpg';
+
+    if (!failedImagesRef.current.has(target.src)) {
+      failedImagesRef.current.add(target.src);
+      target.src = '/images/placeholder.jpg';
+    }
   };
 
   const scroll = (direction: 'left' | 'right') => {

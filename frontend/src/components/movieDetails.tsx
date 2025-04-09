@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { fetchMovieById } from '../api/moviesAPI';
 import { Movie } from '../types/movies';
 import '../css/movieDetails.css';
@@ -16,11 +16,15 @@ export default function MovieDetails({
 }: MovieDetailsProps) {
   const [movie, setMovie] = useState<Movie | null>(null);
 
+  // Track if we’ve already replaced the movie image with a placeholder
+  const imageFailedRef = useRef(false);
+
   useEffect(() => {
     const fetchMovie = async () => {
       try {
         const data = await fetchMovieById(id);
         setMovie(data);
+        imageFailedRef.current = false; // reset when loading a new movie
       } catch (err) {
         console.error('Failed to fetch movie:', err);
       }
@@ -63,8 +67,10 @@ export default function MovieDetails({
             )}.jpg`}
             alt={`${movie.title} poster`}
             onError={(e) => {
-              e.currentTarget.onerror = null;
-              e.currentTarget.src = '/images/placeholder.jpg';
+              if (!imageFailedRef.current) {
+                imageFailedRef.current = true;
+                e.currentTarget.src = '/images/placeholder.jpg';
+              }
             }}
           />
         </div>
