@@ -22,7 +22,6 @@ export const handleLogin = async (
   setLoading(true);
 
   try {
-
     const response = await fetch(
       `${API_URL}/login?useCookies=true&useSessionCookies=false`,
       {
@@ -39,7 +38,6 @@ export const handleLogin = async (
         credentials: 'include', // ✅ This must be outside the body!
       }
     );
-
 
     console.log('Login response:', response);
 
@@ -122,13 +120,13 @@ export const handleRegister = async (
 
   try {
     const response = await fetch(`${API_URL}/register`, {
-      method: "POST",
+      method: 'POST',
       headers: {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
         password: userData.Password,
-        email: userData.Email
+        email: userData.Email,
       }),
     });
 
@@ -193,7 +191,6 @@ export const fetchMovies = async (
   return data;
 };
 
-
 export const addMovie = async (newMovie: Movie): Promise<Movie> => {
   try {
     const response = await fetch(`${API_URL}/Movies/AddMovie`, {
@@ -249,4 +246,18 @@ export const deleteMovie = async (showId: string): Promise<void> => {
     console.error('Error deleting movie:', error);
     throw error;
   }
+};
+
+export const fetchMovieById = async (showId: string): Promise<Movie> => {
+  const response = await fetch(`${API_URL}/Movies/GetMovieDetails/${showId}`, {
+    method: 'GET',
+  });
+
+  if (!response.ok) {
+    throw new Error(`HTTP error! status: ${response.status}`);
+  }
+  const data = await response.json();
+  console.log('Fetched movie by ID:', data);
+
+  return data;
 };

@@ -1,18 +1,6 @@
 import { useEffect, useState } from 'react';
-
-type Movie = {
-  showId?: string;
-  type?: string;
-  title?: string;
-  director?: string;
-  cast?: string;
-  country?: string;
-  releaseYear?: number;
-  rating?: string;
-  duration?: string;
-  description?: string;
-  [key: string]: string | number | undefined;
-};
+import { fetchMovieById } from '../api/moviesAPI';
+import { Movie } from '../types/movies';
 
 type MovieDetailsProps = {
   id: string;
@@ -20,17 +8,27 @@ type MovieDetailsProps = {
 
 export default function MovieDetails({ id }: MovieDetailsProps) {
   const [movie, setMovie] = useState<Movie | null>(null);
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     const fetchMovie = async () => {
-      const res = await fetch(`../api/movies/${id}`);
-      const data = await res.json();
-      setMovie(data);
+      try {
+        const data = await fetchMovieById(id);
+        if (!data || Object.keys(data).length === 0) {
+          setError('Movie not found');
+          return;
+        }
+        setMovie(data);
+      } catch (err) {
+        setError('Failed to load movie');
+        console.error(err);
+      }
     };
 
     fetchMovie();
   }, [id]);
 
+  if (error) return <div>{error}</div>;
   if (!movie) return <div>Loading...</div>;
 
   const genreKeys = [
@@ -68,7 +66,7 @@ export default function MovieDetails({ id }: MovieDetailsProps) {
     'thrillers',
   ];
 
-  const genres = genreKeys.filter((key) => movie[key] === 1);
+  const genres = genreKeys.filter((key) => movie[key as keyof Movie] === 1);
 
   return (
     <div className="p-6 rounded-xl shadow-lg bg-white max-w-2xl mx-auto">
