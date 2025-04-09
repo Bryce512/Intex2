@@ -21,6 +21,8 @@ namespace intex2.Controllers
         private readonly MoviesDbContext _moviesContext;
         private readonly UserManager<AppIdentityUser> _userManager;
         private readonly SignInManager<AppIdentityUser> _signInManager;
+        private readonly IConfiguration _config;
+
 
         public MoviesController(
             TopRatedRecommendationsDbContext topRatedRecommendationsContext,
@@ -32,7 +34,8 @@ namespace intex2.Controllers
             ActionRecommendationsDbContext actionRecommendationsContext,
             MoviesDbContext moviesContext,
             UserManager<AppIdentityUser> userManager,
-            SignInManager<AppIdentityUser> signInManager)
+            SignInManager<AppIdentityUser> signInManager,
+            IConfiguration config)
         {
             _topRatedRecommendationsContext = topRatedRecommendationsContext;
             _userRecommendationsContext = userRecommendationsContext;
@@ -44,6 +47,7 @@ namespace intex2.Controllers
             _moviesContext = moviesContext;
             _userManager = userManager;
             _signInManager = signInManager;
+            _config = config;
         }
 
 
@@ -443,9 +447,29 @@ namespace intex2.Controllers
             {
                 return NotFound();
             }
-            return Ok(movie);
+
+            var baseUrl = _config["BlobStorage:BaseImageUrl"];
+            var encodedTitle = Uri.EscapeDataString(movie.Title ?? "placeholder");
+            var posterUrl = $"{baseUrl}/{encodedTitle}.jpg";
+
+            var dto = new MovieDto
+            {
+                ShowId = movie.ShowId,
+                Title = movie.Title,
+                Type = movie.Type,
+                Director = movie.Director,
+                Cast = movie.Cast,
+                Country = movie.Country,
+                ReleaseYear = movie.ReleaseYear,
+                Rating = movie.Rating,
+                Duration = movie.Duration,
+                Description = movie.Description,
+                PosterUrl = posterUrl
+            };
+
+            return Ok(dto);
         }
-        
+
     }
 }
 
