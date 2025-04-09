@@ -2,9 +2,9 @@ import { useEffect, useState } from 'react';
 import HeaderHome from '../components/HeaderHome';
 import TopMovieRecommendation from '../components/TopMovie';
 import HorizontalCarousel from '../components/HorizontalCarousel';
-import AuthorizeView, { AuthorizedUser } from '../components/AuthorizeView';
-import Logout from '../components/Logout';
+import AuthorizeView from '../components/AuthorizeView';
 import Footer from '../components/Footer';
+import CookieConsent from '../components/CookieConsent';
 
 function Home() {
   // State to hold multiple categories of movies
@@ -93,6 +93,7 @@ function Home() {
             items={getMovieItems(movies)}
           />
         ))}
+        <CookieConsent />
         <Footer />
       </AuthorizeView>
     </>

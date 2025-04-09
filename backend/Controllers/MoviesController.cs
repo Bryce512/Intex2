@@ -504,6 +504,7 @@ private async Task<string> GenerateNextShowIdAsync()
             return $"s{maxNumber + 1}";
         }
 
+        [Authorize(Roles = "admin,user")]
         [HttpGet("GetMovieDetails/{id}")]
         public IActionResult GetMovieDetails(string id)
         {
