@@ -69,6 +69,7 @@ namespace intex2.Models
             OnModelCreatingPartial(modelBuilder);
         }
 
+
         partial void OnModelCreatingPartial(ModelBuilder modelBuilder);
     }
 }

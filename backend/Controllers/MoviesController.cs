@@ -103,6 +103,7 @@ namespace intex2.Controllers
         {
             // Step 1: Get the currently logged-in user
             var user = await _userManager.GetUserAsync(User);
+
             if (user == null)
             {
                 // return Unauthorized(new { message = "User not logged in." });
