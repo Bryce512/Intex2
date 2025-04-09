@@ -54,7 +54,10 @@ function AdminMovielist() {
         setMovies(data.movies);
         setTotalPages(Math.ceil(data.totalNumMovies / resultsPerPage));
       } catch (error) {
-        setError((error as Error).message);
+        setError("You are not authorized to access this page. You will be redirected to the home page.");
+        setTimeout(() => {
+          navigate('/');
+        }, 2000);
       } finally {
         setLoading(false);
       }
@@ -86,7 +89,7 @@ function AdminMovielist() {
     return <p>Loading...</p>;
   }
   if (error) {
-    return <p className="text-red-500">Error: {error}</p>;
+    return <p>Error: {error}</p>;
   }
 
   return (

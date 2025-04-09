@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Authorization;
 
 namespace intex2.Controllers
 {
@@ -11,6 +12,7 @@ namespace intex2.Controllers
     [Route("[controller]")]
     public class MoviesController : ControllerBase
     {
+        private readonly MovieToMovieRecommendationsDbContext _movieToMovieRecommendationsContext;
         private readonly TopRatedRecommendationsDbContext _topRatedRecommendationsContext;
         private readonly UserRecommendationsDbContext _userRecommendationsContext;
         private readonly PopularRecommendationsDbContext _popularRecommendationsContext;
@@ -21,16 +23,24 @@ namespace intex2.Controllers
         private readonly MoviesDbContext _moviesContext;
         private readonly UserManager<AppIdentityUser> _userManager;
         private readonly SignInManager<AppIdentityUser> _signInManager;
+        private readonly IConfiguration _config;
+
 
         public MoviesController(
+            MovieToMovieRecommendationsDbContext movieToMovieRecommendationsContext,
             TopRatedRecommendationsDbContext topRatedRecommendationsContext,
             UserRecommendationsDbContext userRecommendationsContext,
             PopularRecommendationsDbContext popularRecommendationsContext,
             FantasyRecommendationsDbContext fantasyRecommendationsContext,
             ChildrenRecommendationsDbContext childrenRecommendationsContext,
             ComedyRecommendationsDbContext comedyRecommendationsContext,
-            ActionRecommendationsDbContext actionRecommendationsContext, MoviesDbContext moviesContext, UserManager<AppIdentityUser> userManager, SignInManager<AppIdentityUser> signInManager)
+            ActionRecommendationsDbContext actionRecommendationsContext,
+            MoviesDbContext moviesContext,
+            UserManager<AppIdentityUser> userManager,
+            SignInManager<AppIdentityUser> signInManager,
+            IConfiguration config)
         {
+            _movieToMovieRecommendationsContext = movieToMovieRecommendationsContext;
             _topRatedRecommendationsContext = topRatedRecommendationsContext;
             _userRecommendationsContext = userRecommendationsContext;
             _popularRecommendationsContext = popularRecommendationsContext;
@@ -41,30 +51,68 @@ namespace intex2.Controllers
             _moviesContext = moviesContext;
             _userManager = userManager;
             _signInManager = signInManager;
+            _config = config;
         }
 
+        [Authorize(Roles = "admin,user")]
+        [HttpGet("MovieToMovieRecommendations/{showId}")]
+        public async Task<IActionResult> GetMovieRecommendations(string showId)
+        {
+            // Step 1: Validate the input `showId`
+            if (string.IsNullOrEmpty(showId))
+            {
+                return BadRequest(new { message = "Movie showId is null or empty." });
+            }
 
+            // Step 2: Look up movie-to-movie recommendations for the given showId
+            var recs = _movieToMovieRecommendationsContext.MovieRecommendations
+                .FirstOrDefault(r => r.ShowId == showId);
+
+            if (recs == null)
+            {
+                return NotFound(new { message = "No movie recommendations found for this movie." });
+            }
+
+            // Step 3: Collect all the recommended movie show IDs (rec_1 to rec_10)
+            var showIds = new List<string?>
+            {
+                recs.Rec1, recs.Rec2, recs.Rec3, recs.Rec4, recs.Rec5,
+                recs.Rec6, recs.Rec7, recs.Rec8, recs.Rec9, recs.Rec10
+            }.Where(id => !string.IsNullOrEmpty(id)).ToList();
+
+            // Step 4: Match those show IDs with movies from Movies.db
+            var movies = _moviesContext.MoviesTitles
+                .Where(m => showIds.Contains(m.ShowId))
+                .Select(m => new { m.ShowId, m.Title })
+                .ToList();
+
+            // Return the recommended movies
+            return Ok(movies);
+        }
+
+        [Authorize(Roles = "admin,user")]
         [HttpGet("UserActionMovies")]
         public async Task<IActionResult> GetUserActionMovies()
         {
             // Step 1: Get the currently logged-in user
             var user = await _userManager.GetUserAsync(User);
+
             if (user == null)
             {
                 // return Unauthorized(new { message = "User not logged in." });
                 // Mock data for testing
                 var mockMovies = new List<object>
                 {
-                    new { ShowId = "1", Title = "3022" },
-                    new { ShowId = "2", Title = "A Mission in an Old Movie" },
-                    new { ShowId = "3", Title = "Dogs of Berlin" },
-                    new { ShowId = "4", Title = "Afflicted" },
-                    new { ShowId = "5", Title = "Feel Rich" },
-                    new { ShowId = "6", Title = "100 Hotter" },
-                    new { ShowId = "7", Title = "Follow This" },
-                    new { ShowId = "8", Title = "1 Chance 2 Dance" },
-                    new { ShowId = "9", Title = "Slow Country" },
-                    new { ShowId = "10", Title = "Small Town Crime" }
+                    new { ShowId = "s1", Title = "3022" },
+                    new { ShowId = "s2", Title = "A Mission in an Old Movie" },
+                    new { ShowId = "s3", Title = "Dogs of Berlin" },
+                    new { ShowId = "s4", Title = "Afflicted" },
+                    new { ShowId = "s5", Title = "Feel Rich" },
+                    new { ShowId = "s6", Title = "100 Hotter" },
+                    new { ShowId = "s7", Title = "Follow This" },
+                    new { ShowId = "s8", Title = "1 Chance 2 Dance" },
+                    new { ShowId = "s9", Title = "Slow Country" },
+                    new { ShowId = "s10", Title = "Small Town Crime" }
                 };
                 return Ok(mockMovies);
             }
@@ -93,27 +141,29 @@ namespace intex2.Controllers
             return Ok(movies);
         }
 
+        [Authorize(Roles = "admin,user")]
         [HttpGet("UserComedyMovies")]
         public async Task<IActionResult> GetUserComedyMovies()
         {
             // Step 1: Get the currently logged-in user
             var user = await _userManager.GetUserAsync(User);
+
             if (user == null)
             {
                 // return Unauthorized(new { message = "User not logged in." });
                 // Mock data for testing
                 var mockMovies = new List<object>
                 {
-                    new { ShowId = "1", Title = "Small Chops" },
-                    new { ShowId = "2", Title = "A Mission in an Old Movie" },
-                    new { ShowId = "3", Title = "Dogs of Berlin" },
-                    new { ShowId = "4", Title = "Afflicted" },
-                    new { ShowId = "5", Title = "Feel Rich" },
-                    new { ShowId = "6", Title = "100 Hotter" },
-                    new { ShowId = "7", Title = "Follow This" },
-                    new { ShowId = "8", Title = "1 Chance 2 Dance" },
-                    new { ShowId = "9", Title = "Slow Country" },
-                    new { ShowId = "10", Title = "Small Town Crime" }
+                    new { ShowId = "s1", Title = "Small Chops" },
+                    new { ShowId = "s2", Title = "A Mission in an Old Movie" },
+                    new { ShowId = "s3", Title = "Dogs of Berlin" },
+                    new { ShowId = "s4", Title = "Afflicted" },
+                    new { ShowId = "s5", Title = "Feel Rich" },
+                    new { ShowId = "s6", Title = "100 Hotter" },
+                    new { ShowId = "s7", Title = "Follow This" },
+                    new { ShowId = "s8", Title = "1 Chance 2 Dance" },
+                    new { ShowId = "s9", Title = "Slow Country" },
+                    new { ShowId = "s10", Title = "Small Town Crime" }
                 };
                 return Ok(mockMovies);
             }
@@ -142,6 +192,7 @@ namespace intex2.Controllers
             return Ok(movies);
         }
 
+        [Authorize(Roles = "admin,user")]
         [HttpGet("UserChildrenMovies")]
         public async Task<IActionResult> GetUserChildrenMovies()
         {
@@ -153,16 +204,16 @@ namespace intex2.Controllers
                 // Mock data for testing
                 var mockMovies = new List<object>
                 {
-                    new { ShowId = "1", Title = "Shooter" },
-                    new { ShowId = "2", Title = "A Mission in an Old Movie" },
-                    new { ShowId = "3", Title = "Dogs of Berlin" },
-                    new { ShowId = "4", Title = "Afflicted" },
-                    new { ShowId = "5", Title = "Feel Rich" },
-                    new { ShowId = "6", Title = "100 Hotter" },
-                    new { ShowId = "7", Title = "Follow This" },
-                    new { ShowId = "8", Title = "1 Chance 2 Dance" },
-                    new { ShowId = "9", Title = "Slow Country" },
-                    new { ShowId = "10", Title = "Small Town Crime" }
+                    new { ShowId = "s1", Title = "Shooter" },
+                    new { ShowId = "s2", Title = "A Mission in an Old Movie" },
+                    new { ShowId = "s3", Title = "Dogs of Berlin" },
+                    new { ShowId = "s4", Title = "Afflicted" },
+                    new { ShowId = "s5", Title = "Feel Rich" },
+                    new { ShowId = "s6", Title = "100 Hotter" },
+                    new { ShowId = "s7", Title = "Follow This" },
+                    new { ShowId = "s8", Title = "1 Chance 2 Dance" },
+                    new { ShowId = "s9", Title = "Slow Country" },
+                    new { ShowId = "s10", Title = "Small Town Crime" }
                 };
                 return Ok(mockMovies);
             }
@@ -191,6 +242,7 @@ namespace intex2.Controllers
             return Ok(movies);
         }
 
+        [Authorize(Roles = "admin,user")]
         [HttpGet("UserFantasyMovies")]
         public async Task<IActionResult> GetUserFantasyMovies()
         {
@@ -202,16 +254,16 @@ namespace intex2.Controllers
                 // Mock data for testing
                 var mockMovies = new List<object>
                 {
-                    new { ShowId = "1", Title = "Scissor Seven" },
-                    new { ShowId = "2", Title = "A Mission in an Old Movie" },
-                    new { ShowId = "3", Title = "Dogs of Berlin" },
-                    new { ShowId = "4", Title = "Afflicted" },
-                    new { ShowId = "5", Title = "Feel Rich" },
-                    new { ShowId = "6", Title = "100 Hotter" },
-                    new { ShowId = "7", Title = "Follow This" },
-                    new { ShowId = "8", Title = "1 Chance 2 Dance" },
-                    new { ShowId = "9", Title = "Slow Country" },
-                    new { ShowId = "10", Title = "Small Town Crime" }
+                    new { ShowId = "s1", Title = "Scissor Seven" },
+                    new { ShowId = "s2", Title = "A Mission in an Old Movie" },
+                    new { ShowId = "s3", Title = "Dogs of Berlin" },
+                    new { ShowId = "s4", Title = "Afflicted" },
+                    new { ShowId = "s5", Title = "Feel Rich" },
+                    new { ShowId = "s6", Title = "100 Hotter" },
+                    new { ShowId = "s7", Title = "Follow This" },
+                    new { ShowId = "s8", Title = "1 Chance 2 Dance" },
+                    new { ShowId = "s9", Title = "Slow Country" },
+                    new { ShowId = "s10", Title = "Small Town Crime" }
                 };
                 return Ok(mockMovies);
             }
@@ -240,27 +292,29 @@ namespace intex2.Controllers
             return Ok(movies);
         }
 
+        [Authorize(Roles = "admin,user")]
         [HttpGet("UserMovies")]
         public async Task<IActionResult> GetUserMovies()
         {
             // Step 1: Get the currently logged-in user
             var user = await _userManager.GetUserAsync(User);
+
             if (user == null)
             {
                 // return Unauthorized(new { message = "User not logged in." });
                 // Mock data for testing
                 var mockMovies = new List<object>
                 {
-                    new { ShowId = "1", Title = "Sweet Girl" },
-                    new { ShowId = "2", Title = "A Mission in an Old Movie" },
-                    new { ShowId = "3", Title = "Dogs of Berlin" },
-                    new { ShowId = "4", Title = "Afflicted" },
-                    new { ShowId = "5", Title = "Feel Rich" },
-                    new { ShowId = "6", Title = "100 Hotter" },
-                    new { ShowId = "7", Title = "Follow This" },
-                    new { ShowId = "8", Title = "1 Chance 2 Dance" },
-                    new { ShowId = "9", Title = "Slow Country" },
-                    new { ShowId = "10", Title = "Small Town Crime" }
+                    new { ShowId = "s1", Title = "Sweet Girl" },
+                    new { ShowId = "s2", Title = "A Mission in an Old Movie" },
+                    new { ShowId = "s3", Title = "Dogs of Berlin" },
+                    new { ShowId = "s4", Title = "Afflicted" },
+                    new { ShowId = "s5", Title = "Feel Rich" },
+                    new { ShowId = "s6", Title = "100 Hotter" },
+                    new { ShowId = "s7", Title = "Follow This" },
+                    new { ShowId = "s8", Title = "1 Chance 2 Dance" },
+                    new { ShowId = "s9", Title = "Slow Country" },
+                    new { ShowId = "s10", Title = "Small Town Crime" }
                 };
                 return Ok(mockMovies);
             }
@@ -323,6 +377,7 @@ namespace intex2.Controllers
             return Ok(popularMovies);
         }
         
+        [Authorize(Roles = "admin")]
         [HttpGet("AllMovies")]
         public IActionResult GetMovies(int pageNum, int resultsPerPage, string searchTerm = "")
         {
@@ -343,6 +398,7 @@ namespace intex2.Controllers
             var movies = query
                 .Skip((pageNum - 1) * resultsPerPage)
                 .Take(resultsPerPage)
+                .OrderBy(m => m.ShowId)
                 .ToList();
 
             return Ok(new
@@ -351,7 +407,8 @@ namespace intex2.Controllers
                 totalNumMovies = totalMovies
             });
         }
-
+        
+        [Authorize(Roles = "admin")]
         [HttpPost("AddMovie")]
         public async Task<IActionResult> AddMovie([FromBody] MoviesTitle newMovie)
         {
@@ -361,7 +418,7 @@ namespace intex2.Controllers
             return Ok(newMovie);
         }
 
-
+        [Authorize(Roles = "admin")]
         [HttpDelete("DeleteMovie/{id}")]
         public IActionResult DeleteMovie(string id)
         {
@@ -376,6 +433,7 @@ namespace intex2.Controllers
             return Ok(movie);
         }
 
+        [Authorize(Roles = "admin")]
         [HttpPut("UpdateMovie/{id}")]
         public IActionResult UpdateMovie(string id,[FromBody] MoviesTitle updatedMovie)
         {
@@ -430,8 +488,8 @@ namespace intex2.Controllers
             _moviesContext.SaveChanges();
             return Ok(movie);
         }
-        
-        private async Task<string> GenerateNextShowIdAsync()
+
+private async Task<string> GenerateNextShowIdAsync()
         {
             var allIds = await _moviesContext.MoviesTitles
                 .Where(m => m.ShowId.StartsWith("s"))
@@ -446,9 +504,37 @@ namespace intex2.Controllers
             return $"s{maxNumber + 1}";
         }
 
-        
+        [HttpGet("GetMovieDetails/{id}")]
+        public IActionResult GetMovieDetails(string id)
+        {
+            var movie = _moviesContext.MoviesTitles.Find(id);
+            if (movie == null)
+            {
+                return NotFound();
+            }
 
-        
+            var baseUrl = _config["BlobStorage:BaseImageUrl"];
+            var encodedTitle = Uri.EscapeDataString(movie.Title ?? "placeholder");
+            var posterUrl = $"{baseUrl}/{encodedTitle}.jpg";
+
+            var dto = new MovieDto
+            {
+                ShowId = movie.ShowId,
+                Title = movie.Title,
+                Type = movie.Type,
+                Director = movie.Director,
+                Cast = movie.Cast,
+                Country = movie.Country,
+                ReleaseYear = movie.ReleaseYear,
+                Rating = movie.Rating,
+                Duration = movie.Duration,
+                Description = movie.Description,
+                PosterUrl = posterUrl
+            };
+
+            return Ok(dto);
+        }
+
     }
 }
 

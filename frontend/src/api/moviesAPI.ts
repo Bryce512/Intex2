@@ -18,10 +18,10 @@ export const handleLogin = async (
 ): Promise<void> => {
   e.preventDefault();
   setErrorMessage('');
+  setErrorMessage('');
   setLoading(true);
 
   try {
-
     const response = await fetch(
       `${API_URL}/login?useCookies=true&useSessionCookies=false`,
       {
@@ -35,6 +35,7 @@ export const handleLogin = async (
           twoFactorCode: 'string',
           twoFactorRecoveryCode: 'string',
         }),
+        credentials: 'include', // ✅ This must be outside the body!
       }
     );
 
@@ -117,6 +118,7 @@ export const handleRegister = async (
   try {
     const response = await fetch(`${API_URL}/register`, {
       method: 'POST',
+      credentials: 'include',
       headers: {
         'Content-Type': 'application/json',
       },
@@ -173,7 +175,8 @@ export const fetchMovies = async (
   searchTerm: string = ""
 ): Promise<fetchMoviesResponse> => {
   const response = await fetch(
-    `${API_URL}/Movies/AllMovies?pageNum=${page}&resultsPerPage=${resultsPerPage}&searchTerm=${encodeURIComponent(searchTerm)}`
+    `${API_URL}/Movies/AllMovies?pageNum=${page}&resultsPerPage=${resultsPerPage}`,{
+        credentials: 'include'}
   );
 
   if (!response.ok) {
@@ -193,6 +196,7 @@ export const addMovie = async (newMovie: Movie): Promise<Movie> => {
       headers: {
         'Content-Type': 'application/json',
       },
+      credentials: 'include',
       body: JSON.stringify(newMovie),
     });
     if (!response.ok) {
@@ -216,6 +220,7 @@ export const updateMovie = async (
       headers: {
         'Content-Type': 'application/json',
       },
+      credentials: 'include',
       body: JSON.stringify(updatedMovie),
     });
     if (!response.ok) {
@@ -233,6 +238,7 @@ export const deleteMovie = async (showId: string): Promise<void> => {
   try {
     const response = await fetch(`${API_URL}/Movies/DeleteMovie/${showId}`, {
       method: 'DELETE',
+      credentials: 'include',
     });
     if (!response.ok) {
       throw new Error(`HTTP error! status: ${response.status}`);
@@ -243,3 +249,16 @@ export const deleteMovie = async (showId: string): Promise<void> => {
   }
 };
 
+export const fetchMovieById = async (showId: string): Promise<Movie> => {
+  const response = await fetch(`${API_URL}/Movies/GetMovieDetails/${showId}`, {
+    method: 'GET',
+  });
+
+  if (!response.ok) {
+    throw new Error(`HTTP error! status: ${response.status}`);
+  }
+  const data = await response.json();
+  console.log('Fetched movie by ID:', data);
+
+  return data;
+};

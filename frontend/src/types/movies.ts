@@ -1,7 +1,7 @@
 export interface Movie {
   showId: string;
-  type: string;
-  title?: string;
+  type?: string;
+  title: string;
   director?: string;
   cast?: string;
   country?: string;
@@ -9,6 +9,7 @@ export interface Movie {
   rating?: string;
   duration?: string;
   description?: string;
+  posterUrl: string;
 
   action?: number;
   adventure?: number;
