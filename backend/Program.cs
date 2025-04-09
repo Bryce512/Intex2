@@ -164,7 +164,9 @@ app.MapPost("/logout", async (HttpContext context, SignInManager<AppIdentityUser
     });
 
     return Results.Ok(new {
-        message = "Logout successful",
+        // success = true,
+        // redirect = "/login",
+        message = "Logout successful",  
         timestamp = DateTime.UtcNow
 });}).RequireAuthorization();
 

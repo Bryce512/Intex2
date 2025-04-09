@@ -39,9 +39,9 @@ export default function UserInfo() {
         console.log('Logout resonse: ', response);
         // Clear any client-side state if needed
         // Redirect user to login or home
-        // window.location.href = '/login';
+        window.location.href = '/login';
       } else {
-        console.error('Logout failed:', response.statusText);
+        console.error('Logout failed:', response);
       }
     } catch (error) {
       console.error('Logout error:', error);
@@ -60,6 +60,9 @@ export default function UserInfo() {
       />
       {isDropdownOpen && (
         <div className={styles.dropdownMenuUser}>
+          <button className={styles.dropdownItem} onClick={handleLogout}>
+            Privacy Policy
+          </button>
           <button className={styles.dropdownItem} onClick={handleLogout}>
             Logout
           </button>

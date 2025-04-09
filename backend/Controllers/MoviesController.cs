@@ -23,6 +23,8 @@ namespace intex2.Controllers
         private readonly MoviesDbContext _moviesContext;
         private readonly UserManager<AppIdentityUser> _userManager;
         private readonly SignInManager<AppIdentityUser> _signInManager;
+        private readonly IConfiguration _config;
+
 
         public MoviesController(
             MovieToMovieRecommendationsDbContext movieToMovieRecommendationsContext,
@@ -35,7 +37,8 @@ namespace intex2.Controllers
             ActionRecommendationsDbContext actionRecommendationsContext,
             MoviesDbContext moviesContext,
             UserManager<AppIdentityUser> userManager,
-            SignInManager<AppIdentityUser> signInManager)
+            SignInManager<AppIdentityUser> signInManager,
+            IConfiguration config)
         {
             _movieToMovieRecommendationsContext = movieToMovieRecommendationsContext;
             _topRatedRecommendationsContext = topRatedRecommendationsContext;
@@ -48,6 +51,7 @@ namespace intex2.Controllers
             _moviesContext = moviesContext;
             _userManager = userManager;
             _signInManager = signInManager;
+            _config = config;
         }
 
         [Authorize]
@@ -481,7 +485,38 @@ namespace intex2.Controllers
             _moviesContext.SaveChanges();
             return Ok(movie);
         }
-        
+
+        [HttpGet("GetMovieDetails/{id}")]
+        public IActionResult GetMovieDetails(string id)
+        {
+            var movie = _moviesContext.MoviesTitles.Find(id);
+            if (movie == null)
+            {
+                return NotFound();
+            }
+
+            var baseUrl = _config["BlobStorage:BaseImageUrl"];
+            var encodedTitle = Uri.EscapeDataString(movie.Title ?? "placeholder");
+            var posterUrl = $"{baseUrl}/{encodedTitle}.jpg";
+
+            var dto = new MovieDto
+            {
+                ShowId = movie.ShowId,
+                Title = movie.Title,
+                Type = movie.Type,
+                Director = movie.Director,
+                Cast = movie.Cast,
+                Country = movie.Country,
+                ReleaseYear = movie.ReleaseYear,
+                Rating = movie.Rating,
+                Duration = movie.Duration,
+                Description = movie.Description,
+                PosterUrl = posterUrl
+            };
+
+            return Ok(dto);
+        }
+
     }
 }
 

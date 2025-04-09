@@ -1,12 +1,13 @@
 import { useEffect, useState } from 'react';
 import { deleteMovie, fetchMovies } from '../api/moviesAPI';
-// import { Book } from "../types/books";
 import '../css/adminBooklist.css';
 import Pagination from '../components/pagination';
-import NewBookForm from '../components/newBookForm';
+import NewMovieForm from '../components/NewMovieForm';
 import EditMovieForm from '../components/EditMovieForm';
 import HeaderHome from '../components/HeaderHome';
 import { Movie } from '../types/movies';
+import { useNavigate } from 'react-router-dom';
+import NewMovieModal from '../components/NewMovieModal';
 
 function AdminMovielist() {
   const [movies, setMovies] = useState<Movie[]>([]);
@@ -17,6 +18,7 @@ function AdminMovielist() {
   const [totalPages, setTotalPages] = useState(0);
   const [showForm, setShowForm] = useState(false);
   const [editingMovie, setEditingMovie] = useState<Movie | null>(null);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const loadMovies = async () => {
@@ -69,15 +71,17 @@ function AdminMovielist() {
       )}
 
       {showForm && (
-        <NewBookForm
-          onSuccess={() => {
-            setShowForm(false);
-            fetchMovies(page, resultsPerPage).then((data) =>
-              setMovies(data.movies)
-            );
-          }}
-          onCancel={() => setShowForm(false)}
-        />
+        <NewMovieModal onClose={() => setShowForm(false)}>
+          <NewMovieForm
+            onSuccess={() => {
+              setShowForm(false);
+              fetchMovies(page, resultsPerPage).then((data) =>
+                setMovies(data.movies)
+              );
+            }}
+            onCancel={() => setShowForm(false)}
+          />
+        </NewMovieModal>
       )}
 
       {editingMovie && (

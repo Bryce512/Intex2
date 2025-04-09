@@ -3,7 +3,7 @@ import { deleteBook, fetchBooks } from "../api/BooklistAPI";
 import { Book } from "../types/books";
 import '../css/adminBooklist.css';
 import Pagination from "../components/pagination";
-import NewBookForm from "../components/newBookForm";
+import NewBookForm from "../components/NewMovieForm";
 import EditBookForm from "../components/editBookForm";
 import HeaderHome from "../components/HeaderHome";
 import AuthorizeView, { AuthorizedUser } from "../components/AuthorizeView";
