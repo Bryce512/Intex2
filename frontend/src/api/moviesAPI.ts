@@ -129,7 +129,6 @@ export const handleRegister = async (
       }),
     });
 
-    const contentType = response.headers.get('content-type');
     let data;
 
     // Read the response as text first

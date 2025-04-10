@@ -33,7 +33,7 @@ function AllMovies() {
 
       try {
         const url = new URL(`${API_URL}/Movies/AllMoviesMax`);
-        url.searchParams.append('page', String(pageToLoad));
+        url.searchParams.append('page', String(page));
         url.searchParams.append('pageSize', '20');
         if (search) url.searchParams.append('search', search);
         if (genreList) url.searchParams.append('genres', genreList);
@@ -117,7 +117,7 @@ function AllMovies() {
   };
 
   useEffect(() => {
-    loadMovies(1, '', '', true);
+    loadMovies('', '', true);
 
     return () => {
       isMounted.current = false;
