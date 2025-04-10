@@ -1,64 +1,115 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import { deleteMovie, fetchMovies } from '../api/moviesAPI';
-// import { Book } from "../types/books";
-import '../css/adminBooklist.css';
+import '../css/Admin.css';
 import Pagination from '../components/pagination';
-import NewBookForm from '../components/newBookForm';
+import NewMovieForm from '../components/NewMovieForm';
 import EditMovieForm from '../components/EditMovieForm';
 import HeaderHome from '../components/HeaderHome';
 import { Movie } from '../types/movies';
+import NewMovieModal from '../components/NewMovieModal';
+import { useNavigate } from 'react-router-dom';
 
 function AdminMovielist() {
   const [movies, setMovies] = useState<Movie[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [page, setPage] = useState(1);
-  const [resultsPerPage, setResultsPerPage] = useState(5);
+  const [resultsPerPage, setResultsPerPage] = useState(50);
   const [totalPages, setTotalPages] = useState(0);
   const [showForm, setShowForm] = useState(false);
   const [editingMovie, setEditingMovie] = useState<Movie | null>(null);
+  const [searchTerm, setSearchTerm] = useState('');
+  const [debouncedSearchTerm, setDebouncedSearchTerm] = useState('');
+  const navigate = useNavigate();
+
+  // Create a reference for the search input
+  const searchInputRef = useRef<HTMLInputElement>(null);
+
+  // Preserve focus after re-render
+  useEffect(() => {
+    // If the input had focus before re-render, refocus it
+    if (document.activeElement === searchInputRef.current) {
+      searchInputRef.current?.focus();
+    }
+  }, [movies]); // This runs after the movies state updates
+
+  // Debounce search term to avoid too many API calls
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setDebouncedSearchTerm(searchTerm);
+      // Reset to page 1 when search term changes
+      setPage(1);
+    }, 500);
+
+    return () => clearTimeout(timer);
+  }, [searchTerm]);
 
   useEffect(() => {
     const loadMovies = async () => {
       try {
-        const data = await fetchMovies(page, resultsPerPage);
+        setLoading(true);
+        const data = await fetchMovies(
+          page,
+          resultsPerPage,
+          // debouncedSearchTerm
+        );
         setMovies(data.movies);
         setTotalPages(Math.ceil(data.totalNumMovies / resultsPerPage));
       } catch (error) {
-        setError((error as Error).message);
+        setError(
+          'You are not authorized to access this page. You will be redirected to the home page.'
+        );
+        setTimeout(() => {
+          navigate('/');
+        }, 2000);
       } finally {
         setLoading(false);
       }
     };
     loadMovies();
-  }, [page, resultsPerPage, showForm, editingMovie]);
+  }, [page, resultsPerPage, debouncedSearchTerm, showForm, editingMovie]);
 
   const handleDelete = async (showId: string) => {
     if (window.confirm('Are you sure you want to delete this Movie?')) {
       try {
         await deleteMovie(showId);
-        setMovies((prevMovies) =>
-          prevMovies.filter((movie) => movie.showId !== showId)
+        // Refresh the current page after deletion
+        const data = await fetchMovies(
+          page,
+          resultsPerPage,
+          // debouncedSearchTerm
         );
-        setTotalPages(Math.ceil((totalPages - 1) / resultsPerPage));
+        setMovies(data.movies);
+        setTotalPages(Math.ceil(data.totalNumMovies / resultsPerPage));
       } catch (error) {
         setError((error as Error).message);
       }
     }
   };
 
+  const moviesArray = Array.isArray(movies) ? movies : [];
+
   if (loading) {
     return <p>Loading...</p>;
   }
   if (error) {
-    return <p className="text-red-500">Error: {error}</p>;
+    return <p>Error: {error}</p>;
   }
 
   return (
     <>
       <HeaderHome />
       <h1>Manage Movies</h1>
-
+      <br />
+      <input
+        ref={searchInputRef}
+        type="text"
+        placeholder="Search by title..."
+        value={searchTerm}
+        onChange={(e) => setSearchTerm(e.target.value)}
+        className="px-4 py-2 border rounded mb-3"
+      />
+      <br />
       {!showForm && (
         <button
           className="btn btn-success mb-3"
@@ -69,32 +120,46 @@ function AdminMovielist() {
       )}
 
       {showForm && (
-        <NewBookForm
-          onSuccess={() => {
-            setShowForm(false);
-            fetchMovies(page, resultsPerPage).then((data) =>
-              setMovies(data.movies)
-            );
-          }}
-          onCancel={() => setShowForm(false)}
-        />
+        <NewMovieModal onClose={() => setShowForm(false)}>
+          <NewMovieForm
+            onSuccess={() => {
+              setShowForm(false);
+              fetchMovies(page, resultsPerPage, ).then(
+                (data) => {
+                  setMovies(data.movies);
+                  setTotalPages(
+                    Math.ceil(data.totalNumMovies / resultsPerPage)
+                  );
+                }
+              );
+            }}
+            onCancel={() => setShowForm(false)}
+          />
+        </NewMovieModal>
       )}
 
       {editingMovie && (
-        <EditMovieForm
-          movie={editingMovie}
-          onSuccess={() => {
-            setEditingMovie(null);
-            fetchMovies(page, resultsPerPage).then((data) =>
-              setMovies(data.movies)
-            );
-          }}
-          onCancel={() => setEditingMovie(null)}
-        />
+        <NewMovieModal onClose={() => setShowForm(false)}>
+          <EditMovieForm
+            movie={editingMovie}
+            onSuccess={() => {
+              setEditingMovie(null);
+              fetchMovies(page, resultsPerPage).then(
+                (data) => {
+                  setMovies(data.movies);
+                  setTotalPages(
+                    Math.ceil(data.totalNumMovies / resultsPerPage)
+                  );
+                }
+              );
+            }}
+            onCancel={() => setEditingMovie(null)}
+          />
+        </NewMovieModal>
       )}
 
       <table className="table-auto table table-striped table-bordered">
-        <thead className="table-dark">
+        <thead className="">
           <tr>
             <th className="px-4 py-2">ID</th>
             <th className="px-4 py-2">Title</th>
@@ -108,14 +173,14 @@ function AdminMovielist() {
           </tr>
         </thead>
         <tbody>
-          {movies.map((movie) => (
+          {moviesArray.map((movie) => (
             <tr key={movie.showId}>
               <td className="border px-4 py-2">{movie.showId}</td>
               <td className="border px-4 py-2">{movie.title}</td>
               <td className="border px-4 py-2">{movie.type}</td>
               <td className="border px-4 py-2">{movie.director}</td>
               <td className="border px-4 py-2">{movie.releaseYear}</td>
-              <td className="border px-4 py-2">${movie.rating}</td>
+              <td className="border px-4 py-2">{movie.rating}</td>
               <td className="border px-4 py-2">{movie.duration}</td>
               <td className="border px-4 py-2">Genres</td>
               <td>
@@ -138,6 +203,13 @@ function AdminMovielist() {
           ))}
         </tbody>
       </table>
+
+      {moviesArray.length === 0 && !loading && (
+        <div className="text-center py-4">
+          <p>No movies found matching your search criteria.</p>
+        </div>
+      )}
+
       <Pagination
         currentPage={page}
         totalPages={totalPages}

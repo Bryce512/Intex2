@@ -1,12 +1,14 @@
 import { Movie } from '../types/movies';
+import { NewMovie } from '../types/newMovie';
 
 interface fetchMoviesResponse {
   movies: Movie[];
   totalNumMovies: number;
 }
 
-// const API_URL = "https://intex2-backend-ezargqcgdwbgd4hq.westus3-01.azurewebsites.net/User";
-const API_URL = 'https://localhost:5000'; // For local development
+// const API_URL = 'https://localhost:5000'; // For local development
+const API_URL =
+  'https://intex2-backend-ezargqcgdwbgd4hq.westus3-01.azurewebsites.net';
 
 // Handle login using plain username/password
 export const handleLogin = async (
@@ -19,10 +21,10 @@ export const handleLogin = async (
 ): Promise<void> => {
   e.preventDefault();
   setErrorMessage('');
+  setErrorMessage('');
   setLoading(true);
 
   try {
-
     const response = await fetch(
       `${API_URL}/login?useCookies=true&useSessionCookies=false`,
       {
@@ -39,7 +41,6 @@ export const handleLogin = async (
         credentials: 'include', // ✅ This must be outside the body!
       }
     );
-
 
     console.log('Login response:', response);
 
@@ -69,7 +70,7 @@ export const handleSubmit = (
   setErrorMessage: React.Dispatch<React.SetStateAction<string>>,
   setLoading: React.Dispatch<React.SetStateAction<boolean>>,
   setFailedAttempts: React.Dispatch<React.SetStateAction<number>>,
-  handleClose: void
+  handleClose: Function
 ) => {
   event.preventDefault();
   event.stopPropagation();
@@ -87,7 +88,6 @@ export const handleSubmit = (
 
   // Create user object and call the registration function
   const userData = {
-    // Make sure these property names match EXACTLY what's in your C# User model
     Username: username, // Verify if it's Username with capital 'U'
     Password: password,
     Name: name,
@@ -110,25 +110,24 @@ export const handleRegister = async (
   setLoading: Function,
   setErrorMessage: Function,
   setValidated: Function,
-  handleClose: void,
+  handleClose: Function,
   setFailedAttempts: Function
 ) => {
   setLoading(true);
   setErrorMessage('');
-  setErrorMessage('');
 
-  console.log('Registering user:', userData);
   console.log('Registering user:', userData);
 
   try {
     const response = await fetch(`${API_URL}/register`, {
-      method: "POST",
+      method: 'POST',
+      credentials: 'include',
       headers: {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
         password: userData.Password,
-        email: userData.Email
+        email: userData.Email,
       }),
     });
 
@@ -140,7 +139,6 @@ export const handleRegister = async (
       data = await response.json();
       console.log('JSON Response:', data);
     } else {
-      // Not JSON, get as text instead
       const textResponse = await response.text();
       console.log(
         'Text Response (first 200 chars):',
@@ -158,10 +156,8 @@ export const handleRegister = async (
 
     // Reset validation state and close modal
     setValidated(false);
-    handleClose;
+    handleClose();
 
-    // You might want to automatically log the user in here
-    // or show a success message
     alert('Registration successful! Please log in.');
   } catch (error: any) {
     // Increment failed attempts counter
@@ -178,10 +174,13 @@ export const handleRegister = async (
 
 export const fetchMovies = async (
   page: number,
-  resultsPerPage: number
+  resultsPerPage: number,
+  // searchTerm: string = ""
 ): Promise<fetchMoviesResponse> => {
   const response = await fetch(
-    `${API_URL}/Movies/AllMovies?pageNum=${page}&resultsPerPage=${resultsPerPage}`
+    `${API_URL}/Movies/AllMovies?pageNum=${page}&resultsPerPage=${resultsPerPage}`,
+    {credentials: 'include'}
+    // &searchTerm=${encodeURIComponent(searchTerm)}`
   );
 
   if (!response.ok) {
@@ -194,13 +193,14 @@ export const fetchMovies = async (
 };
 
 
-export const addMovie = async (newMovie: Movie): Promise<Movie> => {
+export const addMovie = async (newMovie: NewMovie): Promise<NewMovie> => {
   try {
     const response = await fetch(`${API_URL}/Movies/AddMovie`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
       },
+      credentials: 'include',
       body: JSON.stringify(newMovie),
     });
     if (!response.ok) {
@@ -224,6 +224,7 @@ export const updateMovie = async (
       headers: {
         'Content-Type': 'application/json',
       },
+      credentials: 'include',
       body: JSON.stringify(updatedMovie),
     });
     if (!response.ok) {
@@ -241,6 +242,7 @@ export const deleteMovie = async (showId: string): Promise<void> => {
   try {
     const response = await fetch(`${API_URL}/Movies/DeleteMovie/${showId}`, {
       method: 'DELETE',
+      credentials: 'include',
     });
     if (!response.ok) {
       throw new Error(`HTTP error! status: ${response.status}`);
@@ -249,4 +251,34 @@ export const deleteMovie = async (showId: string): Promise<void> => {
     console.error('Error deleting movie:', error);
     throw error;
   }
+};
+
+export const fetchMovieById = async (showId: string): Promise<Movie> => {
+  const response = await fetch(`${API_URL}/Movies/GetMovieDetails/${showId}`, {
+    method: 'GET',
+    credentials: 'include',
+  });
+
+  if (!response.ok) {
+    throw new Error(`HTTP error! status: ${response.status}`);
+  }
+  const data = await response.json();
+  console.log('Fetched movie by ID:', data);
+
+  return data;
+};
+
+export const fetchAllMoviesMax = async (): Promise<Array<Movie>> => {
+  const response = await fetch(`${API_URL}/Movies/AllMoviesMax`, {
+    method: 'GET',
+    credentials: 'include',
+  });
+
+  if (!response.ok) {
+    throw new Error(`HTTP error! status: ${response.status}`);
+  }
+  const data = await response.json();
+  console.log('Fetched all moives:', data);
+
+  return data;
 };

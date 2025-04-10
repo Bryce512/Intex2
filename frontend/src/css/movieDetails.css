@@ -1,0 +1,128 @@
+.movie-details-container {
+  padding: 60px 20px;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.movie-details-content {
+  display: flex;
+  flex-wrap: wrap;
+  background: #04345c;
+  color: white;
+  border-radius: 20px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+  text-align: left;
+}
+
+.movie-poster {
+  flex: 1 1 350px;
+  max-width: 450px;
+}
+
+.movie-poster img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.movie-info {
+  flex: 2;
+  padding: 30px;
+}
+
+.movie-title {
+  font-size: 2.5rem;
+  font-weight: bold;
+  margin-bottom: 0.5rem;
+}
+
+.movie-type {
+  font-style: italic;
+  color: #c4cbca;
+  margin-bottom: 1.5rem;
+}
+
+.movie-meta {
+  list-style: none;
+  padding: 0;
+  margin: 0 0 1.5rem 0;
+}
+
+.movie-meta li {
+  margin-bottom: 0.5rem;
+}
+
+.movie-genres h2 {
+  font-size: 1.2rem;
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+  text-align: left;
+  color: white;
+}
+
+.genre-badges {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.genre-badge {
+  background-color: #f5b700;
+  color: white;
+  padding: 5px 12px;
+  border-radius: 999px;
+  font-size: 0.85rem;
+}
+
+.movie-rating {
+  margin-top: 20px;
+  font-size: 1.2rem;
+}
+
+.star {
+  cursor: pointer;
+  font-size: 1.5rem;
+  color: #ccc;
+  margin-right: 5px;
+  transition: color 0.2s;
+}
+
+.star.filled {
+  color: #f5b700;
+}
+
+.play-button {
+  margin-top: 30px;
+  padding: 12px 24px;
+  background: linear-gradient(to right, #f5b700, #ff9900);
+  color: white;
+  font-weight: bold;
+  border: none;
+  border-radius: 50px;
+  cursor: pointer;
+  font-size: 1.1rem;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.play-button:hover {
+  transform: scale(1.05);
+  box-shadow: 0 6px 20px rgba(255, 153, 0, 0.5);
+}
+
+.genre-badge {
+  background-color: transparent;
+  color: white;
+  border: 1px solid white;
+  padding: 5px 12px;
+  border-radius: 999px;
+  font-size: 0.85rem;
+  transition: all 0.2s ease;
+  backdrop-filter: blur(4px);
+}
+
+.genre-badge:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+  cursor: default;
+}
