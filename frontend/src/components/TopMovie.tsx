@@ -1,40 +1,92 @@
-'use client';
-import styles from '../css/TopMovie.module.css';
+import React, { useEffect, useRef, useState } from 'react';
+import '../css/TopMovie.css';
+import { useNavigate } from 'react-router-dom';
 
-/**
- * TopMovieRecommendation component displays the #1 watched movie globally
- * with an image and details in a responsive layout
- */
-function TopMovieRecommendation() {
+// Declare YouTube Player API global
+declare global {
+  interface Window {
+    YT: typeof YT;
+    onYouTubeIframeAPIReady: () => void;
+  }
+}
+
+const TopMovieRecommendation = () => {
+  const videoId = '8RF1Re9xyKg';
+  const videos = [
+    `https://www.youtube.com/embed/${videoId}?enablejsapi=1&autoplay=1&mute=1&controls=0&showinfo=0&rel=0&iv_load_policy=3&modestbranding=1&loop=1&playlist=${videoId}`,
+  ];
+
+  const iframeRef = useRef<HTMLIFrameElement | null>(null);
+  const isManualChangeRef = useRef(false);
+  const navigate = useNavigate();
+
+  // Initialize YouTube player
+  useEffect(() => {
+    const loadYouTubeAPI = () => {
+      const tag = document.createElement('script');
+      tag.src = 'https://www.youtube.com/iframe_api';
+      const firstScriptTag = document.getElementsByTagName('script')[0];
+      firstScriptTag.parentNode?.insertBefore(tag, firstScriptTag);
+    };
+
+    if (!window.YT) {
+      loadYouTubeAPI();
+    }
+
+    window.onYouTubeIframeAPIReady = initializePlayer;
+
+    return () => {
+      window.onYouTubeIframeAPIReady = () => {};
+    };
+  }, []);
+
+  const initializePlayer = () => {
+    if (iframeRef.current) {
+      new window.YT.Player(iframeRef.current, {
+        events: {
+          onReady: onPlayerReady,
+          onStateChange: onPlayerStateChange,
+        },
+      });
+    }
+  };
+
+  const onPlayerReady = (event: YT.PlayerEvent) => {
+    event.target.playVideo();
+  };
+
+  const onPlayerStateChange = (event: YT.OnStateChangeEvent) => {
+    if (event.data === YT.PlayerState.ENDED && !isManualChangeRef.current) {
+      event.target.playVideo();
+    }
+  };
+
   return (
-    <section className={styles.recommendationContainer}>
-      <div className={styles.contentWrapper}>
-        <div className={styles.imageColumn}>
-          <img
-            src="https://cdn.builder.io/api/v1/image/assets/TEMP/d649bed2003d146a5e11396e53c280e5534f1de2?placeholderIfAbsent=true&apiKey=1d4cf9c17b5e49bab59666098f731bc6"
-            alt="Top movie poster"
-            className={styles.moviePoster}
-          />
-        </div>
-        <div className={styles.detailsColumn}>
-          <article className={styles.movieDetails}>
-            <h2 className={styles.movieTitle}>#1 Watched Movie Globally </h2>
+    <div className="video-carousel-wrapper full-bleed">
+      <div className="video-container">
+        <iframe
+          ref={iframeRef}
+          src={videos[0]}
+          title="Video"
+          allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture"
+          allowFullScreen
+          className="video-iframe"
+        />
+        <div className="content-overlay">
+          <div className="overlay-content">
+            <h1 className="carousel-text">All Your Favorites</h1>
+            <h3 className="carousel-subtext">
+              In one place
+            </h3>
+              <button className="cta-button" onClick={() => navigate('/All')}>
+                Start Browsing
+              </button>
 
-            <p className={styles.movieDescription}>
-              Before Dorothy ever arrived in Oz, there was another story — the
-              untold tale of two young women: Elphaba, born with green skin and
-              fierce intelligence, and Glinda, beautiful, popular, and
-              ambitious. Though they start as rivals at Shiz University, their
-              unlikely friendship is tested by opposing destinies, love, and the
-              corrupt powers that rule Oz.
-            </p>
-
-            <p className={styles.movieMetadata}>2024 | PG</p>
-          </article>
+          </div>
         </div>
       </div>
-    </section>
+    </div>
   );
-}
+};
 
 export default TopMovieRecommendation;
