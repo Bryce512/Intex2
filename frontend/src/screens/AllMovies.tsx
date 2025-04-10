@@ -21,7 +21,7 @@ function AllMovies() {
   // Add a ref to track if the component is mounted
   const isMounted = useRef(true);
   // Add a debounce timer ref
-  const debounceTimerRef = useRef<NodeJS.Timeout | null>(null);
+  const debounceTimerRef = useRef<number | null>(null);
 
   const genres = ['Action', 'Comedy', 'Docuseries', 'Fantasy', 'Children'];
 
@@ -104,7 +104,7 @@ function AllMovies() {
     }
 
     // Reset movies when search changes
-    debounceTimerRef.current = setTimeout(() => {
+    debounceTimerRef.current = window.setTimeout(() => {
       setHasMore(true);
       loadMovies(newSearchQuery, selectedGenres.join(','), true);
       debounceTimerRef.current = null;
