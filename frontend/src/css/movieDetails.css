@@ -16,8 +16,8 @@
 }
 
 .movie-poster {
-  flex: 1 1 300px;
-  max-width: 400px;
+  flex: 1 1 350px;
+  max-width: 450px;
 }
 
 .movie-poster img {

@@ -4,6 +4,7 @@
   min-height: 100vh;
   padding: 40px 20px;
   font-family: sans-serif;
+  text-align: left;
 }
 
 .privacy-container {
@@ -18,12 +19,14 @@
 .privacy-container h3 {
   color: #ffffff;
   margin-top: 1.5em;
+  text-align: left;
 }
 
 .privacy-container p,
 .privacy-container li {
   line-height: 1.7;
   font-size: 1rem;
+  text-align: left;
 }
 
 .privacy-container ul {
@@ -37,4 +40,5 @@
 
 .privacy-container strong {
   color: #ffffff;
+  text-align: left;
 }
