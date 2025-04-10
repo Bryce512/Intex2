@@ -27,7 +27,7 @@
 .imageColumn {
   flex-direction: column;
   align-items: stretch;
-  width: 43%;
+  width: 60%;
   margin-left: 0;
   line-height: normal;
   display: flex;
@@ -103,3 +103,17 @@
   margin: 0;
   padding: 0;
 }
+
+.bannerText {
+  width: 50%;
+  padding: 4rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  background: transparent;
+  color: white;
+  z-index: 1;
+  align-items: center;
+}
+
+
