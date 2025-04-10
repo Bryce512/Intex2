@@ -54,14 +54,27 @@ body, html {
   padding: 0;
 }
 
-/* Video iframe - cropped to hide borders */
-.video-iframe {
+/* Shared video styling (applies to iframe and video) */
+.video-iframe,
+.video-iframe video {
   position: absolute;
   top: -110px;
   left: -15%;
   width: 130%;
   height: calc(100% + 220px);
   border: 0;
+  object-fit: cover;
+  pointer-events: none;
+}
+
+/* Specifically target <video> if not wrapped */
+video.video-iframe {
+  position: absolute;
+  top: -110px;
+  left: -15%;
+  width: 130%;
+  height: calc(100% + 220px);
+  object-fit: cover;
   pointer-events: none;
 }
 
@@ -119,7 +132,6 @@ body, html {
   cursor: pointer;
   transition: background-color 0.3s ease, transform 0.2s ease;
   box-shadow: 0 4px 12px rgba(0,0,0,0.4);
-
 }
 
 .cta-button:hover {
@@ -188,3 +200,17 @@ body, html {
 .carousel.fade .carousel-item {
   transition: opacity 0.5s ease-in-out;
 }
+
+/* Local video background (instead of YouTube iframe) */
+.video-background {
+  position: absolute;
+  top: -110px;
+  left: -15%;
+  width: 130%;
+  height: calc(100% + 220px);
+  object-fit: cover;
+  border: none;
+  z-index: 1;
+  pointer-events: none;
+}
+
