@@ -447,37 +447,44 @@ namespace intex2.Controllers
             return Ok(popularMovies);
         }
         
-        [Authorize(Roles = "admin")]
-        [HttpGet("AllMovies")]
-        public IActionResult GetMovies(int pageNum, int resultsPerPage, string searchTerm = "")
+    [Authorize(Roles = "admin")]
+    [HttpGet("AllMovies")]
+    public IActionResult GetMovies(int pageNum, int resultsPerPage, string searchTerm = "")
+    {
+        // Trim and convert searchTerm to lowercase once
+        searchTerm = string.IsNullOrEmpty(searchTerm) ? "" : searchTerm.Trim().ToLower();
+
+        var query = _moviesContext.MoviesTitles.AsQueryable();
+
+        // Apply case-insensitive search filter if searchTerm is provided
+        if (!string.IsNullOrEmpty(searchTerm))
         {
-            // Convert searchTerm to lowercase once
-            searchTerm = searchTerm?.ToLower() ?? "";
-    
-            var query = _moviesContext.MoviesTitles.AsQueryable();
-    
-            // Apply case-insensitive search filter if searchTerm is provided
-            if (!string.IsNullOrEmpty(searchTerm))
-            {
-                // Convert title to lowercase for comparison
-                query = query.Where(m => m.Title.ToLower().Contains(searchTerm));
-            }
-
-            var totalMovies = query.Count();
-
-            var movies = query
-                .Skip((pageNum - 1) * resultsPerPage)
-                .Take(resultsPerPage)
-                .OrderBy(m => m.ShowId)
-                .ToList();
-
-            return Ok(new
-            {
-                movies = movies,
-                totalNumMovies = totalMovies
-            });
+            // Apply filtering by title, making sure both sides are case-insensitive and trimmed
+            query = query.Where(m => m.Title.ToLower().Trim().Contains(searchTerm));
         }
-        
+
+        // Log the SQL query for debugging purposes (optional)
+        var sqlQuery = query.ToString();
+        Console.WriteLine("Generated SQL Query: " + sqlQuery);
+
+        // Get the total count of movies based on the query
+        var totalMovies = query.Count();
+
+        // Apply pagination (skip and take) based on pageNum and resultsPerPage
+        var movies = query
+            .Skip((pageNum - 1) * resultsPerPage)
+            .Take(resultsPerPage)
+            .OrderBy(m => m.ShowId)
+            .ToList();
+
+        // Return the results as JSON
+        return Ok(new
+        {
+            movies = movies,
+            totalNumMovies = totalMovies
+        });
+    }
+
         [Authorize(Roles = "admin")]
         [HttpPost("AddMovie")]
         public async Task<IActionResult> AddMovie([FromBody] MoviesTitle newMovie)

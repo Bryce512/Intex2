@@ -2,6 +2,9 @@ import { useState, useRef, useEffect } from 'react';
 import styles from '../css/Header.module.css';
 import { useNavigate } from 'react-router-dom';
 
+const API_URL = import.meta.env.VITE_API_URL;
+
+
 export default function UserInfo() {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
@@ -29,16 +32,13 @@ export default function UserInfo() {
 
   const handleLogout = async () => {
     try {
-      const response = await fetch(
-        'https://intex2-backend-ezargqcgdwbgd4hq.westus3-01.azurewebsites.net/logout',
-        {
-          method: 'POST',
-          credentials: 'include', // 👈 this is important for cookie-based auth
-          headers: {
-            'Content-Type': 'application/json',
-          },
-        }
-      );
+      const response = await fetch(`${API_URL}/logout`, {
+        method: 'POST',
+        credentials: 'include', // 👈 this is important for cookie-based auth
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
 
       if (response.ok) {
         console.log('Logout resonse: ', response);

@@ -7,14 +7,14 @@ import Footer from '../components/Footer';
 import CookieConsent from '../components/CookieConsent';
 import LandingIntro from '../components/LandingIntro';
 
+const API_URL = import.meta.env.VITE_API_URL;
+
+
 function Landing() {
   // State to hold multiple categories of movies
   const [carouselMovies, setCarouselMovies] = useState<{
     [category: string]: { title: string; showId: string }[];
   }>({});
-
-  const API_URL =
-    'https://intex2-backend-ezargqcgdwbgd4hq.westus3-01.azurewebsites.net';
 
   // Fetch different movie categories
   useEffect(() => {
@@ -46,7 +46,7 @@ function Landing() {
             console.error(`Failed to fetch movies for ${key}`);
           }
         } catch (error) {
-          console.error(`Error fetching ${key}:`, error);
+          console.error(`Error fetching ${key}: `, error);
         }
       }
       setCarouselMovies(results);

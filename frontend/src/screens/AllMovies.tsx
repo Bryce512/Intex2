@@ -5,6 +5,9 @@ import '../css/AllMovies.css';
 import { Link } from 'react-router-dom';
 import AuthorizeView from '../components/AuthorizeView';
 
+const API_URL = import.meta.env.VITE_API_URL;
+
+
 function Home() {
   const [movies, setMovies] = useState<Movie[]>([]);
   const [page, setPage] = useState(1); // Track current page
@@ -21,7 +24,7 @@ function Home() {
     try {
       // Fetch the next page of movies
       const response = await fetch(
-        `https://intex2-backend-ezargqcgdwbgd4hq.westus3-01.azurewebsites.net/Movies/AllMoviesMax?page=${page}&pageSize=20`,
+        `${API_URL}/Movies/AllMoviesMax?page=${page}&pageSize=20`,
         {
           credentials: 'include',
         }
@@ -81,7 +84,6 @@ function Home() {
     <>
       <AuthorizeView>
         <HeaderHome />
-        <p className="text-success text-2xl font-bold ml-6">ALL MOVIES</p>
         <div className="gridWrapper">
           {movies.map((movie) => (
             <div key={movie.showId} className="gridItem">

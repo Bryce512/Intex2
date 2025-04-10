@@ -86,7 +86,7 @@ function NewMovieForm({ onSuccess, onCancel }: NewMovieFormProps) {
   // Dynamically get all genre keys
   const genreKeys = Object.keys(formData).filter(
     (key) =>
-      typeof formData[key as keyof NewMovie] === 'number' && key !== 'releaseYear'
+      typeof formData[key as keyof NewMovie] === 'boolean'
   );
 
   const formatGenreLabel = (key: string): string =>

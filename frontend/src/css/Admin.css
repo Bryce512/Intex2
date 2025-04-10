@@ -61,3 +61,32 @@ table.table th {
 .table tbody tr:nth-child(odd) {
   background-color: #c4cbca; /* White for odd rows */
 }
+
+.table-container {
+  min-height: 400px;
+  transition: height 0.3s ease;
+  will-change: contents; /* Tell browser to optimize for changing content */
+  contain: layout; /* Content-visibility optimization */
+}
+
+/* Ensure the pagination stays in a fixed position */
+.pagination-container {
+  margin-top: 20px;
+  position: relative;
+  z-index: 1;
+  height: 60px;
+}
+
+.admin-container {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  overflow-x: hidden; /* Prevent horizontal scrollbars */
+}
+
+/* Prevent table cell layout shifts */
+td,
+th {
+  box-sizing: border-box;
+  min-width: 100px; /* Minimum width for cells */
+}

@@ -1,6 +1,8 @@
 import React, { useState, useEffect, createContext } from 'react';
 import { Navigate } from 'react-router-dom';
 
+const API_URL = import.meta.env.VITE_API_URL;
+
 const UserContext = createContext<User | null>(null);
 
 interface User {
@@ -43,13 +45,10 @@ function AuthorizeView(props: { children: React.ReactNode }) {
       }
     }
 
-    fetchWithRetry(
-      'https://intex2-backend-ezargqcgdwbgd4hq.westus3-01.azurewebsites.net/pingauth',
-      {
-        method: 'GET',
-        credentials: 'include',
-      }
-    );
+    fetchWithRetry(`${API_URL}/pingauth`, {
+      method: 'GET',
+      credentials: 'include',
+    });
   }, []);
 
   if (loading) {
