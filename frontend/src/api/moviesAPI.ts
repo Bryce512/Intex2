@@ -6,9 +6,9 @@ interface fetchMoviesResponse {
   totalNumMovies: number;
 }
 
-// const API_URL = 'https://localhost:5000'; // For local development
-const API_URL =
-  'https://intex2-backend-ezargqcgdwbgd4hq.westus3-01.azurewebsites.net';
+const API_URL = 'https://localhost:5000'; // For local development
+// const API_URL =
+//   'https://intex2-backend-ezargqcgdwbgd4hq.westus3-01.azurewebsites.net';
 
 // Handle login using plain username/password
 export const handleLogin = async (
@@ -178,7 +178,9 @@ export const fetchMovies = async (
   // searchTerm: string = ""
 ): Promise<fetchMoviesResponse> => {
   const response = await fetch(
-    `${API_URL}/Movies/AllMovies?pageNum=${page}&resultsPerPage=${resultsPerPage}`// &searchTerm=${encodeURIComponent(searchTerm)}`
+    `${API_URL}/Movies/AllMovies?pageNum=${page}&resultsPerPage=${resultsPerPage}`,
+    {credentials: 'include'}
+    // &searchTerm=${encodeURIComponent(searchTerm)}`
   );
 
   if (!response.ok) {
@@ -254,6 +256,7 @@ export const deleteMovie = async (showId: string): Promise<void> => {
 export const fetchMovieById = async (showId: string): Promise<Movie> => {
   const response = await fetch(`${API_URL}/Movies/GetMovieDetails/${showId}`, {
     method: 'GET',
+    credentials: 'include',
   });
 
   if (!response.ok) {
@@ -268,6 +271,7 @@ export const fetchMovieById = async (showId: string): Promise<Movie> => {
 export const fetchAllMoviesMax = async (): Promise<Array<Movie>> => {
   const response = await fetch(`${API_URL}/Movies/AllMoviesMax`, {
     method: 'GET',
+    credentials: 'include',
   });
 
   if (!response.ok) {

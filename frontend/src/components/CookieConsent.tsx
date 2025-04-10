@@ -18,12 +18,12 @@ const CookieConsent: React.FC = () => {
       // Start fade-out after 2 seconds
       const timer1 = setTimeout(() => {
         setFadeOut(true);
-      }, 2000);
+      }, 1000);
 
       // Fully hide after fade completes (e.g. 0.5s fade)
       const timer2 = setTimeout(() => {
         setShowThanks(false);
-      }, 2500);
+      }, 1500);
 
       return () => {
         clearTimeout(timer1);
