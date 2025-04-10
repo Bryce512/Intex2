@@ -5,6 +5,7 @@ import Footer from '../components/Footer';
 import '../css/movieDetailsPage.css';
 import { useEffect, useState } from 'react';
 import HorizontalCarousel from '../components/HorizontalCarousel';
+import AuthorizeView from '../components/AuthorizeView';
 
 function MovieDetailsPage() {
   const navigate = useNavigate();
@@ -94,37 +95,39 @@ function MovieDetailsPage() {
 
   return (
     <>
-      <HeaderHome />
+      <AuthorizeView>
+        <HeaderHome />
 
-      {!id ? (
-        <div className="invalid-id-wrapper">
-          <p className="invalid-id-message">Invalid movie ID</p>
+        {!id ? (
+          <div className="invalid-id-wrapper">
+            <p className="invalid-id-message">Invalid movie ID</p>
+          </div>
+        ) : (
+          <>
+            <button className="back-button" onClick={() => navigate(-1)}>
+              ← Back
+            </button>
+
+            <MovieDetails
+              id={id}
+              rating={getRatingForMovie(id)}
+              onRatingChange={(newRating) => handleRatingChange(id, newRating)}
+            />
+          </>
+        )}
+
+        <div className="mt-5">
+          {Object.entries(publicCarousels).map(([category, movies]) => (
+            <HorizontalCarousel
+              key={category}
+              title={category}
+              items={getMovieItems(movies)}
+            />
+          ))}
         </div>
-      ) : (
-        <>
-          <button className="back-button" onClick={() => navigate(-1)}>
-            ← Back
-          </button>
 
-          <MovieDetails
-            id={id}
-            rating={getRatingForMovie(id)}
-            onRatingChange={(newRating) => handleRatingChange(id, newRating)}
-          />
-        </>
-      )}
-
-      <div className="mt-5">
-        {Object.entries(publicCarousels).map(([category, movies]) => (
-          <HorizontalCarousel
-            key={category}
-            title={category}
-            items={getMovieItems(movies)}
-          />
-        ))}
-      </div>
-
-      <Footer />
+        <Footer />
+      </AuthorizeView>
     </>
   );
 }

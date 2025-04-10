@@ -3,6 +3,7 @@ import HeaderHome from '../components/HeaderHome';
 import { Movie } from '../types/movies';
 import '../css/AllMovies.css';
 import { Link } from 'react-router-dom';
+import AuthorizeView from '../components/AuthorizeView';
 
 function Home() {
   const [movies, setMovies] = useState<Movie[]>([]);
@@ -78,20 +79,26 @@ function Home() {
 
   return (
     <>
-      <HeaderHome />
-      <p className="text-success text-2xl font-bold ml-6">ALL MOVIES</p>
-      <div className="gridWrapper">
-        {movies.map((movie) => (
-          <div key={movie.showId} className="gridItem">
-            <Link to={`/MovieDetailsPage/${movie.showId}`}>
-              <img className="image" src={movie.posterUrl} alt={movie.title} />
-            </Link>
-          </div>
-        ))}
-      </div>
-      {loading && <p>Loading more movies...</p>}
-      {!hasMore && <p>No more movies to load</p>}
-      {error && <p className="text-danger">{error}</p>} {/* Error display */}
+      <AuthorizeView>
+        <HeaderHome />
+        <p className="text-success text-2xl font-bold ml-6">ALL MOVIES</p>
+        <div className="gridWrapper">
+          {movies.map((movie) => (
+            <div key={movie.showId} className="gridItem">
+              <Link to={`/MovieDetailsPage/${movie.showId}`}>
+                <img
+                  className="image"
+                  src={movie.posterUrl}
+                  alt={movie.title}
+                />
+              </Link>
+            </div>
+          ))}
+        </div>
+        {loading && <p>Loading more movies...</p>}
+        {!hasMore && <p>No more movies to load</p>}
+        {error && <p className="text-danger">{error}</p>} {/* Error display */}
+      </AuthorizeView>
     </>
   );
 }
