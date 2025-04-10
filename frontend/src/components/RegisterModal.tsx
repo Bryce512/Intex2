@@ -1,8 +1,7 @@
-import Button from "react-bootstrap/Button";
-import Modal from "react-bootstrap/Modal";
-import { useState } from "react";
-import RegisterForm from "./RegisterForm";
-
+import { useEffect, useState } from 'react';
+import ReactDOM from 'react-dom';
+import RegisterForm from './RegisterForm';
+import '../css/RegisterModal.css';
 
 interface RegisterModalProps {
   show: boolean;
@@ -16,51 +15,66 @@ function RegisterModal({
   validated,
   setValidated,
   onHide,
-
 }: RegisterModalProps) {
-    const [errorMessage, setErrorMessage] = useState("");
-    const [loading, setLoading] = useState(false);
-    const [failedAttempts, setFailedAttempts] = useState(0);
-    const handleClose = () => {
-      setErrorMessage("");
-      setLoading(false);
-      onHide();
-    };
+  const [errorMessage, setErrorMessage] = useState('');
+  const [loading, setLoading] = useState(false);
+  const [failedAttempts, setFailedAttempts] = useState(0);
 
-  return (
-    
-    <Modal
-      show={show}
-      onHide={handleClose}
-      size="lg"
-      aria-labelledby="contained-modal-title-vcenter"
-      centered
-    >
-      <Modal.Header closeButton>
-        <Modal.Title id="contained-modal-title-vcenter">
-          Registration
-        </Modal.Title>
-      </Modal.Header>
-      <Modal.Body>
-        <h4>Create Your Account</h4>
-        <RegisterForm
-          validated={validated}
-          setValidated={setValidated}
-          loading={loading}
-          errorMessage={errorMessage}
-          failedAttempts={failedAttempts}
-          setErrorMessage={setErrorMessage}
-          setLoading={setLoading}
-          setFailedAttempts={setFailedAttempts}
-          handleClose={handleClose}
-        />
-      </Modal.Body>
-      <Modal.Footer>
-        <Button onClick={handleClose} disabled={loading}>
-          Close
-        </Button>
-      </Modal.Footer>
-    </Modal>
+  const handleClose = () => {
+    setErrorMessage('');
+    setLoading(false);
+    onHide();
+  };
+
+  // Disable background scrolling while modal is open
+  useEffect(() => {
+    if (show) {
+      document.body.style.overflow = 'hidden';
+    }
+    return () => {
+      document.body.style.overflow = '';
+    };
+  }, [show]);
+
+  if (!show) return null;
+
+  return ReactDOM.createPortal(
+    <div className="custom-modal-overlay">
+      <div className="custom-modal-container">
+        <div className="custom-modal-header">
+          <div className="header-text">
+            <h4 className="custom-modal-subtitle">Create Your Account</h4>
+            <h2 className="custom-modal-title">Sign Up</h2>
+          </div>
+          <button className="custom-modal-close" onClick={handleClose}>
+            &times;
+          </button>
+        </div>
+        <div className="custom-modal-body">
+          <RegisterForm
+            validated={validated}
+            setValidated={setValidated}
+            loading={loading}
+            errorMessage={errorMessage}
+            failedAttempts={failedAttempts}
+            setErrorMessage={setErrorMessage}
+            setLoading={setLoading}
+            setFailedAttempts={setFailedAttempts}
+            handleClose={handleClose}
+          />
+        </div>
+        <div className="custom-modal-footer">
+          <button
+            onClick={handleClose}
+            disabled={loading}
+            className="cancel-button"
+          >
+            Cancel
+          </button>
+        </div>
+      </div>
+    </div>,
+    document.body
   );
 }
 

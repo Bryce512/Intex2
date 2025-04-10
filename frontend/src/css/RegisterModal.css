@@ -1,4 +1,6 @@
-/* Custom Modal Styles */
+/* RegisterModal.css */
+
+/* Custom Modal Overlay & Container */
 .custom-modal-overlay {
   position: fixed;
   top: 0;
@@ -18,7 +20,7 @@
   box-shadow: 0 8px 30px rgba(0, 0, 0, 0.12);
   width: 90%;
   max-width: 550px;
-  padding: 20px;
+  padding: 12px; /* Reduced padding for a shorter modal */
   box-sizing: border-box;
 }
 
@@ -28,22 +30,23 @@
   justify-content: space-between;
   align-items: center;
   border-bottom: 1px solid #eee;
-  padding-bottom: 10px;
-  margin-bottom: 10px;
+  padding-bottom: 4px; /* Reduced header padding */
+  margin-bottom: 4px; /* Reduced header margin */
 }
 
 .header-text {
   text-align: left;
+  margin: 0;
 }
 
 .custom-modal-subtitle {
-  font-size: 1.2rem;
+  font-size: 1.1rem;
   color: #555;
-  margin: 0 0 4px 0;
+  margin: 0 0 2px 0; /* Tighter spacing */
 }
 
 .custom-modal-title {
-  font-size: 1.5rem;
+  font-size: 1.4rem;
   margin: 0;
 }
 
@@ -56,24 +59,25 @@
 
 /* Modal Body */
 .custom-modal-body {
-  padding: 10px 0;
+  padding: 8px 0; /* Reduced vertical padding */
 }
 
 /* Modal Footer */
 .custom-modal-footer {
   display: flex;
   justify-content: flex-end;
-  padding-top: 10px;
+  padding-top: 6px; /* Reduced footer padding */
   border-top: 1px solid #eee;
 }
 
+/* Cancel Button */
 .cancel-button {
   background: #f3f4f6;
   border: none;
-  padding: 10px 20px;
+  padding: 8px 16px;
   border-radius: 8px;
   cursor: pointer;
-  font-size: 1rem;
+  font-size: 0.9rem;
   color: #555;
   transition: background 0.2s;
 }
@@ -86,12 +90,15 @@
 .custom-register-form {
   display: flex;
   flex-direction: column;
+  align-items: stretch; /* Fields take full width */
 }
 
+/* Form groups take full available width */
 .form-group {
-  margin-bottom: 16px;
+  margin-bottom: 12px;
   display: flex;
   flex-direction: column;
+  width: 100%;
 }
 
 .form-group label {
@@ -100,10 +107,11 @@
   color: #333;
 }
 
+/* Input fields fill the entire width */
 .form-group input[type='text'],
 .form-group input[type='email'],
 .form-group input[type='password'] {
-  padding: 12px;
+  padding: 10px;
   border: 1px solid #ccc;
   border-radius: 6px;
   font-size: 1rem;
@@ -111,16 +119,24 @@
   box-sizing: border-box;
 }
 
-/* Ensuring the checkbox is left-aligned */
+/* Checkbox group: ensure left alignment */
 .checkbox-group {
   display: flex;
   align-items: center;
-  justify-content: flex-start;
-  margin-bottom: 16px;
+  justify-content: flex-start; /* Explicitly left-align */
+  margin-bottom: 12px;
+  width: 100%;
 }
 
 .checkbox-group input[type='checkbox'] {
   margin-right: 8px;
+}
+
+/* Optional: force checkbox label left alignment */
+.checkbox-label {
+  text-align: left;
+  font-size: 1rem;
+  color: #333;
 }
 
 /* Primary Action Button */
@@ -129,7 +145,7 @@
   color: #ffffff;
   border: none;
   border-radius: 8px;
-  padding: 12px 20px;
+  padding: 10px 16px;
   font-size: 1rem;
   cursor: pointer;
   transition: background 0.2s;
@@ -144,8 +160,9 @@
 .custom-alert-danger {
   background-color: #fef2f2;
   border: 1px solid #fee2e2;
-  padding: 10px;
+  padding: 8px;
   border-radius: 6px;
   color: #b91c1c;
-  margin-bottom: 16px;
+  margin-bottom: 12px;
+  width: 100%;
 }
