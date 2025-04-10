@@ -49,7 +49,7 @@ function Login() {
                   required
                 />
                 <label htmlFor="email" className="floating-label">
-                  Username
+                  Email
                 </label>
               </div>
             </div>

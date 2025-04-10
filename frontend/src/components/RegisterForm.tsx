@@ -28,11 +28,47 @@ function RegisterForm({
   const [password, setPassword] = useState('');
   const [email, setEmail] = useState('');
   const [agreeTerms, setAgreeTerms] = useState(false);
+  const [validationErrors, setValidationErrors] = useState<
+    Record<string, string>
+  >({});
 
   const isRateLimited = failedAttempts >= 5;
 
+  // Validate the form
+  const validateForm = () => {
+    const errors: Record<string, string> = {};
+
+    // Check required fields
+    if (!name.trim()) errors.name = 'Name is required';
+    if (!username.trim()) errors.username = 'Username is required';
+    if (!email.trim()) errors.email = 'Email is required';
+    if (!password) errors.password = 'Password is required';
+    if (!agreeTerms) errors.agreeTerms = 'You must agree to the terms';
+
+    // Validate email format
+    if (email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+      errors.email = 'Please enter a valid email address';
+    }
+
+    setValidationErrors(errors);
+    return Object.keys(errors).length === 0;
+  };
+
   const onSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+
+    // Validate the form before submission
+    const isValid = validateForm();
+    setValidated(true);
+
+    if (!isValid) {
+      setErrorMessage('Please correct the errors below.');
+      return;
+    }
+
+    // Clear any previous error messages
+    setErrorMessage('');
+
     handleSubmit(
       e,
       setValidated,
@@ -49,9 +85,17 @@ function RegisterForm({
   };
 
   return (
-    <form onSubmit={onSubmit} noValidate className="custom-register-form">
+    <form onSubmit={onSubmit} className="custom-register-form">
       {errorMessage && (
-        <div className="custom-alert-danger">{errorMessage}</div>
+        <div
+          className={
+            errorMessage.includes('successful')
+              ? 'custom-alert-danger custom-alert-success'
+              : 'custom-alert-danger'
+          }
+        >
+          {errorMessage}
+        </div>
       )}
       {isRateLimited && (
         <div className="custom-alert-danger">
@@ -69,7 +113,11 @@ function RegisterForm({
           value={name}
           onChange={(e) => setName(e.target.value)}
           disabled={isRateLimited || loading}
+          className={validationErrors.name ? 'is-invalid' : ''}
         />
+        {validationErrors.name && (
+          <div className="invalid-feedback">{validationErrors.name}</div>
+        )}
       </div>
 
       <div className="form-group">
@@ -82,7 +130,11 @@ function RegisterForm({
           value={email}
           onChange={(e) => setEmail(e.target.value)}
           disabled={isRateLimited || loading}
+          className={validationErrors.email ? 'is-invalid' : ''}
         />
+        {validationErrors.email && (
+          <div className="invalid-feedback">{validationErrors.email}</div>
+        )}
       </div>
 
       <div className="form-group">
@@ -95,7 +147,11 @@ function RegisterForm({
           value={username}
           onChange={(e) => setUsername(e.target.value)}
           disabled={isRateLimited || loading}
+          className={validationErrors.username ? 'is-invalid' : ''}
         />
+        {validationErrors.username && (
+          <div className="invalid-feedback">{validationErrors.username}</div>
+        )}
       </div>
 
       <div className="form-group">
@@ -108,7 +164,11 @@ function RegisterForm({
           value={password}
           onChange={(e) => setPassword(e.target.value)}
           disabled={isRateLimited || loading}
+          className={validationErrors.password ? 'is-invalid' : ''}
         />
+        {validationErrors.password && (
+          <div className="invalid-feedback">{validationErrors.password}</div>
+        )}
       </div>
 
       <div className="form-group checkbox-group">
@@ -119,10 +179,14 @@ function RegisterForm({
           checked={agreeTerms}
           onChange={(e) => setAgreeTerms(e.target.checked)}
           disabled={isRateLimited || loading}
+          className={validationErrors.agreeTerms ? 'is-invalid' : ''}
         />
         <label htmlFor="agreeTerms" className="checkbox-label">
           Agree to terms and conditions
         </label>
+        {validationErrors.agreeTerms && (
+          <div className="invalid-feedback">{validationErrors.agreeTerms}</div>
+        )}
       </div>
 
       <button
