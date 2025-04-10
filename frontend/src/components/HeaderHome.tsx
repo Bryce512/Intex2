@@ -1,12 +1,26 @@
+import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { fetchUserRoles } from '../api/moviesAPI'; // update this import path based on where you defined it
 import UserInfo from './UserInfo';
 import styles from '../css/Header.module.css';
 
 export default function Header() {
   const navigate = useNavigate();
+  const [isAdmin, setIsAdmin] = useState(false);
 
-  // You can later pull this from props, context, or auth state
-  const isAdmin = true; // Set to true to see the "Manage Movies" button
+  useEffect(() => {
+    const checkAdminRole = async () => {
+      try {
+        const roles = await fetchUserRoles();
+        setIsAdmin(roles.includes('admin'));
+      } catch (error) {
+        console.error('Failed to fetch roles:', error);
+        setIsAdmin(false); // fallback: treat as not admin
+      }
+    };
+
+    checkAdminRole();
+  }, []);
 
   return (
     <header className={styles.header}>

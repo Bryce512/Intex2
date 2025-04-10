@@ -3,7 +3,7 @@
   align-items: center;
   justify-content: center; /* Center all elements inside the header */
   background-color: #f5b400; /* Yellow */
-  height: 80px;
+  height: 60px;
   width: 100vw;
   padding: 0 2rem;
   box-sizing: border-box;
@@ -23,8 +23,10 @@
 .rightNav {
   display: flex;
   align-items: center;
-  gap: 1.25rem; /* spacing between Home, All Movies, Profile */
+  gap: 1.25rem; /* spacing between buttons */
+  flex-wrap: wrap; /* Allow buttons to wrap on smaller screens */
 }
+
 
 
 .img {
@@ -68,6 +70,7 @@
   margin-left: 1rem;
 }
 
+/* Default button styles */
 .moviesButton {
   background-color: #011627;
   color: white;
@@ -81,9 +84,48 @@
   gap: 1rem;
 }
 
+/* Button hover effect */
 .moviesButton:hover {
   background-color: #003366;
 }
+/* Default button styles */
+.moviesButton {
+  background-color: #011627;
+  color: white;
+  font-size: 1rem; /* Base font size */
+  padding: 0.6rem 1.5rem; /* Padding creates button height */
+  border: none;
+  border-radius: 999px;
+  cursor: pointer;
+  transition: background 0.3s ease;
+  gap: 1rem;
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+}
+
+/* Button hover effect */
+.moviesButton:hover {
+  background-color: #003366;
+}
+
+/* Adjust padding for medium screens */
+@media (max-width: 768px) {
+  .moviesButton {
+    font-size: 0.9rem;  /* Smaller font size on tablets */
+    padding: 0.5rem 1rem;  /* Adjust padding for medium screens */
+  }
+}
+
+/* Adjust padding and font size for small screens */
+@media (max-width: 480px) {
+  .moviesButton {
+    font-size: 0.8rem;  /* Smaller font size on mobile */
+    padding: 0.4rem 0.8rem;  /* Adjust padding for small screens */
+  }
+}
+
 
 .welcomeWrapper {
   display: flex;
@@ -101,8 +143,8 @@
 }
 
 .img3 {
-  width: 55px;
-  height: 55px;
+  width: 45px;
+  height: 45px;
   border-radius: 50%;
   object-fit: cover;
   background-color: white;

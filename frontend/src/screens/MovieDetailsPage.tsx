@@ -7,6 +7,9 @@ import { useEffect, useState } from 'react';
 import HorizontalCarousel from '../components/HorizontalCarousel';
 import AuthorizeView from '../components/AuthorizeView';
 
+const API_URL = import.meta.env.VITE_API_URL;
+
+
 function MovieDetailsPage() {
   const navigate = useNavigate();
   const { id } = useParams<{ id: string }>();
@@ -52,7 +55,7 @@ function MovieDetailsPage() {
       const endpoints = [
         {
           key: 'Similar Titles',
-          url: `https://intex2-backend-ezargqcgdwbgd4hq.westus3-01.azurewebsites.net/Movies/MovieToMovieRecommendations/${id}`,
+          url: `${API_URL}/Movies/MovieToMovieRecommendations/${id}`,
         },
       ];
 

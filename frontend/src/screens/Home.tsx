@@ -6,6 +6,9 @@ import AuthorizeView from '../components/AuthorizeView';
 import Footer from '../components/Footer';
 import CookieConsent from '../components/CookieConsent';
 
+const API_URL = import.meta.env.VITE_API_URL;
+
+
 function Home() {
   // State to hold multiple categories of movies
   const [carouselMovies, setCarouselMovies] = useState<{
@@ -18,31 +21,31 @@ function Home() {
       const endpoints = [
         {
           key: 'Top Rated',
-          url: 'https://intex2-backend-ezargqcgdwbgd4hq.westus3-01.azurewebsites.net/Movies/TopRatedMovies',
+          url: `${API_URL}/Movies/TopRatedMovies`,
         },
         {
           key: 'Trending Now',
-          url: 'https://intex2-backend-ezargqcgdwbgd4hq.westus3-01.azurewebsites.net/Movies/PopularMovies',
+          url: `${API_URL}/Movies/PopularMovies`,
         },
         {
           key: 'Your Top Picks',
-          url: 'https://intex2-backend-ezargqcgdwbgd4hq.westus3-01.azurewebsites.net/Movies/UserMovies',
+          url: `${API_URL}/Movies/UserMovies`,
         },
         {
           key: 'Comedy',
-          url: 'https://intex2-backend-ezargqcgdwbgd4hq.westus3-01.azurewebsites.net/Movies/UserComedyMovies',
+          url: `${API_URL}/Movies/UserComedyMovies`,
         },
         {
           key: 'Fantasy',
-          url: 'https://intex2-backend-ezargqcgdwbgd4hq.westus3-01.azurewebsites.net/Movies/UserFantasyMovies',
+          url: `${API_URL}/Movies/UserFantasyMovies`,
         },
         {
           key: 'Kids',
-          url: 'https://intex2-backend-ezargqcgdwbgd4hq.westus3-01.azurewebsites.net/Movies/UserChildrenMovies',
+          url: `${API_URL}/Movies/UserChildrenMovies`,
         },
         {
           key: 'Action',
-          url: 'https://intex2-backend-ezargqcgdwbgd4hq.westus3-01.azurewebsites.net/Movies/UserActionMovies',
+          url: `${API_URL}/Movies/UserActionMovies`,
         },
       ];
 

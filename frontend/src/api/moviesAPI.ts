@@ -6,9 +6,8 @@ interface fetchMoviesResponse {
   totalNumMovies: number;
 }
 
-// const API_URL = 'https://localhost:5000'; // For local development
-const API_URL =
-  'https://intex2-backend-ezargqcgdwbgd4hq.westus3-01.azurewebsites.net';
+const API_URL = import.meta.env.VITE_API_URL;
+
 
 // Handle login using plain username/password
 export const handleLogin = async (
@@ -175,13 +174,12 @@ export const handleRegister = async (
 export const fetchMovies = async (
   page: number,
   resultsPerPage: number,
-  // searchTerm: string = ""
+  searchTerm: string = '',
 ): Promise<fetchMoviesResponse> => {
-  const response = await fetch(
-    `${API_URL}/Movies/AllMovies?pageNum=${page}&resultsPerPage=${resultsPerPage}`,
-    {credentials: 'include'}
-    // &searchTerm=${encodeURIComponent(searchTerm)}`
-  );
+  const url = `${API_URL}/Movies/AllMovies?pageNum=${page}&resultsPerPage=${resultsPerPage}&searchTerm=${searchTerm}`;
+  console.log('Fetching movies with URL:', url);
+
+  const response = await fetch(url, { credentials: 'include' });
 
   if (!response.ok) {
     throw new Error(`HTTP error! status: ${response.status}`);
@@ -191,6 +189,7 @@ export const fetchMovies = async (
 
   return data;
 };
+
 
 
 export const addMovie = async (newMovie: NewMovie): Promise<NewMovie> => {
@@ -281,4 +280,26 @@ export const fetchAllMoviesMax = async (): Promise<Array<Movie>> => {
   console.log('Fetched all moives:', data);
 
   return data;
+};
+
+
+export const fetchUserRoles = async (): Promise<string[]> => {
+  const response = await fetch(`${API_URL}/pingauth`, {
+    method: 'GET',
+    credentials: 'include',
+  });
+
+  if (!response.ok) {
+    throw new Error(`HTTP error! status: ${response.status}`);
+  }
+
+  const data = await response.json();
+  console.log('Fetched user data:', data);
+
+  const roles = data.roles;
+  if (!Array.isArray(roles) || roles.length === 0) {
+    throw new Error('No roles found in the response');
+  }
+
+  return roles;
 };
