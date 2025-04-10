@@ -8,7 +8,6 @@ interface fetchMoviesResponse {
 
 const API_URL = import.meta.env.VITE_API_URL;
 
-
 // Handle login using plain username/password
 export const handleLogin = async (
   e: React.FormEvent,
@@ -130,34 +129,99 @@ export const handleRegister = async (
       }),
     });
 
-    // Check if the response is JSON before trying to parse it
     const contentType = response.headers.get('content-type');
     let data;
 
-    if (contentType && contentType.includes('application/json')) {
-      data = await response.json();
-      console.log('JSON Response:', data);
+    // Read the response as text first
+    const responseText = await response.text();
+    console.log('Response (first 200 chars):', responseText.substring(0, 200));
+
+    // Check if response is empty (successful registration)
+    if (responseText.trim() === '' && response.ok) {
+      // Empty response with OK status means success
+      console.log('Registration successful (empty response)');
+      data = { success: true };
     } else {
-      const textResponse = await response.text();
-      console.log(
-        'Text Response (first 200 chars):',
-        textResponse.substring(0, 200)
-      );
-      throw new Error('Server returned non-JSON response');
+      try {
+        // Try to parse the text as JSON
+        data = JSON.parse(responseText);
+        console.log('JSON Response:', data);
+      } catch (e) {
+        console.error('Failed to parse response as JSON:', e);
+        throw new Error('Server returned non-JSON response');
+      }
     }
 
     if (!response.ok) {
-      throw new Error(data?.message || `Server error: ${response.status}`);
+      // Log all validation errors
+      if (data?.errors) {
+        console.log('Validation errors:', data.errors);
+
+        // Handle specific known errors
+        if (data.errors.PasswordTooShort) {
+          throw new Error(data.errors.PasswordTooShort[0]);
+        }
+        if (data.errors.DuplicateUserName) {
+          throw new Error(data.errors.DuplicateUserName[0]);
+        }
+
+        // If there are other errors, get the first one
+        const firstErrorType = Object.keys(data.errors)[0];
+        if (firstErrorType && data.errors[firstErrorType][0]) {
+          throw new Error(data.errors[firstErrorType][0]);
+        }
+      }
+
+      throw new Error(
+        data?.message || data?.title || `Server error: ${response.status}`
+      );
     }
 
     // Registration successful
     console.log('Registration successful:', data);
 
-    // Reset validation state and close modal
-    setValidated(false);
-    handleClose();
+    // Set a success message instead of an alert
+    setErrorMessage('Registration successful! Logging you in...');
 
-    alert('Registration successful! Please log in.');
+    // No need for DOM manipulation here since we're handling it in the component
+    // Instead, just reset validation state
+    setValidated(false);
+
+    // Wait 2 seconds before logging in
+    setTimeout(() => {
+      // Log the user in automatically using their registration credentials
+      fetch(`${API_URL}/login?useCookies=true&useSessionCookies=false`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          email: userData.Email,
+          password: userData.Password,
+          twoFactorCode: 'string',
+          twoFactorRecoveryCode: 'string',
+        }),
+        credentials: 'include',
+      })
+        .then((response) => {
+          if (response.ok) {
+            // Close registration modal
+            handleClose();
+
+            // Navigate to home page
+            window.location.href = '/Home';
+          } else {
+            // If auto-login fails, show message and let user log in manually
+            setErrorMessage('Registration successful! Please log in manually.');
+            handleClose();
+          }
+        })
+        .catch(() => {
+          // If there's a network error during auto-login
+          setErrorMessage('Registration successful! Please log in manually.');
+          handleClose();
+        });
+    }, 100);
   } catch (error: any) {
     // Increment failed attempts counter
     setFailedAttempts((prev: any) => prev + 1);
@@ -174,7 +238,7 @@ export const handleRegister = async (
 export const fetchMovies = async (
   page: number,
   resultsPerPage: number,
-  searchTerm: string = '',
+  searchTerm: string = ''
 ): Promise<fetchMoviesResponse> => {
   const url = `${API_URL}/Movies/AllMovies?pageNum=${page}&resultsPerPage=${resultsPerPage}&searchTerm=${searchTerm}`;
   console.log('Fetching movies with URL:', url);
@@ -189,8 +253,6 @@ export const fetchMovies = async (
 
   return data;
 };
-
-
 
 export const addMovie = async (newMovie: NewMovie): Promise<NewMovie> => {
   try {
@@ -281,7 +343,6 @@ export const fetchAllMoviesMax = async (): Promise<Array<Movie>> => {
 
   return data;
 };
-
 
 export const fetchUserRoles = async (): Promise<string[]> => {
   const response = await fetch(`${API_URL}/pingauth`, {

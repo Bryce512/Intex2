@@ -32,10 +32,8 @@ function AllMovies() {
       setError(null);
 
       try {
-        const pageToFetch = resetList ? 1 : page;
-
         const url = new URL(`${API_URL}/Movies/AllMoviesMax`);
-        url.searchParams.append('page', String(pageToFetch));
+        url.searchParams.append('page', String(pageToLoad));
         url.searchParams.append('pageSize', '20');
         if (search) url.searchParams.append('search', search);
         if (genreList) url.searchParams.append('genres', genreList);
@@ -69,7 +67,7 @@ function AllMovies() {
             setPage((prev) => prev + 1);
           }
 
-          setHasMore(data.result.length > 0);
+          setHasMore(data.hasMore);
         } else {
           const errorDetails = await response.text();
           throw new Error(`Failed to fetch movies: ${errorDetails}`);
@@ -119,7 +117,7 @@ function AllMovies() {
   };
 
   useEffect(() => {
-    loadMovies('', '', true);
+    loadMovies(1, '', '', true);
 
     return () => {
       isMounted.current = false;
