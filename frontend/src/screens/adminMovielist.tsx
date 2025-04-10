@@ -28,7 +28,7 @@ function AdminMovielist() {
   const searchInputRef = useRef<HTMLInputElement>(null);
 
   // Add at the top of your component, near the other refs
-  const searchTimerRef = useRef<NodeJS.Timeout | null>(null);
+  const searchTimerRef = useRef<number | null>(null);
 
   // Memoize loadMovies function to prevent unnecessary re-creation
   const loadMovies = useCallback(
@@ -122,7 +122,7 @@ function AdminMovielist() {
     }
 
     // Set a new timer to debounce search
-    searchTimerRef.current = setTimeout(() => {
+    searchTimerRef.current = window.setTimeout(() => {
       loadMovies(value);
       searchTimerRef.current = null;
     }, 150);
