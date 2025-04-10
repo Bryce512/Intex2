@@ -50,7 +50,7 @@ export const handleLogin = async (
     }
 
     // If the login is successful, redirect the user
-    navigate('/');
+    navigate('/Home');
   } catch (error: any) {
     setErrorMessage(error.message || 'Failed to login. Please try again.');
   } finally {
