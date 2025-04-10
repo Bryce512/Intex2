@@ -57,7 +57,9 @@ function NewMovieForm({ onSuccess, onCancel }: NewMovieFormProps) {
   });
 
   const handleChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
+    e: React.ChangeEvent<
+      HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement
+    >
   ) => {
     const { name, value } = e.target;
 
@@ -193,34 +195,33 @@ function NewMovieForm({ onSuccess, onCancel }: NewMovieFormProps) {
 
         <label>
           Description:
-          <input
-            type="text"
+          <textarea
             name="description"
             value={formData.description}
             onChange={handleChange}
+            className="description-input"
           />
         </label>
 
+        <br />
         <h3>Genres</h3>
-        {genreKeys.map((key) => (
-          <label key={key}>
-            {formatGenreLabel(key)}:
-            <input
-              type="checkbox"
-              name={key}
-              checked={formData[key as keyof NewMovie] === 1}
-              onChange={handleCheckboxChange}
-            />
-          </label>
-        ))}
+        <div className="checkbox-list">
+          {genreKeys.map((key) => (
+            <div className="checkbox-item" key={key}>
+              <input
+                type="checkbox"
+                name={key}
+                checked={formData[key as keyof NewMovie] === true}
+                onChange={handleCheckboxChange}
+              />
+              <label htmlFor={key}>{formatGenreLabel(key)}</label>
+            </div>
+          ))}
+        </div>
 
-        <div style={{ marginTop: '1rem' }}>
+        <div className='button-container' style={{ marginTop: '1rem' }}>
           <button type="submit">Add Movie</button>
-          <button
-            type="button"
-            onClick={onCancel}
-            style={{ marginLeft: '1rem' }}
-          >
+          <button type="button" onClick={onCancel}>
             Cancel
           </button>
         </div>
