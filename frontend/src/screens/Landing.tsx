@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import LandingHeader from '../components/LandingHeader';
-import TopMovieRecommendation from '../components/TopMovie';
+// import TopMovieRecommendation from '../components/TopMovie';
 import HorizontalCarousel from '../components/HorizontalCarousel';
 // import AuthorizeView from '../components/AuthorizeView';
 import Footer from '../components/Footer';
