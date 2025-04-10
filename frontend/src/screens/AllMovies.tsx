@@ -8,7 +8,6 @@ import AuthorizeView from '../components/AuthorizeView';
 const API_URL = import.meta.env.VITE_API_URL;
 
 function AllMovies() {
-  // Renamed from Home to match file name
   const [movies, setMovies] = useState<Movie[]>([]);
   const [page, setPage] = useState(1);
   const [loading, setLoading] = useState(false);
@@ -18,20 +17,15 @@ function AllMovies() {
   const [selectedGenres, setSelectedGenres] = useState<string[]>([]);
   const [showGenreModal, setShowGenreModal] = useState(false);
 
-  // Add a ref to track if the component is mounted
-  const isMounted = useRef(true);
-  // Add a debounce timer ref
+  const observerRef = useRef<IntersectionObserver | null>(null);
+  const sentinelRef = useRef<HTMLDivElement | null>(null);
   const debounceTimerRef = useRef<number | null>(null);
+  const isMounted = useRef(true);
 
   const genres = ['Action', 'Comedy', 'Docuseries', 'Fantasy', 'Children'];
 
-  // Memoize loadMovies function with useCallback
   const loadMovies = useCallback(
-    async (
-      search = searchQuery,
-      genreList = selectedGenres.join(','),
-      resetList = false
-    ) => {
+    async (search = '', genreList = '', resetList = false) => {
       if (loading || (!hasMore && !resetList)) return;
 
       setLoading(true);
@@ -69,7 +63,7 @@ function AllMovies() {
 
           if (resetList) {
             setMovies(newMovies);
-            setPage(2); // Set next page to 2 after reset
+            setPage(2);
           } else {
             setMovies((prev) => [...prev, ...newMovies]);
             setPage((prev) => prev + 1);
@@ -81,7 +75,6 @@ function AllMovies() {
           throw new Error(`Failed to fetch movies: ${errorDetails}`);
         }
       } catch (error) {
-        console.error('Error fetching movies:', error);
         if (isMounted.current) {
           setError('Failed to load movies. Please try again later.');
         }
@@ -91,21 +84,20 @@ function AllMovies() {
         }
       }
     },
-    [loading, hasMore, page, searchQuery, selectedGenres]
+    [loading, hasMore, page]
   );
 
   const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const newSearchQuery = e.target.value;
     setSearchQuery(newSearchQuery);
 
-    // Clear previous timer
     if (debounceTimerRef.current) {
       clearTimeout(debounceTimerRef.current);
     }
 
-    // Reset movies when search changes
     debounceTimerRef.current = window.setTimeout(() => {
       setHasMore(true);
+      setPage(1);
       loadMovies(newSearchQuery, selectedGenres.join(','), true);
       debounceTimerRef.current = null;
     }, 500);
@@ -122,37 +114,45 @@ function AllMovies() {
   const handleModalSubmit = () => {
     setShowGenreModal(false);
     setHasMore(true);
+    setPage(1);
     loadMovies(searchQuery, selectedGenres.join(','), true);
   };
 
-  // Initial load
   useEffect(() => {
     loadMovies('', '', true);
 
-    // Cleanup function to prevent state updates after unmount
     return () => {
       isMounted.current = false;
       if (debounceTimerRef.current) {
         clearTimeout(debounceTimerRef.current);
       }
+      if (observerRef.current) {
+        observerRef.current.disconnect();
+      }
     };
   }, []);
 
-  // Infinite scroll handler
   useEffect(() => {
-    const handleScroll = () => {
-      if (
-        !loading &&
-        hasMore &&
-        window.innerHeight + window.scrollY >= document.body.scrollHeight - 80
-      ) {
-        loadMovies();
+    if (!sentinelRef.current) return;
+
+    observerRef.current = new IntersectionObserver(
+      (entries) => {
+        const firstEntry = entries[0];
+        if (firstEntry.isIntersecting && hasMore && !loading) {
+          loadMovies();
+        }
+      },
+      { rootMargin: '100px' }
+    );
+
+    observerRef.current.observe(sentinelRef.current);
+
+    return () => {
+      if (observerRef.current && sentinelRef.current) {
+        observerRef.current.unobserve(sentinelRef.current);
       }
     };
-
-    window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
-  }, [loading, hasMore, loadMovies]);
+  }, [loadMovies, hasMore, loading]);
 
   return (
     <AuthorizeView>
@@ -168,6 +168,7 @@ function AllMovies() {
         <button
           onClick={() => setShowGenreModal(true)}
           className="genre-filter-button"
+          aria-label="Filter movies by genre"
         >
           Filter by Genre
         </button>
@@ -209,17 +210,30 @@ function AllMovies() {
         ) : (
           movies.map((movie) => (
             <div key={movie.showId} className="gridItem">
-              <Link to={`/MovieDetailsPage/${movie.showId}`}>
-                <img
-                  className="image"
-                  src={movie.posterUrl}
-                  alt={movie.title}
-                />
-              </Link>
+              <div className="poster-container">
+                <Link to={`/MovieDetailsPage/${movie.showId}`}>
+                  <img
+                    className="image"
+                    src={movie.posterUrl}
+                    alt={movie.title}
+                    loading="lazy"
+                    onError={(e) => {
+                      e.currentTarget.src = '/images/placeholder.jpg';
+                    }}
+                  />
+                </Link>
+              </div>
+              <div className="movie-title" title={movie.title}>
+                {movie.title.length > 25
+                  ? `${movie.title.slice(0, 25)}...`
+                  : movie.title}
+              </div>
             </div>
           ))
         )}
       </div>
+
+      <div ref={sentinelRef} style={{ height: '1px' }} />
 
       {loading && <p className="loading-indicator">Loading more movies...</p>}
       {!hasMore && movies.length > 0 && (
@@ -230,4 +244,4 @@ function AllMovies() {
   );
 }
 
-export default AllMovies; // Renamed export to match component name
+export default AllMovies;
