@@ -1,3 +1,5 @@
+/* ========== GRID LAYOUT ========== */
+
 .gridWrapper {
   padding: 1rem 2rem;
   display: grid;
@@ -6,19 +8,26 @@
 }
 
 .gridItem {
-  position: relative;
-  padding-top: 150%;
-  overflow: hidden;
-  border-radius: 6px;
-  cursor: pointer;
-  transition: transform 0.5s ease;
+  text-align: center;
 }
 
-.gridItem:hover {
+/* Container that preserves aspect ratio */
+.poster-container {
+  position: relative;
+  padding-top: 150%; /* 2:3 aspect ratio */
+  overflow: hidden;
+  border-radius: 6px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.4);
+  transition: transform 0.5s ease;
+  cursor: pointer;
+}
+
+.poster-container:hover {
   transform: scale(1.08);
 }
 
-.image {
+/* Poster image inside the container */
+.poster-container .image {
   position: absolute;
   top: 0;
   left: 0;
@@ -26,14 +35,27 @@
   height: 100%;
   object-fit: cover;
   border-radius: 6px;
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.4);
 }
+
+/* Movie title under each image */
+.movie-title {
+  font-size: 16px !important; /* Smaller text */
+  color: #fff;
+  margin-top: 4px;
+  text-align: center;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  line-height: 1.2;
+}
+
+/* ========== SEARCH + FILTER UI ========== */
 
 .search-container {
   display: flex;
   justify-content: center;
-  margin-top: 100px; /* Added margin to push it down below the header */
-  margin-bottom: 20px; /* Added margin for some space at the bottom */
+  margin-top: 100px; /* Push down below header */
+  margin-bottom: 20px;
 }
 
 .search-bar {
@@ -54,7 +76,8 @@
   cursor: pointer;
 }
 
-/* --- Improved Modal Styling Starts Here --- */
+/* ========== GENRE MODAL ========== */
+
 .genre-modal {
   position: fixed;
   top: 0;
@@ -145,4 +168,17 @@
   transform: translateY(-2px);
   opacity: 0.9;
 }
-/* --- Improved Modal Styling Ends Here --- */
+
+/* ========== STATUS MESSAGES ========== */
+
+.loading-indicator,
+.end-message,
+.error-message {
+  text-align: center;
+  margin-top: 20px;
+  font-size: 1rem;
+}
+
+.error-message {
+  color: #f44336;
+}
