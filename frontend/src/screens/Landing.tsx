@@ -59,7 +59,10 @@ function Landing() {
   const getMovieItems = (movies: { title: string; showId: string }[]) => {
     return movies.map((movie) => ({
       id: movie.showId,
-      imageUrl: `https://movieposters123.blob.core.windows.net/movieposters/${movie.title}.jpg`,
+      imageUrl: `https://movieposters123.blob.core.windows.net/movieposters/${movie.title.replace(
+        /[^a-zA-Z0-9 ]/g,
+        ''
+      )}.jpg`,
       linkUrl: `/MovieDetailsPage/${movie.showId}`,
     }));
   };
