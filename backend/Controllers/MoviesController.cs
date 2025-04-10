@@ -56,26 +56,56 @@ namespace intex2.Controllers
 
         [Authorize(Roles = "admin,user")]
         [HttpGet("AllMoviesMax")]
-        public async Task<IActionResult> GetMovies(int page = 1, int pageSize = 20)
+        public async Task<IActionResult> GetMovies(string search = "", int page = 1, int pageSize = 20, string genres = "")
         {
+            Console.WriteLine($"CURRENT SEARCH: {search}");
+            Console.WriteLine($"SELECTED GENRES: {genres}");
+
             var user = await _userManager.GetUserAsync(User);
             if (user == null)
             {
                 return Unauthorized(new { message = "User not logged in." });
             }
 
-            // Step 1: Pull the data into memory FIRST
-            var moviesRaw = await _moviesContext.MoviesTitles
+            // Step 1: Pull the data with filtering based on the search query
+            var query = _moviesContext.MoviesTitles.AsQueryable();
+
+            // Apply search filter if there's a search string
+            if (!string.IsNullOrEmpty(search))
+            {
+                query = query.Where(m => m.Title.ToLower().Contains(search.ToLower()));
+            }
+
+            // Step 2: Filter movies based on selected genres
+            if (!string.IsNullOrEmpty(genres))
+            {
+                // Split the genres by commas to get a list
+                var genreList = genres.Split(',').Select(g => g.Trim()).ToList();
+
+                // Apply genre filters
+                query = query.Where(m =>
+                    genreList.Any(genre =>
+                        (genre == "Fantasy" && m.Fantasy == 1) ||
+                        (genre == "Action" && m.Action == 1) ||
+                        (genre == "Comedy" && m.Comedies == 1) ||
+                        (genre == "Children" && m.Children == 1) ||
+                        (genre == "Docuseries" && m.Docuseries == 1)
+                    )
+                );
+            }
+
+            // Step 3: Apply pagination
+            var moviesRaw = await query
                 .Skip((page - 1) * pageSize)
                 .Take(pageSize)
-                .ToListAsync(); // This runs the query and materializes it in memory
+                .ToListAsync();
 
-            // Step 2: Now use your helper method safely
-            var movies = moviesRaw.Select(m => new 
+            // Step 4: Format the response
+            var movies = moviesRaw.Select(m => new
             {
                 m.ShowId,
                 m.Title,
-                Genres = GetGenresForMovie(m) // ✅ Safe now
+                Genres = GetGenresForMovie(m)
             }).ToList();
 
             return Ok(new { result = movies });

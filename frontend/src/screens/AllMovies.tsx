@@ -6,28 +6,37 @@ import { Link } from 'react-router-dom';
 
 function Home() {
   const [movies, setMovies] = useState<Movie[]>([]);
-  const [page, setPage] = useState(1); // Track current page
+  const [page, setPage] = useState(1);
   const [loading, setLoading] = useState(false);
-  const [hasMore, setHasMore] = useState(true); // Flag for whether there are more movies
+  const [hasMore, setHasMore] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [searchQuery, setSearchQuery] = useState('');
+  const [selectedGenres, setSelectedGenres] = useState<string[]>([]); // Array of selected genres
+  const [showGenreModal, setShowGenreModal] = useState(false); // Show or hide genre modal
 
-  const loadMoreMovies = async () => {
-    if (loading || !hasMore) return; // Prevent multiple requests at the same time and stop if no more data
+  const genres = ['Action', 'Comedy', 'Docuseries', 'Fantasy', 'Children']; // List of genres (can be dynamic if fetched from API)
+
+  const loadMovies = async (search = '', genres = '') => {
+    if (loading || !hasMore) return;
 
     setLoading(true);
-    setError(null); // Reset error state before fetching
+    setError(null);
 
     try {
-      // Fetch the next page of movies
-      const response = await fetch(
-        `https://localhost:5000/Movies/AllMoviesMax?page=${page}&pageSize=20`,
-        {
-          credentials: 'include',
-        }
-      );
+      const url = new URL('https://localhost:5000/Movies/AllMoviesMax');
+      url.searchParams.append('page', String(page));
+      url.searchParams.append('pageSize', '20');
+      if (search) url.searchParams.append('search', search);
+      if (genres) url.searchParams.append('genres', genres); // Pass genres filter to the API
+
+      const response = await fetch(url.toString(), {
+        credentials: 'include',
+      });
 
       if (response.ok) {
         const data = await response.json();
+        console.log('Movies data:', data.result);
+
         const newMovies = data.result.map(
           (movie: { genres: string[]; showId: string; title: string }) => ({
             showId: movie.showId,
@@ -35,17 +44,17 @@ function Home() {
             posterUrl: `https://movieposters123.blob.core.windows.net/movieposters/${movie.title.replace(
               /[^a-zA-Z0-9À-ÿ ]/g,
               ''
-            )}.jpg`, // Example URL, replace with your actual poster URL if needed
-            genres: movie.genres, // You can replace this with actual genres if available
+            )}.jpg`,
+            genres: movie.genres,
           })
         );
 
-        // Append new movies to the existing list
         setMovies((prev) => [...prev, ...newMovies]);
-        setPage((prev) => prev + 1); // Increment the page
-        setHasMore(data.result.length > 0); // Stop if no more data is available
+        setPage((prev) => prev + 1);
+        setHasMore(data.result.length > 0);
       } else {
-        throw new Error('Failed to fetch movies');
+        const errorDetails = await response.text();
+        throw new Error(`Failed to fetch movies: ${errorDetails}`);
       }
     } catch (error) {
       console.error('Error fetching movies:', error);
@@ -55,31 +64,114 @@ function Home() {
     }
   };
 
+  const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setSearchQuery(e.target.value);
+    setPage(1); // Reset to the first page when search query changes
+    setMovies([]); // Clear current movie list
+    setHasMore(true);
+  };
+
+  const handleGenreSelect = (genre: string) => {
+    setSelectedGenres(
+      (prev) =>
+        prev.includes(genre)
+          ? prev.filter((item) => item !== genre) // Remove genre if already selected
+          : [...prev, genre] // Add genre if not selected
+    );
+  };
+
+  const toggleGenreModal = () => {
+    setShowGenreModal((prev) => !prev); // Toggle the genre modal visibility
+  };
+
+  const handleModalSubmit = () => {
+    if (selectedGenres.length === 0) {
+      // Clear the genre filter and reload data without genres
+      setPage(-1); // Reset to the first page when genre filter changes
+      setMovies([]); // Clear current movie list
+      setHasMore(true);
+      loadMovies(searchQuery, ''); // Pass an empty string to remove the genre filter
+    } else {
+      // If genres are selected, pass them to the backend
+      setPage(-1); // Reset to the first page when genre filter changes
+      setMovies([]); // Clear current movie list
+      setHasMore(true);
+      loadMovies(searchQuery, selectedGenres.join(',')); // Pass selected genres as a comma-separated string
+    }
+
+    setShowGenreModal(false); // Close the modal
+  };
+
   useEffect(() => {
-    loadMoreMovies(); // Initial load of the first page
-  }, []);
+    const debounceTimeout = setTimeout(() => {
+      loadMovies(searchQuery, selectedGenres.join(',')); // Pass selected genres with the search query
+    }, 500);
+
+    return () => clearTimeout(debounceTimeout);
+  }, [searchQuery, selectedGenres]);
+
+  useEffect(() => {
+    loadMovies('', selectedGenres.join(',')); // Initial load of the first page when the component mounts
+  }, []); // Only run once when component is first loaded
 
   useEffect(() => {
     const handleScroll = () => {
-      // Check if we're near the bottom of the page and not currently loading
       if (
-        !loading && // Only load more if not currently loading
-        window.innerHeight + window.scrollY >= document.body.scrollHeight - 50
+        !loading &&
+        window.innerHeight + window.scrollY >= document.body.scrollHeight - 80
       ) {
-        loadMoreMovies(); // Load the next page
+        loadMovies(searchQuery, selectedGenres.join(',')); // Load more movies with the selected genres
       }
     };
 
     window.addEventListener('scroll', handleScroll);
 
-    // Cleanup the event listener when the component is unmounted or when the page changes
     return () => window.removeEventListener('scroll', handleScroll);
-  }, [loading, hasMore]); // Only depend on `loading` and `hasMore` so we avoid unnecessary rerenders
+  }, [loading, hasMore, searchQuery, selectedGenres]);
 
   return (
     <>
       <HeaderHome />
-      <p className="text-success text-2xl font-bold ml-6">ALL MOVIES</p>
+      <div className="search-container">
+        <input
+          type="text"
+          value={searchQuery}
+          onChange={handleSearchChange}
+          placeholder="Search by title..."
+          className="search-bar"
+        />
+        <button onClick={toggleGenreModal} className="genre-filter-button">
+          Filter by Genre
+        </button>
+      </div>
+
+      {showGenreModal && (
+        <div className="genre-modal">
+          <div className="modal-content">
+            <h2>Select Genres</h2>
+            {genres.map((genre) => (
+              <div key={genre} className="genre-item">
+                <input
+                  type="checkbox"
+                  id={genre}
+                  checked={selectedGenres.includes(genre)}
+                  onChange={() => handleGenreSelect(genre)}
+                />
+                <label htmlFor={genre}>{genre}</label>
+              </div>
+            ))}
+            <div className="modal-actions">
+              <button onClick={handleModalSubmit} className="btn-submit">
+                Apply
+              </button>
+              <button onClick={toggleGenreModal} className="btn-cancel">
+                Cancel
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
       <div className="gridWrapper">
         {movies.map((movie) => (
           <div key={movie.showId} className="gridItem">
@@ -89,9 +181,10 @@ function Home() {
           </div>
         ))}
       </div>
+
       {loading && <p>Loading more movies...</p>}
       {!hasMore && <p>No more movies to load</p>}
-      {error && <p className="text-danger">{error}</p>} {/* Error display */}
+      {error && <p className="text-danger">{error}</p>}
     </>
   );
 }
