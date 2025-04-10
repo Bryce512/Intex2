@@ -14,11 +14,35 @@ builder.Services.AddSwaggerGen();
 
 // Register DbContexts
 builder.Services.AddDbContext<MoviesDbContext>(options =>
-{
-    options.UseSqlite(builder.Configuration.GetConnectionString("MovieConnection"));
-});
+    options.UseSqlite(builder.Configuration.GetConnectionString("MovieConnection")));
+    
 builder.Services.AddDbContext<AuthDbContext>(options => 
     options.UseSqlite(builder.Configuration.GetConnectionString("AuthConnection")));
+
+builder.Services.AddDbContext<ActionRecommendationsDbContext>(options =>
+    options.UseSqlite(builder.Configuration.GetConnectionString("ActionRecommendations")));
+
+builder.Services.AddDbContext<TopRatedRecommendationsDbContext>(options =>
+    options.UseSqlite(builder.Configuration.GetConnectionString("TopRatedRecommendations")));
+
+builder.Services.AddDbContext<ChildrenRecommendationsDbContext>(options =>
+    options.UseSqlite(builder.Configuration.GetConnectionString("ChildrenRecommendations")));
+
+builder.Services.AddDbContext<FantasyRecommendationsDbContext>(options =>
+    options.UseSqlite(builder.Configuration.GetConnectionString("FantasyRecommendations")));
+
+builder.Services.AddDbContext<ComedyRecommendationsDbContext>(options =>
+    options.UseSqlite(builder.Configuration.GetConnectionString("ComedyRecommendations")));
+
+builder.Services.AddDbContext<PopularRecommendationsDbContext>(options =>
+    options.UseSqlite(builder.Configuration.GetConnectionString("PopularRecommendations")));
+
+builder.Services.AddDbContext<UserRecommendationsDbContext>(options =>
+    options.UseSqlite(builder.Configuration.GetConnectionString("UserRecommendations")));
+
+builder.Services.AddDbContext<MovieToMovieRecommendationsDbContext>(options =>
+    options.UseSqlite(builder.Configuration.GetConnectionString("MovieToMovieRecommendations")));
+
 
 
     builder.Services.AddAuthorization(options =>
@@ -67,31 +91,6 @@ builder.Services.ConfigureApplicationCookie(options =>
     options.AccessDeniedPath = "/login";  // Optional: Path to handle access-denied scenarios
     options.Cookie.SecurePolicy = CookieSecurePolicy.Always;
 });
-
-// Added DbContexts for each of the .db recommendation files to builder
-builder.Services.AddDbContext<ActionRecommendationsDbContext>(options =>
-    options.UseSqlite("Data Source=Databases/action_recommendations.db"));
-
-builder.Services.AddDbContext<TopRatedRecommendationsDbContext>(options =>
-    options.UseSqlite("Data Source=Databases/top_rated.db"));
-
-builder.Services.AddDbContext<ChildrenRecommendationsDbContext>(options =>
-    options.UseSqlite("Data Source=Databases/children_recommendations.db"));
-
-builder.Services.AddDbContext<FantasyRecommendationsDbContext>(options =>
-    options.UseSqlite("Data Source=Databases/fantasy_recommendations.db"));
-
-builder.Services.AddDbContext<ComedyRecommendationsDbContext>(options =>
-    options.UseSqlite("Data Source=Databases/comedy_recommendations.db"));
-
-builder.Services.AddDbContext<PopularRecommendationsDbContext>(options =>
-    options.UseSqlite("Data Source=Databases/popular.db"));
-
-builder.Services.AddDbContext<UserRecommendationsDbContext>(options =>
-    options.UseSqlite("Data Source=Databases/user_recommendations.db"));
-
-builder.Services.AddDbContext<MovieToMovieRecommendationsDbContext>(options =>
-    options.UseSqlite("Data Source=Databases/movie_to_movie_hybrid_recommendations.db"));
 
 
 builder.Services.AddCors(options =>

@@ -26,5 +26,7 @@ obj*
 *.sln
 *.sw?
 
-/frontend/public/images/Movie\ Posters
-frontend/public/images/Movie\ Posters/
+frontend/public/images
+backend/Databases/
+# backend/appSettings.json
+# backend/appSettings.Development.json

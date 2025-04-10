@@ -8,13 +8,13 @@ export default defineConfig({
     port: 3000,
     headers: {
       'Content-Security-Policy':
-        "default-src 'self'; " +
+        "default-src 'self' https://intex2-backend-ezargqcgdwbgd4hq.westus3-01.azurewebsites.net; " +
         "script-src 'self' 'unsafe-inline' 'unsafe-eval' https://accounts.google.com; " +
         "style-src 'self' 'unsafe-inline' fonts.googleapis.com https://accounts.google.com; " +
-        "img-src 'self' https://cdn.builder.io https://movieposters123.blob.core.windows.net data:; " +
+        "img-src 'self' https://cdn.builder.io https://movieposters123.blob.core.windows.net https://intex2-backend-ezargqcgdwbgd4hq.westus3-01.azurewebsites.net data:; " +
         "frame-ancestors 'none'; " +
         "font-src 'self' fonts.gstatic.com data:; " +
-        "connect-src 'self' https://localhost:5000 https://accounts.google.com https://oauth2.googleapis.com; " + // ✅ Allow OAuth token exchange
+        "connect-src 'self' https://localhost:5000 https://accounts.google.com https://oauth2.googleapis.com https://intex2-backend-ezargqcgdwbgd4hq.westus3-01.azurewebsites.net; " + // ✅ Allow OAuth token exchange
         "object-src 'none'; " +
         "base-uri 'self'; " +
         "form-action 'self'; " +
