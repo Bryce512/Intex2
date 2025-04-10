@@ -1,0 +1,48 @@
+.pagination-button {
+  padding: 6px 12px;
+  margin: 0 2px;
+  border: 1px solid;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.2s, color 0.2s, border-color 0.2s;
+}
+
+/* Light mode defaults */
+@media (prefers-color-scheme: light) {
+  .pagination-button {
+    background-color: white;
+    color: black;
+    border-color: #ccc;
+  }
+
+  .pagination-button:hover {
+    background-color: #f0f0f0;
+  }
+
+  .pagination-button.active {
+    background-color: #007bff;
+    color: white;
+    border-color: #007bff;
+    font-weight: bold;
+  }
+}
+
+/* Dark mode overrides */
+@media (prefers-color-scheme: dark) {
+  .pagination-button {
+    background-color: #1e1e1e;
+    color: white;
+    border-color: #555;
+  }
+
+  .pagination-button:hover {
+    background-color: #333;
+  }
+
+  .pagination-button.active {
+    background-color: #3390ff;
+    color: white;
+    border-color: #3390ff;
+    font-weight: bold;
+  }
+}
