@@ -1,5 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 import '../css/LandingIntro.css';
+import RegisterModal from './RegisterModal';
 
 // Declare YouTube Player API global
 declare global {
@@ -17,6 +18,8 @@ const LandingIntro = () => {
 
   const iframeRef = useRef<HTMLIFrameElement | null>(null);
   const isManualChangeRef = useRef(false);
+  const [modalShow, setModalShow] = useState(false);
+  const [validated, setValidated] = useState(false);
 
   // Initialize YouTube player
   useEffect(() => {
@@ -76,7 +79,20 @@ const LandingIntro = () => {
             <h3 className="carousel-subtext">
               Start watching <strong>now</strong>
             </h3>
-            <button className="cta-button">Sign Up</button>
+            {!modalShow && (
+              <button className="cta-button" onClick={() => setModalShow(true)}>
+                Sign Up
+              </button>
+            )}
+
+            {modalShow && (
+              <RegisterModal
+                show={modalShow}
+                onHide={() => setModalShow(false)}
+                validated={validated}
+                setValidated={setValidated}
+              />
+            )}
           </div>
         </div>
       </div>
