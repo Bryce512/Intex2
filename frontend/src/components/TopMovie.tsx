@@ -11,7 +11,7 @@ declare global {
 }
 
 const TopMovieRecommendation = () => {
-  const videoId = '8RF1Re9xyKg';
+  const videoId = '22QAcwuGqFs';
   const videos = [
     `https://www.youtube.com/embed/${videoId}?enablejsapi=1&autoplay=1&mute=1&controls=0&showinfo=0&rel=0&iv_load_policy=3&modestbranding=1&loop=1&playlist=${videoId}`,
   ];
