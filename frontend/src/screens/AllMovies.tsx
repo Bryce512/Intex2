@@ -209,9 +209,9 @@ function AllMovies() {
           <p>No movies found. Try different search criteria.</p>
         ) : (
           movies.map((movie) => (
-            <div key={movie.showId} className="gridItem">
-              <div className="poster-container">
-                <Link to={`/MovieDetailsPage/${movie.showId}`}>
+            <div key={movie.showId} className="movie-card">
+              <Link to={`/MovieDetailsPage/${movie.showId}`}>
+                <div className="poster-container">
                   <img
                     className="image"
                     src={movie.posterUrl}
@@ -221,13 +221,13 @@ function AllMovies() {
                       e.currentTarget.src = '/images/placeholder.jpg';
                     }}
                   />
-                </Link>
-              </div>
-              <div className="movie-title" title={movie.title}>
-                {movie.title.length > 25
-                  ? `${movie.title.slice(0, 25)}...`
-                  : movie.title}
-              </div>
+                </div>
+                <div className="movie-title2" title={movie.title}>
+                  {movie.title.length > 25
+                    ? `${movie.title.slice(0, 25)}...`
+                    : movie.title}
+                </div>
+              </Link>
             </div>
           ))
         )}
