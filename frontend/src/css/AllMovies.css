@@ -7,26 +7,38 @@
   gap: 1rem;
 }
 
-.gridItem {
+/* Whole card wrapper for movie poster + title */
+.movie-card {
+  background-color: #1e1e1e;
+  border-radius: 8px;
+  overflow: hidden;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
   text-align: center;
 }
 
-/* Container that preserves aspect ratio */
+.movie-card:hover {
+  transform: scale(1.05);
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.5);
+}
+
+.movie-card a {
+  text-decoration: none;
+  color: inherit;
+  display: block;
+  height: 100%;
+}
+
+/* ========== POSTER CONTAINER ========== */
+
 .poster-container {
   position: relative;
   padding-top: 150%; /* 2:3 aspect ratio */
   overflow: hidden;
-  border-radius: 6px;
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.4);
-  transition: transform 0.5s ease;
-  cursor: pointer;
+  border-top-left-radius: 8px;
+  border-top-right-radius: 8px;
 }
 
-.poster-container:hover {
-  transform: scale(1.08);
-}
-
-/* Poster image inside the container */
+/* NOTE: Removed hover scale from poster-container! */
 .poster-container .image {
   position: absolute;
   top: 0;
@@ -34,19 +46,29 @@
   width: 100%;
   height: 100%;
   object-fit: cover;
-  border-radius: 6px;
+  border-top-left-radius: 8px;
+  border-top-right-radius: 8px;
+  display: block;
+  transition: transform 0.3s ease;
 }
 
-/* Movie title under each image */
-.movie-title {
-  font-size: 16px !important; /* Smaller text */
+/* ========== TITLE BELOW IMAGE ========== */
+
+.movie-title2 {
+  font-size: 0.9rem !important;
+  padding: 8px;
+  background-color: #2a2a2a;
   color: #fff;
-  margin-top: 4px;
-  text-align: center;
+  white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
-  white-space: nowrap;
-  line-height: 1.2;
+  border-bottom-left-radius: 8px;
+  border-bottom-right-radius: 8px;
+  transition: background-color 0.3s ease;
+}
+
+.movie-card:hover .movie-title2 {
+  background-color: #3a3a3a;
 }
 
 /* ========== SEARCH + FILTER UI ========== */
@@ -54,7 +76,7 @@
 .search-container {
   display: flex;
   justify-content: center;
-  margin-top: 100px; /* Push down below header */
+  margin-top: 100px;
   margin-bottom: 20px;
 }
 
