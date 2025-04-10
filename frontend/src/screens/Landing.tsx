@@ -12,8 +12,9 @@ function Landing() {
   const [carouselMovies, setCarouselMovies] = useState<{
     [category: string]: { title: string; showId: string }[];
   }>({});
-  
-  const API_URL = 'https://localhost:5000';
+
+  const API_URL =
+    'https://intex2-backend-ezargqcgdwbgd4hq.westus3-01.azurewebsites.net';
 
   // Fetch different movie categories
   useEffect(() => {
