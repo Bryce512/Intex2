@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useCallback, useRef } from 'react';
 import HeaderHome from '../components/HeaderHome';
 import { Movie } from '../types/movies';
 import '../css/AllMovies.css';
@@ -7,134 +7,155 @@ import AuthorizeView from '../components/AuthorizeView';
 
 const API_URL = import.meta.env.VITE_API_URL;
 
-
-function Home() {
+function AllMovies() {
+  // Renamed from Home to match file name
   const [movies, setMovies] = useState<Movie[]>([]);
   const [page, setPage] = useState(1);
   const [loading, setLoading] = useState(false);
   const [hasMore, setHasMore] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [searchQuery, setSearchQuery] = useState('');
-  const [selectedGenres, setSelectedGenres] = useState<string[]>([]); // Array of selected genres
-  const [showGenreModal, setShowGenreModal] = useState(false); // Show or hide genre modal
+  const [selectedGenres, setSelectedGenres] = useState<string[]>([]);
+  const [showGenreModal, setShowGenreModal] = useState(false);
 
-  const genres = ['Action', 'Comedy', 'Docuseries', 'Fantasy', 'Children']; // List of genres (can be dynamic if fetched from API)
+  // Add a ref to track if the component is mounted
+  const isMounted = useRef(true);
+  // Add a debounce timer ref
+  const debounceTimerRef = useRef<NodeJS.Timeout | null>(null);
 
-  const loadMovies = async (search = '', genres = '') => {
-    if (loading || !hasMore) return;
+  const genres = ['Action', 'Comedy', 'Docuseries', 'Fantasy', 'Children'];
 
-    setLoading(true);
-    setError(null);
+  // Memoize loadMovies function with useCallback
+  const loadMovies = useCallback(
+    async (
+      search = searchQuery,
+      genreList = selectedGenres.join(','),
+      resetList = false
+    ) => {
+      if (loading || (!hasMore && !resetList)) return;
 
-    try {
-      const url = new URL('${API_URL}/Movies/AllMoviesMax');
-      url.searchParams.append('page', String(page));
-      url.searchParams.append('pageSize', '20');
-      if (search) url.searchParams.append('search', search);
-      if (genres) url.searchParams.append('genres', genres); // Pass genres filter to the API
+      setLoading(true);
+      setError(null);
 
-      const response = await fetch(url.toString(), {
-        credentials: 'include',
-      });
+      try {
+        const pageToFetch = resetList ? 1 : page;
 
-      if (response.ok) {
-        const data = await response.json();
-        console.log('Movies data:', data.result);
+        const url = new URL(`${API_URL}/Movies/AllMoviesMax`);
+        url.searchParams.append('page', String(pageToFetch));
+        url.searchParams.append('pageSize', '20');
+        if (search) url.searchParams.append('search', search);
+        if (genreList) url.searchParams.append('genres', genreList);
 
-        const newMovies = data.result.map(
-          (movie: { genres: string[]; showId: string; title: string }) => ({
-            showId: movie.showId,
-            title: movie.title,
-            posterUrl: `https://movieposters123.blob.core.windows.net/movieposters/${movie.title.replace(
-              /[^a-zA-Z0-9À-ÿ ]/g,
-              ''
-            )}.jpg`,
-            genres: movie.genres,
-          })
-        );
+        const response = await fetch(url.toString(), {
+          credentials: 'include',
+        });
 
-        setMovies((prev) => [...prev, ...newMovies]);
-        setPage((prev) => prev + 1);
-        setHasMore(data.result.length > 0);
-      } else {
-        const errorDetails = await response.text();
-        throw new Error(`Failed to fetch movies: ${errorDetails}`);
+        if (!isMounted.current) return;
+
+        if (response.ok) {
+          const data = await response.json();
+
+          const newMovies = data.result.map(
+            (movie: { genres: string[]; showId: string; title: string }) => ({
+              showId: movie.showId,
+              title: movie.title,
+              posterUrl: `https://movieposters123.blob.core.windows.net/movieposters/${movie.title.replace(
+                /[^a-zA-Z0-9À-ÿ ]/g,
+                ''
+              )}.jpg`,
+              genres: movie.genres,
+            })
+          );
+
+          if (resetList) {
+            setMovies(newMovies);
+            setPage(2); // Set next page to 2 after reset
+          } else {
+            setMovies((prev) => [...prev, ...newMovies]);
+            setPage((prev) => prev + 1);
+          }
+
+          setHasMore(data.result.length > 0);
+        } else {
+          const errorDetails = await response.text();
+          throw new Error(`Failed to fetch movies: ${errorDetails}`);
+        }
+      } catch (error) {
+        console.error('Error fetching movies:', error);
+        if (isMounted.current) {
+          setError('Failed to load movies. Please try again later.');
+        }
+      } finally {
+        if (isMounted.current) {
+          setLoading(false);
+        }
       }
-    } catch (error) {
-      console.error('Error fetching movies:', error);
-      setError('Failed to load movies. Please try again later.');
-    } finally {
-      setLoading(false);
-    }
-  };
+    },
+    [loading, hasMore, page, searchQuery, selectedGenres]
+  );
 
   const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setSearchQuery(e.target.value);
-    setPage(1); // Reset to the first page when search query changes
-    setMovies([]); // Clear current movie list
-    setHasMore(true);
+    const newSearchQuery = e.target.value;
+    setSearchQuery(newSearchQuery);
+
+    // Clear previous timer
+    if (debounceTimerRef.current) {
+      clearTimeout(debounceTimerRef.current);
+    }
+
+    // Reset movies when search changes
+    debounceTimerRef.current = setTimeout(() => {
+      setHasMore(true);
+      loadMovies(newSearchQuery, selectedGenres.join(','), true);
+      debounceTimerRef.current = null;
+    }, 500);
   };
 
   const handleGenreSelect = (genre: string) => {
-    setSelectedGenres(
-      (prev) =>
-        prev.includes(genre)
-          ? prev.filter((item) => item !== genre) // Remove genre if already selected
-          : [...prev, genre] // Add genre if not selected
+    setSelectedGenres((prev) =>
+      prev.includes(genre)
+        ? prev.filter((item) => item !== genre)
+        : [...prev, genre]
     );
   };
 
-  const toggleGenreModal = () => {
-    setShowGenreModal((prev) => !prev); // Toggle the genre modal visibility
-  };
-
   const handleModalSubmit = () => {
-    if (selectedGenres.length === 0) {
-      // Clear the genre filter and reload data without genres
-      setPage(-1); // Reset to the first page when genre filter changes
-      setMovies([]); // Clear current movie list
-      setHasMore(true);
-      loadMovies(searchQuery, ''); // Pass an empty string to remove the genre filter
-    } else {
-      // If genres are selected, pass them to the backend
-      setPage(-1); // Reset to the first page when genre filter changes
-      setMovies([]); // Clear current movie list
-      setHasMore(true);
-      loadMovies(searchQuery, selectedGenres.join(',')); // Pass selected genres as a comma-separated string
-    }
-
-    setShowGenreModal(false); // Close the modal
+    setShowGenreModal(false);
+    setHasMore(true);
+    loadMovies(searchQuery, selectedGenres.join(','), true);
   };
 
+  // Initial load
   useEffect(() => {
-    const debounceTimeout = setTimeout(() => {
-      loadMovies(searchQuery, selectedGenres.join(',')); // Pass selected genres with the search query
-    }, 500);
+    loadMovies('', '', true);
 
-    return () => clearTimeout(debounceTimeout);
-  }, [searchQuery, selectedGenres]);
+    // Cleanup function to prevent state updates after unmount
+    return () => {
+      isMounted.current = false;
+      if (debounceTimerRef.current) {
+        clearTimeout(debounceTimerRef.current);
+      }
+    };
+  }, []);
 
-  useEffect(() => {
-    loadMovies('', selectedGenres.join(',')); // Initial load of the first page when the component mounts
-  }, []); // Only run once when component is first loaded
-
+  // Infinite scroll handler
   useEffect(() => {
     const handleScroll = () => {
       if (
         !loading &&
+        hasMore &&
         window.innerHeight + window.scrollY >= document.body.scrollHeight - 80
       ) {
-        loadMovies(searchQuery, selectedGenres.join(',')); // Load more movies with the selected genres
+        loadMovies();
       }
     };
 
     window.addEventListener('scroll', handleScroll);
-
     return () => window.removeEventListener('scroll', handleScroll);
-  }, [loading, hasMore, searchQuery, selectedGenres]);
+  }, [loading, hasMore, loadMovies]);
 
   return (
-    <>
+    <AuthorizeView>
       <HeaderHome />
       <div className="search-container">
         <input
@@ -144,7 +165,10 @@ function Home() {
           placeholder="Search by title..."
           className="search-bar"
         />
-        <button onClick={toggleGenreModal} className="genre-filter-button">
+        <button
+          onClick={() => setShowGenreModal(true)}
+          className="genre-filter-button"
+        >
           Filter by Genre
         </button>
       </div>
@@ -168,7 +192,10 @@ function Home() {
               <button onClick={handleModalSubmit} className="btn-submit">
                 Apply
               </button>
-              <button onClick={toggleGenreModal} className="btn-cancel">
+              <button
+                onClick={() => setShowGenreModal(false)}
+                className="btn-cancel"
+              >
                 Cancel
               </button>
             </div>
@@ -177,20 +204,30 @@ function Home() {
       )}
 
       <div className="gridWrapper">
-        {movies.map((movie) => (
-          <div key={movie.showId} className="gridItem">
-            <Link to={`/MovieDetailsPage/${movie.showId}`}>
-              <img className="image" src={movie.posterUrl} alt={movie.title} />
-            </Link>
-          </div>
-        ))}
+        {movies.length === 0 && !loading ? (
+          <p>No movies found. Try different search criteria.</p>
+        ) : (
+          movies.map((movie) => (
+            <div key={movie.showId} className="gridItem">
+              <Link to={`/MovieDetailsPage/${movie.showId}`}>
+                <img
+                  className="image"
+                  src={movie.posterUrl}
+                  alt={movie.title}
+                />
+              </Link>
+            </div>
+          ))
+        )}
       </div>
 
-      {loading && <p>Loading more movies...</p>}
-      {!hasMore && <p>No more movies to load</p>}
-      {error && <p className="text-danger">{error}</p>}
-    </>
+      {loading && <p className="loading-indicator">Loading more movies...</p>}
+      {!hasMore && movies.length > 0 && (
+        <p className="end-message">No more movies to load</p>
+      )}
+      {error && <p className="text-danger error-message">{error}</p>}
+    </AuthorizeView>
   );
 }
 
-export default Home;
+export default AllMovies; // Renamed export to match component name

@@ -14,7 +14,6 @@ interface RegisterFormProps {
 }
 
 function RegisterForm({
-  validated,
   setValidated,
   loading,
   errorMessage,
