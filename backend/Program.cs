@@ -45,11 +45,12 @@ builder.Services.AddDbContext<MovieToMovieRecommendationsDbContext>(options =>
 
 
 
-    builder.Services.AddAuthorization(options =>
+builder.Services.AddAuthorization(options =>
     {
         options.AddPolicy("AdminOnly", policy => policy.RequireRole("admin"));
         options.AddPolicy("UserOrAdmin", policy => policy.RequireRole("admin", "user"));
     });
+
 builder.Services.AddIdentity<AppIdentityUser, IdentityRole<int>>(options =>
     {
          options.Password.RequireDigit = false;
@@ -110,11 +111,11 @@ builder.Services.AddSingleton<IEmailSender<AppIdentityUser>, NoOpEmailSender<App
 
 var app = builder.Build();
 
-using (var scope = app.Services.CreateScope())
-{
-    var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<IdentityRole<int>>>();
-    await SeedRoles(roleManager);
-}
+// using (var scope = app.Services.CreateScope())
+// {
+//     var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<IdentityRole<int>>>();
+//     await SeedRoles(roleManager);
+// }
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
@@ -123,23 +124,23 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
-static async Task SeedRoles(RoleManager<IdentityRole<int>>roleManager)
-{
-    string[] roleNames = { "Admin", "User" };
-    
-    foreach (var roleName in roleNames)
-    {
-        // Check if role already exists
-        var roleExists = await roleManager.RoleExistsAsync(roleName);
-        if (!roleExists)
-        {
-            // Create the role
-            var role = new IdentityRole<int>();
-            await roleManager.CreateAsync(role);
-            Console.WriteLine($"Created role: {roleName}");
-        }
-    }
-}
+// static async Task SeedRoles(RoleManager<IdentityRole<int>>roleManager)
+// {
+//     string[] roleNames = { "Admin", "User" };
+//     
+//     foreach (var roleName in roleNames)
+//     {
+//         // Check if role already exists
+//         var roleExists = await roleManager.RoleExistsAsync(roleName);
+//         if (!roleExists)
+//         {
+//             // Create the role
+//             var role = new IdentityRole<int>();
+//             await roleManager.CreateAsync(role);
+//             Console.WriteLine($"Created role: {roleName}");
+//         }
+//     }
+// }
 
 app.UseCors("AllowReactApp");
 

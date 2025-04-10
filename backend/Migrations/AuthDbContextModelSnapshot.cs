@@ -152,13 +152,13 @@ namespace intex2.Migrations
                     b.Property<int>("AccessFailedCount")
                         .HasColumnType("INTEGER");
 
-                    b.Property<int>("Age")
+                    b.Property<int?>("Age")
                         .HasColumnType("INTEGER");
 
-                    b.Property<bool>("AmazonPrime")
+                    b.Property<bool?>("AmazonPrime")
                         .HasColumnType("INTEGER");
 
-                    b.Property<bool>("AppleTv")
+                    b.Property<bool?>("AppleTv")
                         .HasColumnType("INTEGER");
 
                     b.Property<string>("City")
@@ -169,7 +169,7 @@ namespace intex2.Migrations
                         .IsConcurrencyToken()
                         .HasColumnType("TEXT");
 
-                    b.Property<bool>("Disney")
+                    b.Property<bool?>("Disney")
                         .HasColumnType("INTEGER");
 
                     b.Property<string>("Email")
@@ -183,7 +183,7 @@ namespace intex2.Migrations
                         .IsRequired()
                         .HasColumnType("TEXT");
 
-                    b.Property<bool>("Hulu")
+                    b.Property<bool?>("Hulu")
                         .HasColumnType("INTEGER");
 
                     b.Property<bool>("LockoutEnabled")
@@ -192,14 +192,14 @@ namespace intex2.Migrations
                     b.Property<DateTimeOffset?>("LockoutEnd")
                         .HasColumnType("TEXT");
 
-                    b.Property<bool>("Max")
+                    b.Property<bool?>("Max")
                         .HasColumnType("INTEGER");
 
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("TEXT");
 
-                    b.Property<bool>("Netflix")
+                    b.Property<bool?>("Netflix")
                         .HasColumnType("INTEGER");
 
                     b.Property<string>("NormalizedEmail")
@@ -210,13 +210,13 @@ namespace intex2.Migrations
                         .HasMaxLength(256)
                         .HasColumnType("TEXT");
 
-                    b.Property<bool>("Paramount")
+                    b.Property<bool?>("Paramount")
                         .HasColumnType("INTEGER");
 
                     b.Property<string>("PasswordHash")
                         .HasColumnType("TEXT");
 
-                    b.Property<bool>("Peacock")
+                    b.Property<bool?>("Peacock")
                         .HasColumnType("INTEGER");
 
                     b.Property<string>("PhoneNumber")
@@ -239,7 +239,7 @@ namespace intex2.Migrations
                         .HasMaxLength(256)
                         .HasColumnType("TEXT");
 
-                    b.Property<int>("Zip")
+                    b.Property<int?>("Zip")
                         .HasColumnType("INTEGER");
 
                     b.HasKey("Id");
