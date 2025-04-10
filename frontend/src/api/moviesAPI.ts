@@ -129,51 +129,61 @@ export const handleRegister = async (
       }),
     });
 
+    // Check if the response is JSON before trying to parse it
+    const contentType = response.headers.get('content-type');
     let data;
 
-    // Read the response as text first
-    const responseText = await response.text();
-    console.log('Response (first 200 chars):', responseText.substring(0, 200));
-
-    // Check if response is empty (successful registration)
-    if (responseText.trim() === '' && response.ok) {
-      // Empty response with OK status means success
-      console.log('Registration successful (empty response)');
-      data = { success: true };
+    if (contentType && contentType.includes('application/json')) {
+      data = await response.json();
+      console.log('JSON Response:', data);
     } else {
-      try {
-        // Try to parse the text as JSON
-        data = JSON.parse(responseText);
-        console.log('JSON Response:', data);
-      } catch (e) {
-        console.error('Failed to parse response as JSON:', e);
-        throw new Error('Server returned non-JSON response');
-      }
-    }
-
-    if (!response.ok) {
-      // Log all validation errors
-      if (data?.errors) {
-        console.log('Validation errors:', data.errors);
-
-        // Handle specific known errors
-        if (data.errors.PasswordTooShort) {
-          throw new Error(data.errors.PasswordTooShort[0]);
-        }
-        if (data.errors.DuplicateUserName) {
-          throw new Error(data.errors.DuplicateUserName[0]);
-        }
-
-        // If there are other errors, get the first one
-        const firstErrorType = Object.keys(data.errors)[0];
-        if (firstErrorType && data.errors[firstErrorType][0]) {
-          throw new Error(data.errors[firstErrorType][0]);
-        }
-      }
-
-      throw new Error(
-        data?.message || data?.title || `Server error: ${response.status}`
+      // Read the response as text first
+      const responseText = await response.text();
+      console.log(
+        'Response (first 200 chars):',
+        responseText.substring(0, 200)
       );
+
+      // Check if response is empty (successful registration)
+      if (responseText.trim() === '' && response.ok) {
+        // Empty response with OK status means success
+        console.log('Registration successful (empty response)');
+        data = { success: true };
+      } else {
+        try {
+          // Try to parse the text as JSON
+          data = JSON.parse(responseText);
+          console.log('JSON Response:', data);
+        } catch (e) {
+          console.error('Failed to parse response as JSON:', e);
+          throw new Error('Server returned non-JSON response');
+        }
+      }
+
+      if (!response.ok) {
+        // Log all validation errors
+        if (data?.errors) {
+          console.log('Validation errors:', data.errors);
+
+          // Handle specific known errors
+          if (data.errors.PasswordTooShort) {
+            throw new Error(data.errors.PasswordTooShort[0]);
+          }
+          if (data.errors.DuplicateUserName) {
+            throw new Error(data.errors.DuplicateUserName[0]);
+          }
+
+          // If there are other errors, get the first one
+          const firstErrorType = Object.keys(data.errors)[0];
+          if (firstErrorType && data.errors[firstErrorType][0]) {
+            throw new Error(data.errors[firstErrorType][0]);
+          }
+        }
+
+        throw new Error(
+          data?.message || data?.title || `Server error: ${response.status}`
+        );
+      }
     }
 
     // Registration successful
@@ -182,8 +192,13 @@ export const handleRegister = async (
     // Set a success message instead of an alert
     setErrorMessage('Registration successful! Logging you in...');
 
-    // No need for DOM manipulation here since we're handling it in the component
-    // Instead, just reset validation state
+    // Add a class to style the success message with green background
+    // This will need a corresponding CSS style
+    document
+      .querySelector('.custom-alert-danger')
+      ?.classList.add('custom-alert-success');
+
+    // Reset validation state
     setValidated(false);
 
     // Wait 2 seconds before logging in

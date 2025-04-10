@@ -51,6 +51,7 @@ function RegisterModal({
           </button>
         </div>
         <div className="custom-modal-body">
+    
           <RegisterForm
             validated={validated}
             setValidated={setValidated}

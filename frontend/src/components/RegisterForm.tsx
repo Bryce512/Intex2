@@ -85,12 +85,12 @@ function RegisterForm({
   };
 
   return (
-    <form onSubmit={onSubmit} className="custom-register-form">
+    <form onSubmit={onSubmit} noValidate className="custom-register-form">
       {errorMessage && (
-        <div
+        <div 
           className={
-            errorMessage.includes('successful')
-              ? 'custom-alert-danger custom-alert-success'
+            errorMessage.includes('successful') 
+              ? 'custom-alert-danger custom-alert-success' 
               : 'custom-alert-danger'
           }
         >
