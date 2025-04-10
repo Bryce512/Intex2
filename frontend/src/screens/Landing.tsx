@@ -69,6 +69,8 @@ function Landing() {
       <LandingHeader />
       <LandingIntro />
       <br />
+      <br />
+
       {Object.entries(carouselMovies).map(([category, movies]) => (
         <HorizontalCarousel
           key={category}

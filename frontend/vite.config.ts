@@ -10,7 +10,7 @@ export default defineConfig({
       'Content-Security-Policy':
         "default-src 'self' https://intex2-backend-ezargqcgdwbgd4hq.westus3-01.azurewebsites.net; " +
         "script-src 'self' 'unsafe-inline' 'unsafe-eval' https://accounts.google.com; " +
-        "style-src 'self' 'unsafe-inline' fonts.googleapis.com https://accounts.google.com; " +
+        "style-src 'self' 'unsafe-inline' fonts.googleapis.com https://accounts.google.com https://www.youtube.com/iframe_api; " +
         "img-src 'self' https://cdn.builder.io https://movieposters123.blob.core.windows.net https://intex2-backend-ezargqcgdwbgd4hq.westus3-01.azurewebsites.net data:; " +
         "frame-ancestors 'none'; " +
         "font-src 'self' fonts.gstatic.com data:; " +
@@ -18,7 +18,7 @@ export default defineConfig({
         "object-src 'none'; " +
         "base-uri 'self'; " +
         "form-action 'self'; " +
-        "frame-src 'self' https://accounts.google.com https://oauth2.googleapis.com;", // ✅ Allow OAuth login popups
+        "frame-src 'self' https://accounts.google.com https://oauth2.googleapis.com https://www.youtube.com https://youtube.com;", // ✅ Allow OAuth login popups
     },
     cors: {
       origin: 'http://localhost:3000',

@@ -1,45 +1,190 @@
-.video-carousel-container {
+/* Reset margins/paddings */
+body, html {
+  margin: 0;
+  padding: 0;
+  overflow-x: hidden;
+  width: 100%;
+  height: 100%;
+  box-sizing: border-box;
+}
+
+*, *:before, *:after {
+  box-sizing: inherit;
+}
+
+/* Main wrapper */
+.video-carousel-wrapper {
+  width: 100vw;
+  height: 80vh;
   position: relative;
-  height: 100vh;
   overflow: hidden;
+  margin: 0;
+  padding: 0;
+  background-color: #011627;
+  overscroll-behavior-x: contain;
 }
 
-.carousel-item {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
+/* Override Bootstrap container and row */
+.container, .container-fluid, .row {
+  max-width: 100vw !important;
+  padding-left: 0 !important;
+  padding-right: 0 !important;
+  margin-left: 0 !important;
+  margin-right: 0 !important;
+}
+
+/* Override Bootstrap carousel styles */
+.fullwidth-carousel,
+.carousel-inner,
+.carousel-item-fullwidth,
+.carousel {
   height: 100%;
+  width: 100vw;
+  margin: 0;
+  padding: 0;
 }
 
-.carousel-video {
+/* Video container */
+.video-container {
   position: relative;
-  width: 100%;
+  width: 100vw;
   height: 100%;
+  overflow: hidden;
+  margin: 0;
+  padding: 0;
 }
 
+/* Video iframe - cropped to hide borders */
 .video-iframe {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
+  position: absolute;
+  top: -110px;
+  left: -15%;
+  width: 130%;
+  height: calc(100% + 220px);
+  border: 0;
+  pointer-events: none;
 }
 
-.carousel-overlay {
+/* Content overlay */
+.content-overlay {
   position: absolute;
   top: 0;
   left: 0;
   width: 100%;
   height: 100%;
-  background: rgba(0, 0, 0, 0.5); /* Dark overlay */
   display: flex;
-  justify-content: center;
   align-items: center;
+  justify-content: center;
+  background: rgba(1, 22, 39, 0.55);
+  z-index: 2;
 }
 
+/* Text and layout for overlay */
+.overlay-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 1rem;
+}
+
+/* Main heading */
 .carousel-text {
   color: white;
-  font-size: 3rem;
+  font-size: 2.5rem;
+  font-weight: bold;
   text-align: center;
-  z-index: 10;
+  padding: 0 20px;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
 }
 
+/* Subtitle */
+.carousel-subtext {
+  color: #ffffffcc;
+  font-size: 1.5rem;
+  font-weight: 500;
+  margin-top: -10px;
+  text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.4);
+}
+
+/* CTA button */
+.cta-button {
+  background-color: #f5b700;
+  color: #011627;
+  font-size: 1.1rem;
+  font-weight: 600;
+  padding: 12px 28px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.4);
+
+}
+
+.cta-button:hover {
+  background-color: #c4cbca;
+  transform: scale(1.05);
+}
+
+/* Tiny nav dots (if you use them) */
+.tiny-indicators {
+  position: absolute;
+  bottom: 15px;
+  left: 0;
+  right: 0;
+  display: flex;
+  justify-content: center;
+  z-index: 3;
+}
+
+.tiny-dot {
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.5);
+  margin: 0 4px;
+  border: none;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.tiny-dot.active {
+  background: white;
+  transform: scale(1.1);
+}
+
+/* Force full bleed edge-to-edge */
+.full-bleed {
+  margin-left: calc(-50vw + 50%);
+  margin-right: calc(-50vw + 50%);
+  width: 100vw;
+  max-width: 100vw;
+}
+
+/* Mobile responsiveness */
+@media (max-width: 768px) {
+  .carousel-text {
+    font-size: 1.8rem;
+  }
+
+  .carousel-subtext {
+    font-size: 1.1rem;
+  }
+
+  .cta-button {
+    font-size: 1rem;
+    padding: 10px 22px;
+  }
+
+  .tiny-dot {
+    width: 4px;
+    height: 4px;
+    margin: 0 3px;
+  }
+}
+
+/* Fade animation for carousel (if applicable) */
+.carousel.fade .carousel-item {
+  transition: opacity 0.5s ease-in-out;
+}
