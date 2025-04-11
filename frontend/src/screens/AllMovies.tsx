@@ -16,6 +16,7 @@ function AllMovies() {
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedGenres, setSelectedGenres] = useState<string[]>([]);
   const [showGenreModal, setShowGenreModal] = useState(false);
+  const [isSearching, setIsSearching] = useState(false);
 
   const observerRef = useRef<IntersectionObserver | null>(null);
   const sentinelRef = useRef<HTMLDivElement | null>(null);
@@ -32,8 +33,12 @@ function AllMovies() {
       setError(null);
 
       try {
+        // For new searches, always start with page 1
+        const pageToRequest = resetList ? 1 : page;
+        console.log(`Requesting page ${pageToRequest} for search "${search}"`);
+
         const url = new URL(`${API_URL}/Movies/AllMoviesMax`);
-        url.searchParams.append('page', String(page));
+        url.searchParams.append('page', String(pageToRequest));
         url.searchParams.append('pageSize', '20');
         if (search) url.searchParams.append('search', search);
         if (genreList) url.searchParams.append('genres', genreList);
@@ -46,6 +51,9 @@ function AllMovies() {
 
         if (response.ok) {
           const data = await response.json();
+          console.log(
+            `Search "${search}" returned ${data.result.length} results (total: ${data.totalCount})`
+          );
 
           const newMovies = data.result.map(
             (movie: { genres: string[]; showId: string; title: string }) => ({
@@ -61,7 +69,7 @@ function AllMovies() {
 
           if (resetList) {
             setMovies(newMovies);
-            setPage(2);
+            setPage(2); // Next page will be 2
           } else {
             setMovies((prev) => [...prev, ...newMovies]);
             setPage((prev) => prev + 1);
@@ -75,6 +83,7 @@ function AllMovies() {
       } catch (error) {
         if (isMounted.current) {
           setError('Failed to load movies. Please try again later.');
+          console.error('Search error:', error);
         }
       } finally {
         if (isMounted.current) {
@@ -82,12 +91,13 @@ function AllMovies() {
         }
       }
     },
-    [loading, hasMore, page]
+    [loading, hasMore, page, API_URL]
   );
 
   const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const newSearchQuery = e.target.value;
     setSearchQuery(newSearchQuery);
+    setIsSearching(true); // Show searching indicator
 
     if (debounceTimerRef.current) {
       clearTimeout(debounceTimerRef.current);
@@ -96,7 +106,9 @@ function AllMovies() {
     debounceTimerRef.current = window.setTimeout(() => {
       setHasMore(true);
       setPage(1);
-      loadMovies(newSearchQuery, selectedGenres.join(','), true);
+      loadMovies(newSearchQuery, selectedGenres.join(','), true).finally(() =>
+        setIsSearching(false)
+      ); // Hide searching indicator
       debounceTimerRef.current = null;
     }, 500);
   };
@@ -171,6 +183,8 @@ function AllMovies() {
           Filter by Genre
         </button>
       </div>
+
+      {isSearching && <div className="search-indicator">Searching...</div>}
 
       {showGenreModal && (
         <div className="genre-modal">

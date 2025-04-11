@@ -82,6 +82,7 @@ namespace intex2.Models
                 entity.Property(e => e.TvDramas).HasColumnName("TV Dramas");
                 entity.Property(e => e.TalkShowsTvComedies).HasColumnName("Talk Shows TV Comedies");
                 entity.Property(e => e.Thrillers).HasColumnName("Thrillers");
+                entity.HasIndex(e => e.Title);
             });
 
 

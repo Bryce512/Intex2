@@ -1,10 +1,9 @@
 using Microsoft.AspNetCore.Identity;
 using intex2.Models;
-using System.Linq;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.Data.Sqlite;
 
 namespace intex2.Controllers
 {
@@ -56,7 +55,7 @@ namespace intex2.Controllers
 
         [Authorize(Roles = "admin,user")]
         [HttpGet("AllMoviesMax")]
-        public async Task<IActionResult> GetMoviesPaged(string search = "", int page = 1, int pageSize = 20, string genres = "")
+        public async Task<IActionResult> GetMoviesPaged(string search = "", int page = 1, int pageSize = 20, string genres = "", bool exactMatch = false)
         {
             Console.WriteLine($"CURRENT SEARCH: {search}");
             Console.WriteLine($"SELECTED GENRES: {genres}");
@@ -70,10 +69,89 @@ namespace intex2.Controllers
             // Step 1: Start the query
             var query = _moviesContext.MoviesTitles.AsQueryable();
 
-            // Step 2: Apply search filter
+            // Step 2: Apply search filter with prioritization
             if (!string.IsNullOrWhiteSpace(search))
             {
-                query = query.Where(m => m.Title.ToLower().Contains(search.ToLower()));
+                string searchLower = search.ToLower().Trim();
+                Console.WriteLine($"Debug - Searching for: '{searchLower}'");
+                
+                // Simplified SQL approach that ensures we catch all matches
+                var sql = @"
+                    SELECT m.*, 
+                        CASE 
+                            WHEN LOWER(m.Title) LIKE @startsWithPattern THEN 0 
+                            ELSE 1 
+                        END AS SortOrder 
+                    FROM movies_titles m
+                    WHERE LOWER(m.Title) LIKE @containsPattern COLLATE NOCASE
+                    ORDER BY 
+                        SortOrder,
+                        m.Title
+                    LIMIT @take OFFSET @skip";
+                
+                var startsWithPattern = searchLower + "%";
+                var containsPattern = "%" + searchLower + "%";
+                
+                // Log patterns for debugging
+                Console.WriteLine($"Debug - StartsWith pattern: '{startsWithPattern}'");
+                Console.WriteLine($"Debug - Contains pattern: '{containsPattern}'");
+                
+                var parameters = new object[] {
+                    new SqliteParameter("@startsWithPattern", startsWithPattern),
+                    new SqliteParameter("@containsPattern", containsPattern),
+                    new SqliteParameter("@skip", (page - 1) * pageSize),
+                    new SqliteParameter("@take", pageSize)
+                };
+                
+                var results = await _moviesContext.MoviesTitles.FromSqlRaw(sql, parameters).ToListAsync();
+                
+                // Debug output
+                Console.WriteLine($"Debug - Found {results.Count} results");
+                if (results.Count > 0)
+                {
+                    Console.WriteLine($"Debug - First 5 results: {string.Join(", ", results.Take(5).Select(m => m.Title))}");
+                }
+                
+                // Fix the count query to get accurate total count
+                int totalRecords = 0;
+                using (var connection = _moviesContext.Database.GetDbConnection())
+                {
+                    // Simplified count query
+                    var countSql = @"
+                        SELECT COUNT(*) 
+                        FROM movies_titles m 
+                        WHERE LOWER(m.Title) LIKE @containsPattern COLLATE NOCASE";
+                    
+                    var command = connection.CreateCommand();
+                    command.CommandText = countSql;
+                    
+                    // Only need the containsPattern parameter
+                    var contains = command.CreateParameter();
+                    contains.ParameterName = "@containsPattern";
+                    contains.Value = containsPattern;
+                    command.Parameters.Add(contains);
+                    
+                    if (connection.State != System.Data.ConnectionState.Open)
+                        await connection.OpenAsync();
+                    
+                    var result = await command.ExecuteScalarAsync();
+                    if (result != null && result != DBNull.Value)
+                        totalRecords = Convert.ToInt32(result);
+                    
+                    Console.WriteLine($"Debug - Total records matching: {totalRecords}");
+                }
+                
+                var moviesList = results.Select(m => new {
+                    m.ShowId,
+                    m.Title,
+                    Genres = GetGenresForMovie(m),
+                    StartsWithMatch = m.Title.ToLower().StartsWith(searchLower)
+                });
+                
+                return Ok(new {
+                    result = moviesList,
+                    hasMore = (page * pageSize) < totalRecords
+                });
             }
 
             // Step 3: Apply genre filters
@@ -170,7 +248,7 @@ namespace intex2.Controllers
             // Step 1: Validate the input `showId`
             if (string.IsNullOrEmpty(showId))
             {
-                return BadRequest(new { message = "Movie showId is null or empty." });
+                return await Task.FromResult<IActionResult>(BadRequest(new { message = "Movie showId is null or empty." }));
             }
 
             // Step 2: Look up movie-to-movie recommendations for the given showId
@@ -179,7 +257,7 @@ namespace intex2.Controllers
 
             if (recs == null)
             {
-                return NotFound(new { message = "No movie recommendations found for this movie." });
+                return await Task.FromResult<IActionResult>(NotFound(new { message = "No movie recommendations found for this movie." }));
             }
 
             // Step 3: Collect all the recommended movie show IDs (rec_1 to rec_10)
@@ -196,7 +274,7 @@ namespace intex2.Controllers
                 .ToList();
 
             // Return the recommended movies
-            return Ok(movies);
+            return await Task.FromResult<IActionResult>(Ok(movies));
         }
 
         [Authorize(Roles = "admin,user")]

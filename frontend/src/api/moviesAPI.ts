@@ -343,8 +343,21 @@ export const fetchMovieById = async (showId: string): Promise<Movie> => {
   return data;
 };
 
-export const fetchAllMoviesMax = async (): Promise<Array<Movie>> => {
-  const response = await fetch(`${API_URL}/Movies/AllMoviesMax`, {
+export const fetchAllMoviesMax = async (
+  page: number = 1,
+  pageSize: number = 20,
+  search: string = '',
+  genres: string = ''
+): Promise<{ result: Array<Movie>; hasMore: boolean }> => {
+  const url = new URL(`${API_URL}/Movies/AllMoviesMax`);
+
+  // Add all parameters
+  url.searchParams.append('page', String(page));
+  url.searchParams.append('pageSize', String(pageSize));
+  if (search) url.searchParams.append('search', search);
+  if (genres) url.searchParams.append('genres', genres);
+
+  const response = await fetch(url.toString(), {
     method: 'GET',
     credentials: 'include',
   });
@@ -353,7 +366,7 @@ export const fetchAllMoviesMax = async (): Promise<Array<Movie>> => {
     throw new Error(`HTTP error! status: ${response.status}`);
   }
   const data = await response.json();
-  console.log('Fetched all moives:', data);
+  console.log('Fetched movies with search:', data);
 
   return data;
 };
