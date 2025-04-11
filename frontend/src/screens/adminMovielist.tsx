@@ -242,7 +242,6 @@ function AdminMovielist() {
                     <th className="px-4 py-2">Year</th>
                     <th className="px-4 py-2">Rating</th>
                     <th className="px-4 py-2">Duration</th>
-                    <th className="px-4 py-2">Genre Tags</th>
                     <th className="px-4 py-2">Actions</th>
                   </tr>
                 </thead>
