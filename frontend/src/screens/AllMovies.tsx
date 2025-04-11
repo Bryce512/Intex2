@@ -119,7 +119,41 @@ function AllMovies() {
   };
 
   useEffect(() => {
-    loadMovies('', '', true);
+    const initLoad = async () => {
+      setLoading(true);
+      try {
+        const url = new URL(`${API_URL}/Movies/AllMoviesMax`);
+        url.searchParams.append('page', '1');
+        url.searchParams.append('pageSize', '20');
+
+        const response = await fetch(url.toString(), {
+          credentials: 'include',
+        });
+        const data = await response.json();
+
+        const newMovies = data.result.map(
+          (movie: { genres: string[]; showId: string; title: string }) => ({
+            showId: movie.showId,
+            title: movie.title,
+            posterUrl: `https://movieposters123.blob.core.windows.net/movieposters/${movie.title.replace(
+              /[^a-zA-Z0-9À-ÿ ]/g,
+              ''
+            )}.jpg`,
+            genres: movie.genres,
+          })
+        );
+
+        setMovies(newMovies);
+        setPage(2);
+        setHasMore(data.result.length > 0);
+      } catch (error) {
+        setError('Failed to load movies. Please try again later.');
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    initLoad();
 
     return () => {
       isMounted.current = false;
@@ -133,26 +167,24 @@ function AllMovies() {
   }, []);
 
   useEffect(() => {
-    if (!sentinelRef.current) return;
+    if (!sentinelRef.current || loading || !hasMore) return;
 
-    observerRef.current = new IntersectionObserver(
+    const observer = new IntersectionObserver(
       (entries) => {
         const firstEntry = entries[0];
         if (firstEntry.isIntersecting && hasMore && !loading) {
-          loadMovies();
+          loadMovies(searchQuery, selectedGenres.join(','), false);
         }
       },
-      { rootMargin: '100px' }
+      { rootMargin: '200px' } // Give it some pre-buffer
     );
 
-    observerRef.current.observe(sentinelRef.current);
+    observer.observe(sentinelRef.current);
 
     return () => {
-      if (observerRef.current && sentinelRef.current) {
-        observerRef.current.unobserve(sentinelRef.current);
-      }
+      observer.disconnect();
     };
-  }, [loadMovies, hasMore, loading]);
+  }, [movies, hasMore, loading, searchQuery, selectedGenres, loadMovies]);
 
   return (
     <AuthorizeView>
