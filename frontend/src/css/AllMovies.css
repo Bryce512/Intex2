@@ -1,5 +1,4 @@
 /* ========== GRID LAYOUT ========== */
-/* Boing! */
 
 .gridWrapper {
   padding: 1rem 2rem;
@@ -13,7 +12,9 @@
   background-color: #1e1e1e;
   border-radius: 8px;
   overflow: hidden;
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  transition:
+    transform 0.3s ease,
+    box-shadow 0.3s ease;
   text-align: center;
 }
 
@@ -143,21 +144,6 @@
   margin-bottom: 20px;
 }
 
-.genre-item {
-  margin-bottom: 12px;
-  display: flex;
-  align-items: center;
-  font-size: 1rem;
-}
-
-.genre-item input[type='checkbox'] {
-  transform: scale(1.2);
-}
-
-.genre-item label {
-  margin-left: 10px;
-}
-
 .modal-actions {
   display: flex;
   justify-content: space-between;
@@ -173,7 +159,9 @@
   cursor: pointer;
   border-radius: 6px;
   font-size: 1rem;
-  transition: background-color 0.2s, transform 0.2s;
+  transition:
+    background-color 0.2s,
+    transform 0.2s;
 }
 
 .btn-submit {
@@ -204,4 +192,143 @@
 
 .error-message {
   color: #f44336;
+}
+
+/* ========== GENRE MODAL ONLY ========== */
+
+.genre-modal {
+  position: fixed;
+  inset: 0;
+  background-color: rgba(15, 15, 15, 0.7);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+  backdrop-filter: blur(6px);
+}
+
+.modal-content {
+  background-color: #fff;
+  padding: 30px 25px;
+  border-radius: 14px;
+  width: 90%;
+  max-width: 420px;
+  box-shadow: 0 15px 40px rgba(0, 0, 0, 0.25);
+  animation: fadeInScale 0.3s ease-out;
+}
+
+@keyframes fadeInScale {
+  from {
+    transform: scale(0.95);
+    opacity: 0;
+  }
+  to {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+.modal-content h2 {
+  font-size: 1.5rem;
+  margin-bottom: 20px;
+  text-align: center;
+  color: #222;
+}
+
+/* 🔧 Genre items styling */
+.genre-item {
+  display: flex !important;
+  align-items: center !important; /* Changed from flex-start to center for vertical alignment */
+  gap: 10px !important;
+  margin-bottom: 12px !important;
+}
+
+/* Checkbox scaled and spaced - SMALLER SIZE */
+.genre-item input[type='checkbox'] {
+  transform: scale(
+    0.9
+  ) !important; /* Further reduced from 1.0 for smaller size */
+  margin: 0 !important;
+  flex-shrink: 0 !important;
+  accent-color: #007bff !important;
+}
+
+/* ✅ Label is now left-aligned and fills remaining space */
+.genre-item label {
+  flex: 1 !important;
+  font-size: 1rem !important;
+  text-align: left !important;
+  color: #333 !important;
+  margin: 0 !important; /* Removes any default margin */
+  padding-top: 0 !important; /* Adjusted for alignment */
+}
+
+/* Custom genre checkbox styling - SMALLER SIZE */
+.genre-item .custom-checkbox {
+  margin-right: 10px !important;
+  width: 14px !important; /* Further reduced from 16px */
+  height: 14px !important; /* Further reduced from 16px */
+  flex-shrink: 0 !important;
+  accent-color: #007bff !important;
+}
+
+.genre-item .custom-label {
+  margin: 0 !important;
+  padding: 0 !important;
+  font-size: 1rem !important;
+  font-weight: normal !important;
+  line-height: 1.5 !important;
+  color: #333 !important;
+  flex: 1 !important;
+  text-align: left !important;
+}
+
+/* Buttons container */
+.modal-actions {
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+  margin-top: 25px;
+}
+
+/* 🔵 Apply button = same as genre filter button */
+.btn-submit {
+  background-color: #007bff;
+  color: white;
+  border: none;
+  padding: 12px;
+  font-size: 1rem;
+  font-weight: 600;
+  border-radius: 8px;
+  cursor: pointer;
+  flex: 1;
+  transition:
+    background-color 0.2s ease,
+    transform 0.2s ease;
+}
+
+.btn-submit:hover {
+  background-color: #0069d9;
+  transform: translateY(-2px);
+}
+
+/* Cancel button stays red */
+.btn-cancel {
+  background-color: #dc3545;
+  color: white;
+  border: none;
+  padding: 12px;
+  font-size: 1rem;
+  font-weight: 600;
+  border-radius: 8px;
+  cursor: pointer;
+  flex: 1;
+  transition:
+    background-color 0.2s ease,
+    transform 0.2s ease;
+}
+
+.btn-cancel:hover {
+  background-color: #c82333;
+  transform: translateY(-2px);
 }

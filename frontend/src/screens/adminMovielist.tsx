@@ -178,7 +178,8 @@ function AdminMovielist() {
           }}
         >
           <HeaderHome />
-
+          <br />
+          <br />
           <div
             className="admin-content"
             style={{

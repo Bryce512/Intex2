@@ -191,16 +191,23 @@ function AllMovies() {
           <div className="modal-content">
             <h2>Select Genres</h2>
             {genres.map((genre) => (
-              <div key={genre} className="genre-item">
+              <div key={genre} className="genre-item custom-control">
                 <input
                   type="checkbox"
-                  id={genre}
+                  id={`genre-${genre}`} // Make ID more unique
+                  className="custom-checkbox"
                   checked={selectedGenres.includes(genre)}
                   onChange={() => handleGenreSelect(genre)}
                 />
-                <label htmlFor={genre}>{genre}</label>
+                <label
+                  htmlFor={`genre-${genre}`} // Match the new ID
+                  className="custom-label"
+                >
+                  {genre}
+                </label>
               </div>
             ))}
+
             <div className="modal-actions">
               <button onClick={handleModalSubmit} className="btn-submit">
                 Apply
