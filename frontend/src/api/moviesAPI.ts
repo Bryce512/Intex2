@@ -1,13 +1,14 @@
 import { Movie } from '../types/movies';
 import { NewMovie } from '../types/newMovie';
 
+const API_URL = import.meta.env.VITE_API_URL;
+
 interface fetchMoviesResponse {
   movies: Movie[];
   totalNumMovies: number;
 }
 
-const API_URL = import.meta.env.VITE_API_URL;
-// Handle login using plain username/password
+
 export const handleLogin = async (
   e: React.FormEvent,
   setErrorMessage: Function,
@@ -278,7 +279,7 @@ export const addMovie = async (newMovie: NewMovie): Promise<NewMovie> => {
       body: JSON.stringify(newMovie),
     });
     if (!response.ok) {
-      throw new Error(`HTTP error! status: ${response.status}`);
+      throw new Error(`HTTP error! status: ${response.status}, message: ${response.statusText}`);
     }
 
     return await response.json();
