@@ -56,7 +56,7 @@ namespace intex2.Controllers
 
         [Authorize(Roles = "admin,user")]
         [HttpGet("AllMoviesMax")]
-        public async Task<IActionResult> GetMovies(string search = "", int page = 1, int pageSize = 20, string genres = "")
+        public async Task<IActionResult> GetMoviesPaged(string search = "", int page = 1, int pageSize = 20, string genres = "")
         {
             Console.WriteLine($"CURRENT SEARCH: {search}");
             Console.WriteLine($"SELECTED GENRES: {genres}");
@@ -67,22 +67,20 @@ namespace intex2.Controllers
                 return Unauthorized(new { message = "User not logged in." });
             }
 
-            // Step 1: Pull the data with filtering based on the search query
+            // Step 1: Start the query
             var query = _moviesContext.MoviesTitles.AsQueryable();
 
-            // Apply search filter if there's a search string
-            if (!string.IsNullOrEmpty(search))
+            // Step 2: Apply search filter
+            if (!string.IsNullOrWhiteSpace(search))
             {
                 query = query.Where(m => m.Title.ToLower().Contains(search.ToLower()));
             }
 
-            // Step 2: Filter movies based on selected genres
-            if (!string.IsNullOrEmpty(genres))
+            // Step 3: Apply genre filters
+            if (!string.IsNullOrWhiteSpace(genres))
             {
-                // Split the genres by commas to get a list
                 var genreList = genres.Split(',').Select(g => g.Trim()).ToList();
 
-                // Apply genre filters
                 query = query.Where(m =>
                     genreList.Any(genre =>
                         (genre == "Fantasy" && m.Fantasy == 1) ||
@@ -94,22 +92,33 @@ namespace intex2.Controllers
                 );
             }
 
-            // Step 3: Apply pagination
+            // Step 4: Order by title (to keep pagination stable)
+            query = query.OrderBy(m => m.Title);
+
+            // Step 5: Get total count AFTER filters
+            var totalCount = await query.CountAsync();
+
+            // Step 6: Fetch paginated data
             var moviesRaw = await query
                 .Skip((page - 1) * pageSize)
                 .Take(pageSize)
                 .ToListAsync();
 
-            // Step 4: Format the response
             var movies = moviesRaw.Select(m => new
             {
                 m.ShowId,
                 m.Title,
                 Genres = GetGenresForMovie(m)
-            }).ToList();
+            });
 
-            return Ok(new { result = movies });
+            // Step 7: Return result with hasMore
+            return Ok(new
+            {
+                result = movies,
+                hasMore = (page * pageSize) < totalCount
+            });
         }
+
 
         // Helper method to dynamically extract genres
         private static List<string> GetGenresForMovie(MoviesTitle movie)
