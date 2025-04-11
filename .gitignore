@@ -28,7 +28,7 @@ obj*
 *.sln
 *.sw?
 
-frontend/public/images
+# frontend/public/images
 backend/Databases/*
 backend/appsettings.json
 backend/appsettings.Development.json
