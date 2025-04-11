@@ -8,8 +8,6 @@ import HorizontalCarousel from '../components/HorizontalCarousel';
 import AuthorizeView from '../components/AuthorizeView';
 
 const API_URL = import.meta.env.VITE_API_URL;
-
-
 function MovieDetailsPage() {
   const navigate = useNavigate();
   const { id } = useParams<{ id: string }>();

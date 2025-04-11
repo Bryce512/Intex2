@@ -7,7 +7,6 @@ interface fetchMoviesResponse {
 }
 
 const API_URL = import.meta.env.VITE_API_URL;
-
 // Handle login using plain username/password
 export const handleLogin = async (
   e: React.FormEvent,

@@ -7,8 +7,6 @@ import Footer from '../components/Footer';
 import CookieConsent from '../components/CookieConsent';
 
 const API_URL = import.meta.env.VITE_API_URL;
-
-
 function Home() {
   // State to hold multiple categories of movies
   const [carouselMovies, setCarouselMovies] = useState<{

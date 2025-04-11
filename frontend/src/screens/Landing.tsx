@@ -8,8 +8,6 @@ import CookieConsent from '../components/CookieConsent';
 import LandingIntro from '../components/LandingIntro';
 
 const API_URL = import.meta.env.VITE_API_URL;
-
-
 function Landing() {
   // State to hold multiple categories of movies
   const [carouselMovies, setCarouselMovies] = useState<{
