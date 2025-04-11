@@ -17,7 +17,7 @@ builder.Services.AddDbContext<MoviesDbContext>(options =>
     options.UseSqlite(builder.Configuration.GetConnectionString("MovieConnection")));
     
 builder.Services.AddDbContext<AuthDbContext>(options => 
-    options.UseSqlite(builder.Configuration.GetConnectionString("AuthConnection")));
+    options.UseSqlServer(builder.Configuration.GetConnectionString("AuthConnection")));
 
 builder.Services.AddDbContext<ActionRecommendationsDbContext>(options =>
     options.UseSqlite(builder.Configuration.GetConnectionString("ActionRecommendations")));

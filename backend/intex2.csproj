@@ -16,6 +16,7 @@
           <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
         </PackageReference>
         <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="8.0.14" />
+        <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="8.0.14" />
         <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="8.0.14">
           <PrivateAssets>all</PrivateAssets>
           <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
@@ -46,6 +47,11 @@
       <_ContentIncludedByDefault Remove="publish\appsettings.json" />
       <_ContentIncludedByDefault Remove="publish\intex2.deps.json" />
       <_ContentIncludedByDefault Remove="publish\intex2.runtimeconfig.json" />
+      <_ContentIncludedByDefault Remove="publish\release\web.config" />
+      <_ContentIncludedByDefault Remove="publish\release\appsettings.Development.json" />
+      <_ContentIncludedByDefault Remove="publish\release\appsettings.json" />
+      <_ContentIncludedByDefault Remove="publish\release\intex2.deps.json" />
+      <_ContentIncludedByDefault Remove="publish\release\intex2.runtimeconfig.json" />
     </ItemGroup>
 
     <!-- <ItemGroup>
