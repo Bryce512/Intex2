@@ -44,9 +44,6 @@ const AdminTableData = React.memo(
             <td className="border px-4 py-2">{movie.rating}</td>
             <td className="border px-4 py-2">{movie.duration}</td>
             <td className="border px-4 py-2">
-              {movie.genres ? movie.genres.join(', ') : ''}
-            </td>
-            <td className="border px-4 py-2">
               <button
                 className="btn-blue mb-2 text-white px-4 py-2 rounded btn-edit btn-small"
                 onClick={() => onEdit(movie)}
