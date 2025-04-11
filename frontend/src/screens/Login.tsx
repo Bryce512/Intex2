@@ -22,6 +22,9 @@ function Login() {
 
   return (
     <>
+      <button className="back-button" onClick={() => navigate('/')}>
+        ← Back
+      </button>
       <div className="login-wrapper">
         <div className="login-card">
           <img src="/images/logo.jpeg" className="login-logo" alt="Logo" />
@@ -262,6 +265,28 @@ function Login() {
 
         .signup-link:hover {
           text-decoration: underline;
+        }
+        .back-button {
+          position: fixed;
+          top: 20px; /* Change this value to move it closer to the top */
+          left: calc(var(--side-padding, 20px));
+          z-index: 1000;
+          padding: 10px 18px;
+          font-size: 16px;
+          background-color: #1e2a38; /* subtle dark tone that blends with #011627 */
+          color: #ffffff;
+          border: 1px solid #3f5e74; /* thin border to define shape */
+          border-radius: 8px;
+          cursor: pointer;
+          box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3); /* subtle shadow for elevation */
+          transition: all 0.2s ease-in-out;
+        }
+
+        .back-button:hover {
+          background-color: #3f5e74; /* on hover: brighter shade */
+          color: #f5f5f5;
+          transform: translateY(-1px);
+          box-shadow: 0 4px 10px rgba(0, 0, 0, 0.4);
         }
       `}</style>
     </>
