@@ -2,8 +2,7 @@ import { useState, useRef, useEffect } from 'react';
 import styles from '../css/Header.module.css';
 import { useNavigate } from 'react-router-dom';
 
-const API_URL = import.meta.env.VITE_API_URL;
-
+const API_URL = import.meta.env.VITE_API_URL || window.APP_CONFIG?.API_URL;
 
 export default function UserInfo() {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);

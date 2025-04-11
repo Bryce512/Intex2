@@ -5,7 +5,7 @@ import '../css/AllMovies.css';
 import { Link } from 'react-router-dom';
 import AuthorizeView from '../components/AuthorizeView';
 
-const API_URL = import.meta.env.VITE_API_URL;
+const API_URL = import.meta.env.VITE_API_URL || window.APP_CONFIG?.API_URL;
 
 function AllMovies() {
   const [movies, setMovies] = useState<Movie[]>([]);

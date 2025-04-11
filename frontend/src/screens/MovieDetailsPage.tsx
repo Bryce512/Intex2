@@ -7,8 +7,7 @@ import { useEffect, useState } from 'react';
 import HorizontalCarousel from '../components/HorizontalCarousel';
 import AuthorizeView from '../components/AuthorizeView';
 
-const API_URL = import.meta.env.VITE_API_URL;
-
+const API_URL = import.meta.env.VITE_API_URL || window.APP_CONFIG?.API_URL;
 
 function MovieDetailsPage() {
   const navigate = useNavigate();
