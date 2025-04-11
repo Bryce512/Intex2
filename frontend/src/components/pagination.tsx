@@ -66,7 +66,7 @@ const Pagination = ({
       </button>
 
       <select
-        className="ml-4"
+        className="ml-4 page-size-select"
         value={itemsPerPage}
         onChange={(e) => onPageSizeChange(Number(e.target.value))}
       >

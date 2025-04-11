@@ -7,6 +7,25 @@
   transition: background-color 0.2s, color 0.2s, border-color 0.2s;
 }
 
+.page-size-select {
+  width: 20vw;
+  max-width: 150px;
+  min-width: 100px;
+  padding: 6px 8px;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+  background-color: white;
+  font-size: 0.9rem;
+  cursor: pointer;
+  outline: none;
+  margin-left: 13px;
+}
+
+.page-size-select:focus {
+  border-color: #007bff;
+  box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.25);
+}
+
 /* Light mode defaults */
 @media (prefers-color-scheme: light) {
   .pagination-button {
