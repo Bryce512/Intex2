@@ -32,3 +32,4 @@ obj*
 # backend/Databases/
 # backend/appSettings.json
 # backend/appSettings.Development.json
+backend/publish
