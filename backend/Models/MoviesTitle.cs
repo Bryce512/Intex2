@@ -29,67 +29,67 @@ public partial class MoviesTitle
 
     public string? Description { get; set; }
 
-    public int? Action { get; set; }
+    public bool? Action { get; set; }
 
-    public int? Adventure { get; set; }
+    public bool? Adventure { get; set; }
 
-    public int? AnimeSeriesInternationalTvShows { get; set; }
+    public bool? AnimeSeriesInternationalTvShows { get; set; }
 
-    public int? BritishTvShowsDocuseriesInternationalTvShows { get; set; }
+    public bool? BritishTvShowsDocuseriesInternationalTvShows { get; set; }
 
-    public int? Children { get; set; }
+    public bool? Children { get; set; }
 
-    public int? Comedies { get; set; }
+    public bool? Comedies { get; set; }
 
-    public int? ComediesDramasInternationalMovies { get; set; }
+    public bool? ComediesDramasInternationalMovies { get; set; }
 
-    public int? ComediesInternationalMovies { get; set; }
+    public bool? ComediesInternationalMovies { get; set; }
 
-    public int? ComediesRomanticMovies { get; set; }
+    public bool? ComediesRomanticMovies { get; set; }
 
-    public int? CrimeTvShowsDocuseries { get; set; }
+    public bool? CrimeTvShowsDocuseries { get; set; }
 
-    public int? Documentaries { get; set; }
+    public bool? Documentaries { get; set; }
 
-    public int? DocumentariesInternationalMovies { get; set; }
+    public bool? DocumentariesInternationalMovies { get; set; }
 
-    public int? Docuseries { get; set; }
+    public bool? Docuseries { get; set; }
 
-    public int? Dramas { get; set; }
+    public bool? Dramas { get; set; }
 
-    public int? DramasInternationalMovies { get; set; }
+    public bool? DramasInternationalMovies { get; set; }
 
-    public int? DramasRomanticMovies { get; set; }
+    public bool? DramasRomanticMovies { get; set; }
 
-    public int? FamilyMovies { get; set; }
+    public bool? FamilyMovies { get; set; }
 
-    public int? Fantasy { get; set; }
+    public bool? Fantasy { get; set; }
 
-    public int? HorrorMovies { get; set; }
+    public bool? HorrorMovies { get; set; }
 
-    public int? InternationalMoviesThrillers { get; set; }
+    public bool? InternationalMoviesThrillers { get; set; }
 
-    public int? InternationalTvShowsRomanticTvShowsTvDramas { get; set; }
+    public bool? InternationalTvShowsRomanticTvShowsTvDramas { get; set; }
 
-    public int? KidsTv { get; set; }
+    public bool? KidsTv { get; set; }
 
-    public int? LanguageTvShows { get; set; }
+    public bool? LanguageTvShows { get; set; }
 
-    public int? Musicals { get; set; }
+    public bool? Musicals { get; set; }
 
-    public int? NatureTv { get; set; }
+    public bool? NatureTv { get; set; }
 
-    public int? RealityTv { get; set; }
+    public bool? RealityTv { get; set; }
 
-    public int? Spirituality { get; set; }
+    public bool? Spirituality { get; set; }
 
-    public int? TvAction { get; set; }
+    public bool? TvAction { get; set; }
 
-    public int? TvComedies { get; set; }
+    public bool? TvComedies { get; set; }
 
-    public int? TvDramas { get; set; }
+    public bool? TvDramas { get; set; }
 
-    public int? TalkShowsTvComedies { get; set; }
+    public bool? TalkShowsTvComedies { get; set; }
 
-    public int? Thrillers { get; set; }
+    public bool? Thrillers { get; set; }
 }

@@ -161,11 +161,11 @@ namespace intex2.Controllers
 
                 query = query.Where(m =>
                     genreList.Any(genre =>
-                        (genre == "Fantasy" && m.Fantasy == 1) ||
-                        (genre == "Action" && m.Action == 1) ||
-                        (genre == "Comedy" && m.Comedies == 1) ||
-                        (genre == "Children" && m.Children == 1) ||
-                        (genre == "Docuseries" && m.Docuseries == 1)
+                        (genre == "Fantasy" && m.Fantasy == true) ||
+                        (genre == "Action" && m.Action == true) ||
+                        (genre == "Comedy" && m.Comedies == true) ||
+                        (genre == "Children" && m.Children == true) ||
+                        (genre == "Docuseries" && m.Docuseries == true)
                     )
                 );
             }
@@ -203,39 +203,39 @@ namespace intex2.Controllers
         {
             var genres = new List<string>();
 
-            // Check each genre column and add to the list if the value is 1
-            if (movie.Action == 1) genres.Add("Action");
-            if (movie.Adventure == 1) genres.Add("Adventure");
-            if (movie.AnimeSeriesInternationalTvShows == 1) genres.Add("Anime Series International TV Shows");
-            if (movie.BritishTvShowsDocuseriesInternationalTvShows == 1) genres.Add("British TV Shows Docuseries International TV Shows");
-            if (movie.Children == 1) genres.Add("Children");
-            if (movie.Comedies == 1) genres.Add("Comedies");
-            if (movie.ComediesDramasInternationalMovies == 1) genres.Add("Comedies Dramas International Movies");
-            if (movie.ComediesInternationalMovies == 1) genres.Add("Comedies International Movies");
-            if (movie.ComediesRomanticMovies == 1) genres.Add("Comedies Romantic Movies");
-            if (movie.CrimeTvShowsDocuseries == 1) genres.Add("Crime TV Shows Docuseries");
-            if (movie.Documentaries == 1) genres.Add("Documentaries");
-            if (movie.DocumentariesInternationalMovies == 1) genres.Add("Documentaries International Movies");
-            if (movie.Docuseries == 1) genres.Add("Docuseries");
-            if (movie.Dramas == 1) genres.Add("Dramas");
-            if (movie.DramasInternationalMovies == 1) genres.Add("Dramas International Movies");
-            if (movie.DramasRomanticMovies == 1) genres.Add("Dramas Romantic Movies");
-            if (movie.FamilyMovies == 1) genres.Add("Family Movies");
-            if (movie.Fantasy == 1) genres.Add("Fantasy");
-            if (movie.HorrorMovies == 1) genres.Add("Horror Movies");
-            if (movie.InternationalMoviesThrillers == 1) genres.Add("International Movies Thrillers");
-            if (movie.InternationalTvShowsRomanticTvShowsTvDramas == 1) genres.Add("International TV Shows Romantic TV Shows TV Dramas");
-            if (movie.KidsTv == 1) genres.Add("Kids' TV");
-            if (movie.LanguageTvShows == 1) genres.Add("Language TV Shows");
-            if (movie.Musicals == 1) genres.Add("Musicals");
-            if (movie.NatureTv == 1) genres.Add("Nature TV");
-            if (movie.RealityTv == 1) genres.Add("Reality TV");
-            if (movie.Spirituality == 1) genres.Add("Spirituality");
-            if (movie.TvAction == 1) genres.Add("TV Action");
-            if (movie.TvComedies == 1) genres.Add("TV Comedies");
-            if (movie.TvDramas == 1) genres.Add("TV Dramas");
-            if (movie.TalkShowsTvComedies == 1) genres.Add("Talk Shows TV Comedies");
-            if (movie.Thrillers == 1) genres.Add("Thrillers");
+            // Check each genre column and add to the list if the value is true
+            if (movie.Action == true) genres.Add("Action");
+            if (movie.Adventure == true) genres.Add("Adventure");
+            if (movie.AnimeSeriesInternationalTvShows == true) genres.Add("Anime Series International TV Shows");
+            if (movie.BritishTvShowsDocuseriesInternationalTvShows == true) genres.Add("British TV Shows Docuseries International TV Shows");
+            if (movie.Children == true) genres.Add("Children");
+            if (movie.Comedies == true) genres.Add("Comedies");
+            if (movie.ComediesDramasInternationalMovies == true) genres.Add("Comedies Dramas International Movies");
+            if (movie.ComediesInternationalMovies == true) genres.Add("Comedies International Movies");
+            if (movie.ComediesRomanticMovies == true) genres.Add("Comedies Romantic Movies");
+            if (movie.CrimeTvShowsDocuseries == true) genres.Add("Crime TV Shows Docuseries");
+            if (movie.Documentaries == true) genres.Add("Documentaries");
+            if (movie.DocumentariesInternationalMovies == true) genres.Add("Documentaries International Movies");
+            if (movie.Docuseries == true) genres.Add("Docuseries");
+            if (movie.Dramas == true) genres.Add("Dramas");
+            if (movie.DramasInternationalMovies == true) genres.Add("Dramas International Movies");
+            if (movie.DramasRomanticMovies == true) genres.Add("Dramas Romantic Movies");
+            if (movie.FamilyMovies == true) genres.Add("Family Movies");
+            if (movie.Fantasy == true) genres.Add("Fantasy");
+            if (movie.HorrorMovies == true) genres.Add("Horror Movies");
+            if (movie.InternationalMoviesThrillers == true) genres.Add("International Movies Thrillers");
+            if (movie.InternationalTvShowsRomanticTvShowsTvDramas == true) genres.Add("International TV Shows Romantic TV Shows TV Dramas");
+            if (movie.KidsTv == true) genres.Add("Kids' TV");
+            if (movie.LanguageTvShows == true) genres.Add("Language TV Shows");
+            if (movie.Musicals == true) genres.Add("Musicals");
+            if (movie.NatureTv == true) genres.Add("Nature TV");
+            if (movie.RealityTv == true) genres.Add("Reality TV");
+            if (movie.Spirituality == true) genres.Add("Spirituality");
+            if (movie.TvAction == true) genres.Add("TV Action");
+            if (movie.TvComedies == true) genres.Add("TV Comedies");
+            if (movie.TvDramas == true) genres.Add("TV Dramas");
+            if (movie.TalkShowsTvComedies == true) genres.Add("Talk Shows TV Comedies");
+            if (movie.Thrillers == true) genres.Add("Thrillers");
 
             return genres;
         }
@@ -714,7 +714,7 @@ private async Task<string> GenerateNextShowIdAsync()
             var posterUrl = $"{baseUrl}/{encodedTitle}.jpg";
 
             // Step 2: Extract genres (place this here)
-            var genreMap = new Dictionary<string, int?>
+            var genreMap = new Dictionary<string, bool?>
     {
         { "Action", movie.Action },
         { "Adventure", movie.Adventure },
@@ -751,7 +751,7 @@ private async Task<string> GenerateNextShowIdAsync()
     };
 
             var genres = genreMap
-                .Where(kvp => kvp.Value == 1)
+                .Where(kvp => kvp.Value == true)
                 .Select(kvp => kvp.Key)
                 .ToList();
 
